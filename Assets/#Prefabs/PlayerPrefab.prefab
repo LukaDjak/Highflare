@@ -373,6 +373,7 @@ GameObject:
   - component: {fileID: 6148837239651342033}
   - component: {fileID: 2279792888242029255}
   - component: {fileID: 3219353407075810750}
+  - component: {fileID: 6420279729475703528}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -461,6 +462,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 7210653300062382759}
   moveSpeed: 10
+  groundDrag: 5
+  airDrag: 1
   jumpForce: 10
   jumpCooldown: 0.2
   groundLayer:
@@ -471,6 +474,7 @@ MonoBehaviour:
   maxSlopeAngle: 40
   jumpKey: 32
   crouchKey: 306
+  isSliding: 0
 --- !u!114 &3219353407075810750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,6 +490,21 @@ MonoBehaviour:
   orientation: {fileID: 7210653300062382759}
   maxSlideTime: 0.7
   slideForce: 200
+--- !u!114 &6420279729475703528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4248363028501625375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b64a0ef5787bf642a995b4cb2c29795, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whatIsGrabbable:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &4469269525722835180
 GameObject:
   m_ObjectHideFlags: 0

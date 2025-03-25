@@ -495,6 +495,11 @@ PrefabInstance:
       propertyPath: sliding
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2279792888242029255, guid: 1d8e7cb61f42e754ea09c64c88976373,
+        type: 3}
+      propertyPath: groundDrag
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 2785249697657349797, guid: 1d8e7cb61f42e754ea09c64c88976373,
         type: 3}
       propertyPath: m_Name
