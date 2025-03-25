@@ -18,21 +18,19 @@ public class PlayerMovement : MonoBehaviour
     [Header("Crouch Settings")]
     [SerializeField] private float crouchSpeed;
 
-    [Header("Keybinds")]
-    [SerializeField] private KeyCode forwardKey = KeyCode.W;
-    [SerializeField] private KeyCode backwardKey = KeyCode.S;
-    [SerializeField] private KeyCode leftKey = KeyCode.A;
-    [SerializeField] private KeyCode rightKey = KeyCode.D;
-    [SerializeField] private KeyCode jumpKey = KeyCode.Space;
-    [SerializeField] private KeyCode crouchKey = KeyCode.LeftControl;
+    [Header("Slide Settings")]
+    [SerializeField] private float maxSlopeAngle = 40f;
 
+    [Header("Keybinds")]
+    [SerializeField] private KeyCode jumpKey = KeyCode.Space;
+    public KeyCode crouchKey = KeyCode.LeftControl;
 
     private Vector3 originalScale;
-    //private bool isCrouching;
 
     private Rigidbody rb;
     private float desiredMoveSpeed;
     private bool isGrounded;
+    RaycastHit slopeHit;
 
     void Start()
     {
@@ -53,13 +51,8 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleMovement()
     {
-        float xInput = 0f;
-        float zInput = 0f;
-
-        if (Input.GetKey(forwardKey)) zInput += 1;
-        if (Input.GetKey(backwardKey)) zInput -= 1;
-        if (Input.GetKey(leftKey)) xInput -= 1;
-        if (Input.GetKey(rightKey)) xInput += 1;
+        float xInput = Input.GetAxisRaw("Horizontal");
+        float zInput = Input.GetAxisRaw("Vertical");
 
         Vector3 moveDirection = (orientation.right * xInput + orientation.forward * zInput).normalized;
         Vector3 targetVelocity = moveDirection * desiredMoveSpeed;
@@ -96,12 +89,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Jump()
-    {
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-    }
-
     void LimitVelocity()
     {
         Vector3 horizontalVelocity = new(rb.velocity.x, 0f, rb.velocity.z);
@@ -111,4 +98,16 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
         }
     }
+
+    public bool OnSlope()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, originalScale.y * 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            return angle < maxSlopeAngle && angle != 0;
+        }
+        return false;
+    }
+
+    public Vector3 GetSlopeMoveDirection(Vector3 direction) => Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
 }

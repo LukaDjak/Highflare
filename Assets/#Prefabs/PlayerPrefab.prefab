@@ -372,6 +372,7 @@ GameObject:
   - component: {fileID: 744723167849850769}
   - component: {fileID: 6148837239651342033}
   - component: {fileID: 2279792888242029255}
+  - component: {fileID: 3219353407075810750}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -467,12 +468,24 @@ MonoBehaviour:
     m_Bits: 64
   groundCheckDistance: 1.2
   crouchSpeed: 6
-  forwardKey: 119
-  backwardKey: 115
-  leftKey: 97
-  rightKey: 100
+  maxSlopeAngle: 40
   jumpKey: 32
   crouchKey: 306
+--- !u!114 &3219353407075810750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4248363028501625375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6677efe49ffe89d4eb9b7e5aff188659, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orientation: {fileID: 7210653300062382759}
+  maxSlideTime: 0.7
+  slideForce: 200
 --- !u!1 &4469269525722835180
 GameObject:
   m_ObjectHideFlags: 0
