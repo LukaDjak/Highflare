@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using DG.Tweening;
 public class PlayerCam : MonoBehaviour
 {
     [SerializeField] private float sensX;
@@ -36,5 +36,27 @@ public class PlayerCam : MonoBehaviour
         //rotate cam and orientation objects
         camHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+    }
+
+    //private void LateUpdate()
+    //{
+    //    ChangeParticleAlpha(rb.velocity.magnitude);
+    //}
+
+    public void DoFov(float endValue)
+    {
+        Camera.main.DOFieldOfView(endValue, 0.33f);
+    }
+
+    public void DoTilt(float zTilt)
+    {
+        transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.33f);
+    }
+
+    void ChangeParticleAlpha(float playerSpeed)
+    {
+        var main = speedPS.main;
+        if (playerSpeed <= 12) main.startColor = new Color(1f, 1f, 1f, 0f);
+        else main.startColor = new Color(1f, 1f, 1f, playerSpeed / 120);
     }
 }
