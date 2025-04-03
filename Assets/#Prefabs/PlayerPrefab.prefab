@@ -588,9 +588,11 @@ GameObject:
   - component: {fileID: 2337029042048263466}
   - component: {fileID: 744723167849850769}
   - component: {fileID: 6148837239651342033}
-  - component: {fileID: 2279792888242029255}
-  - component: {fileID: 3219353407075810750}
   - component: {fileID: 6420279729475703528}
+  - component: {fileID: 1338129448261448312}
+  - component: {fileID: 5171691368619245755}
+  - component: {fileID: 4602860867320749860}
+  - component: {fileID: 635605806917385572}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -665,49 +667,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2279792888242029255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4248363028501625375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62ae6877a59d243409a9d33c8e045662, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  orientation: {fileID: 7210653300062382759}
-  moveSpeed: 10
-  groundDrag: 6
-  jumpForce: 12
-  jumpCooldown: 0.2
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  groundCheckDistance: 1.2
-  crouchSpeed: 4
-  maxSlopeAngle: 40
-  jumpKey: 32
-  crouchKey: 306
-  isGrounded: 0
-  isSliding: 0
---- !u!114 &3219353407075810750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4248363028501625375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6677efe49ffe89d4eb9b7e5aff188659, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  orientation: {fileID: 7210653300062382759}
-  slideSpeed: 12
-  slideFriction: 0.98
-  slideGravity: 5
 --- !u!114 &6420279729475703528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -723,6 +682,118 @@ MonoBehaviour:
   whatIsGrabbable:
     serializedVersion: 2
     m_Bits: 256
+--- !u!114 &1338129448261448312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4248363028501625375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c30699c5748e5041aa62015f2691214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 10
+  slideSpeed: 30
+  wallrunSpeed: 10
+  airSpeed: 0
+  dashSpeed: 20
+  speedIncreaseMultiplier: 1.5
+  slopeIncreaseMultiplier: 2.5
+  groundDrag: 4
+  moveSpeed: 0
+  desiredMoveSpeed: 0
+  jumpForce: 12
+  jumpCooldown: 0.25
+  airMultiplier: 0.4
+  crouchSpeed: 5
+  crouchYScale: 0.5
+  jumpKey: 32
+  crouchKey: 306
+  playerHeight: 2
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 64
+  isGrounded: 0
+  maxSlopeAngle: 40
+  orientation: {fileID: 7210653300062382759}
+  state: 0
+  isSliding: 0
+  isCrouching: 0
+  wallRunning: 0
+  isClimbing: 0
+  isDashing: 0
+--- !u!114 &5171691368619245755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4248363028501625375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed9f2fc2b551f240b356da076c5ad0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orientation: {fileID: 7210653300062382759}
+  playerObj: {fileID: 2337029042048263466}
+  maxSlideTime: 0.7
+  slideForce: 200
+  slideYScale: 0.5
+  slideKey: 306
+--- !u!114 &4602860867320749860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4248363028501625375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b513146081538424ca339551400029af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orientation: {fileID: 7210653300062382759}
+  playerCam: {fileID: 2081237645022797684}
+  dashForce: 30
+  dashUpForce: 3
+  dashDuration: 0.25
+  dashDelay: 0.7
+  dashKey: 304
+--- !u!114 &635605806917385572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4248363028501625375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65446a9e1e8bc3247983604db9259087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whatIsWall:
+    serializedVersion: 2
+    m_Bits: 512
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 64
+  wallRunForce: 150
+  wallJumpUpForce: 12
+  wallJumpSideForce: 25
+  wallClimbSpeed: 3
+  maxWallRunTime: 300
+  jumpKey: 32
+  upwardsRunKey: 304
+  downwardsRunKey: 306
+  wallCheckDistance: 1
+  minJumpHeight: 0.8
+  exitWallTime: 0.5
+  useGravity: 1
+  gravityCounterForce: 40
+  orientation: {fileID: 7210653300062382759}
+  cam: {fileID: 2081237645022797684}
 --- !u!1 &4469269525722835180
 GameObject:
   m_ObjectHideFlags: 0

@@ -54,8 +54,8 @@ Material:
     - _BUILTIN_QueueControl: 1
     - _BUILTIN_QueueOffset: 0
     - _GridSize: 1.48
-    - _LineThickness: 0.05
-    - _NormalStrength: -0.3
+    - _LineThickness: 0.015
+    - _NormalStrength: -0.05
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
