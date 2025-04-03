@@ -20,12 +20,10 @@ public class Void : MonoBehaviour
         {
             if (player.position.y < deathYLevel)
             {
-                RestartScene();
+                FindObjectOfType<GameMenuManager>().ShowGameOver();
                 yield break; //stop the coroutine after restarting the scene
             }
             yield return new WaitForSeconds(0.1f); //check every 0.1 seconds - better than checking in Update()
         }
     }
-
-    void RestartScene() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 }

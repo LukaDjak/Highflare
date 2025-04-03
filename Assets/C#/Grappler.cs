@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GrapplingHook : MonoBehaviour
+public class Grappler : MonoBehaviour
 {
     [Header("Grappling Settings")]
     [SerializeField] private LayerMask grappleLayer;
