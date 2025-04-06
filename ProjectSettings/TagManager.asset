@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Grabbable
+  - Gun
   layers:
   - Default
   - TransparentFX
@@ -16,6 +17,7 @@ TagManager:
   - 
   - Grabbable
   - Wall
+  - Enemy
   - 
   - 
   - 
@@ -28,14 +30,13 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Gun
   - Grappler
   - 
   - 
   - 
   - 
-  - 
+  - NoCollision
   - Clipping
   - 
   m_SortingLayers:

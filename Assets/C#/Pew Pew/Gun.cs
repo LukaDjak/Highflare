@@ -1,0 +1,118 @@
+using UnityEngine;
+using UnityEngine.Timeline;
+
+public class Gun : MonoBehaviour
+{
+    [Header("General Settings")]
+    public bool allowButtonHold = true;
+    public KeyCode reloadKey = KeyCode.R;
+
+    [Header("Shooting Settings")]
+    public GameObject bulletPrefab;
+    public Transform firePoint;
+    public float shootForce = 20f;
+    public float spread = 0.1f;
+    public float timeBetweenShots = 0.1f;
+    public int bulletsPerTap = 1;
+
+    [Header("Magazine Settings")]
+    public int magazineSize = 12;
+    public float reloadTime = 1.5f;
+
+    [Header("Recoil Settings")]
+    public float recoilForce = 5f;
+
+    [HideInInspector] public int bulletsLeft;
+    private int bulletsShot;
+
+    private bool shooting;
+    private bool readyToShoot;
+    private bool reloading;
+
+    private Rigidbody playerRb;
+    private Camera cam;
+
+    void Start()
+    {
+        bulletsLeft = magazineSize;
+        readyToShoot = true;
+        cam = Camera.main;
+        playerRb = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
+    }
+
+    void Update() => HandleInput();
+
+    void HandleInput()
+    {
+        if (transform.parent == null) return;
+
+        if (allowButtonHold)
+            shooting = Input.GetMouseButton(0);
+        else
+            shooting = Input.GetMouseButtonDown(0);
+
+        if (Input.GetKeyDown(reloadKey) && bulletsLeft < magazineSize && !reloading)
+            StartReload();
+
+        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        {
+            bulletsShot = 0;
+            Shoot();
+        }
+    }
+
+    void Shoot()
+    {
+        readyToShoot = false;
+
+        for (int i = 0; i < bulletsPerTap; i++)
+        {
+            Vector3 direction = GetDirectionWithSpread();
+            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+            Rigidbody rb = bullet.GetComponent<Rigidbody>();
+            rb.AddForce(direction * shootForce, ForceMode.Impulse);
+        }
+
+        ApplyRecoil();
+
+        bulletsLeft--;
+        bulletsShot++;
+
+        Invoke(nameof(ResetShot), timeBetweenShots);
+    }
+
+    Vector3 GetDirectionWithSpread()
+    {
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Vector3 targetPoint = ray.GetPoint(100f);
+        Vector3 direction = targetPoint - firePoint.position;
+
+        float xSpread = Random.Range(-spread, spread);
+        float ySpread = Random.Range(-spread, spread);
+
+        return (direction + new Vector3(xSpread, ySpread, 0)).normalized;
+    }
+
+    void ApplyRecoil()
+    {
+        if (playerRb != null)
+        {
+            Vector3 recoilDir = -cam.transform.forward * recoilForce;
+            playerRb.AddForce(recoilDir, ForceMode.Impulse);
+        }
+    }
+
+    void ResetShot() => readyToShoot = true;
+
+    void StartReload()
+    {
+        reloading = true;
+        Invoke(nameof(FinishReload), reloadTime);
+    }
+
+    void FinishReload()
+    {
+        bulletsLeft = magazineSize;
+        reloading = false;
+    }
+}
