@@ -1,58 +1,74 @@
 using UnityEngine;
 
-public class GunSway : MonoBehaviour
+public class GunBob : MonoBehaviour
 {
-    [Header("Bobbing Settings")]
-    public float swayAmount = 0.1f; // How much the gun moves
-    public float swaySpeed = 4f; // Speed of the sway
-    public float swaySpeedIdle = 1f; // Speed when the player is idle
+    [Header("Sway")]
+    public float swayAmount = 0.05f;
+    public float maxSway = 0.1f;
+    public float swaySmooth = 8f;
+
+    [Header("Sway Rotation")]
+    public float rotationAmount = 4f;
+    public float maxRotation = 5f;
+    public float rotationSmooth = 12f;
+
+    [Header("Bobbing")]
+    public float bobSpeed = 8f;
+    public float bobAmount = 0.02f;
+
     private Vector3 initialPosition;
-
-    [Header("Camera-Based Sway")]
-    public float cameraSwayAmount = 0.02f; // Amount of sway relative to camera movement
-    public float cameraSwaySpeed = 2f; // Speed of the camera-based sway
-
     private Vector3 targetPosition;
-    private Vector3 smoothPosition;
-    private float swayTime = 0f;
+    private Quaternion initialRotation;
+    private Quaternion targetRotation;
+    private float bobTimer;
 
-    private bool isMoving = false;
-    private Transform playerCamera;
-
-    void Start()
+    private void Start()
     {
-        // Store the initial position of the gun
         initialPosition = transform.localPosition;
-
-        // Get the player's camera
-        playerCamera = Camera.main.transform;
+        initialRotation = transform.localRotation;
     }
 
-    void Update()
+    private void Update()
     {
-        // Determine if the player is moving or idle (you can use your existing movement script for this)
-        isMoving = Mathf.Abs(Input.GetAxis("Horizontal")) > 0.1f || Mathf.Abs(Input.GetAxis("Vertical")) > 0.1f;
+        if (transform.childCount == 0) return; 
 
-        // Adjust sway speed based on movement or idle
-        swayTime += (isMoving ? swaySpeed : swaySpeedIdle) * Time.deltaTime;
+        Vector2 mouseInput = new(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        Vector2 moveInput = new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-        // Apply the sway effect (bobbing up and down)
-        targetPosition = initialPosition + new Vector3(0, Mathf.Sin(swayTime) * swayAmount, 0);
+        // Sway position based on mouse
+        Vector3 swayOffset = new Vector3(-mouseInput.x, -mouseInput.y, 0) * swayAmount;
+        swayOffset = Vector3.ClampMagnitude(swayOffset, maxSway);
 
-        // Apply camera-based sway (horizontal and vertical movement based on camera rotation)
-        float cameraPitch = playerCamera.localRotation.eulerAngles.x;  // Up and down camera rotation
-        float cameraYaw = playerCamera.localRotation.eulerAngles.y;    // Left and right camera rotation
+        // Sway rotation based on mouse
+        Vector3 swayRot = new Vector3(mouseInput.y, mouseInput.x, -mouseInput.x) * rotationAmount;
+        swayRot = Vector3.ClampMagnitude(swayRot, maxRotation);
 
-        // Calculate sway based on camera movement
-        float swayX = Mathf.Sin(cameraYaw * Mathf.Deg2Rad) * cameraSwayAmount;
-        float swayY = Mathf.Cos(cameraPitch * Mathf.Deg2Rad) * cameraSwayAmount;
+        targetPosition = initialPosition + swayOffset;
+        targetRotation = Quaternion.Euler(swayRot) * initialRotation;
 
-        targetPosition += new Vector3(swayX, swayY, 0);
+        // Bobbing based on movement
+        if (moveInput.magnitude > 0.1f && IsGrounded()) // Optional: Replace with your own grounded check
+        {
+            bobTimer += Time.deltaTime * bobSpeed;
+            float bobX = Mathf.Sin(bobTimer) * bobAmount;
+            float bobY = Mathf.Cos(bobTimer * 2) * bobAmount;
 
-        // Smooth the transition to the new position
-        smoothPosition = Vector3.Lerp(transform.localPosition, targetPosition, Time.deltaTime * 10f);
+            targetPosition += new Vector3(bobX, bobY, 0);
+        }
+        else
+        {
+            bobTimer = 0f;
+        }
 
-        // Apply the smooth position to the gun
-        transform.localPosition = smoothPosition;
+        // Lerp to smooth motion
+        transform.SetLocalPositionAndRotation(
+            Vector3.Lerp(transform.localPosition, targetPosition, Time.deltaTime * swaySmooth), 
+            Quaternion.Slerp(transform.localRotation, targetRotation, Time.deltaTime * rotationSmooth));
+    }
+
+    bool IsGrounded()
+    {
+        // Temporary grounded check - replace with your own grounded logic
+        return Physics.Raycast(transform.position, Vector3.down, 1.1f);
     }
 }
