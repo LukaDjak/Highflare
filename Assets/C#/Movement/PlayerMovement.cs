@@ -29,8 +29,9 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody rb;
     private float desiredMoveSpeed;
-    private bool isGrounded;
     RaycastHit slopeHit;
+
+    [HideInInspector] public bool isDashing;
 
     void Start()
     {
@@ -42,8 +43,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
-
         HandleMovement();
         HandleCrouch();
         HandleJump();
@@ -51,6 +50,8 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleMovement()
     {
+        if (isDashing) return;
+
         float xInput = Input.GetAxisRaw("Horizontal");
         float zInput = Input.GetAxisRaw("Vertical");
 
@@ -65,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleJump()
     {
-        if (Input.GetKey(jumpKey) && isGrounded && Time.time >= nextJumpTime)
+        if (Input.GetKey(jumpKey) && IsGrounded() && Time.time >= nextJumpTime)
         {
             nextJumpTime = Time.time + jumpCooldown; //apply cooldown
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -108,6 +109,8 @@ public class PlayerMovement : MonoBehaviour
         }
         return false;
     }
+
+    public bool IsGrounded() => Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
 
     public Vector3 GetSlopeMoveDirection(Vector3 direction) => Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
 }
