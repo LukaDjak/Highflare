@@ -1179,15 +1179,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16777216
   maxGrappleDistance: 30
-  cam: {fileID: 6148200799981686193}
-  player: {fileID: 2337029042048263466}
-  lineOrigin: {fileID: 5370709835779489263}
-  lineRenderer: {fileID: 778474557201024030}
-  aimAssistObj: {fileID: 0}
   uiGrappleIndicator: {fileID: 0}
   canvas: {fileID: 0}
   scaleSpeed: 10
   rotationSpeed: 180
+  cam: {fileID: 6148200799981686193}
+  player: {fileID: 2337029042048263466}
+  lineOrigin: {fileID: 5370709835779489263}
+  lineRenderer: {fileID: 778474557201024030}
+  ropeShootSpeed: 10
+  ropeMaxLength: 30
+  wobbleFrequency: 2
+  wobbleAmplitude: 1
+  numSegments: 20
+  ropeSegmentLength: 1
 --- !u!120 &778474557201024030
 LineRenderer:
   serializedVersion: 2
