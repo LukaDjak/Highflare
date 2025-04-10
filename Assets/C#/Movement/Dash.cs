@@ -50,4 +50,9 @@ public class Dash : MonoBehaviour
         playerCam.DoFov(85f);
         pm.isDashing = false;
     }
+
+    public void ResetDash()
+    {
+        canDash = true;
+    }
 }

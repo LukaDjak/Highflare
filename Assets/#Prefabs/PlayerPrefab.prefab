@@ -759,20 +759,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c30699c5748e5041aa62015f2691214, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 10
+  walkSpeed: 12
   slideSpeed: 30
   wallrunSpeed: 10
   airSpeed: 0
-  dashSpeed: 20
+  dashSpeed: 25
   speedIncreaseMultiplier: 1.5
   slopeIncreaseMultiplier: 2.5
-  groundDrag: 4
+  groundDrag: 8
   moveSpeed: 0
   desiredMoveSpeed: 0
   jumpForce: 12
   jumpCooldown: 0.25
   airMultiplier: 0.4
-  crouchSpeed: 5
+  crouchSpeed: 6
   crouchYScale: 0.5
   jumpKey: 32
   crouchKey: 306
@@ -804,7 +804,7 @@ MonoBehaviour:
   orientation: {fileID: 7210653300062382759}
   playerObj: {fileID: 2337029042048263466}
   maxSlideTime: 0.7
-  slideForce: 200
+  slideForce: 220
   slideYScale: 0.5
   slideKey: 306
 --- !u!114 &4602860867320749860
@@ -846,7 +846,7 @@ MonoBehaviour:
     m_Bits: 64
   wallRunForce: 150
   wallJumpUpForce: 12
-  wallJumpSideForce: 25
+  wallJumpSideForce: 30
   wallClimbSpeed: 3
   maxWallRunTime: 300
   jumpKey: 32
@@ -856,7 +856,7 @@ MonoBehaviour:
   minJumpHeight: 0.8
   exitWallTime: 0.5
   useGravity: 1
-  gravityCounterForce: 40
+  gravityCounterForce: 30
   orientation: {fileID: 7210653300062382759}
   cam: {fileID: 2081237645022797684}
 --- !u!1 &4469269525722835180
@@ -952,6 +952,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5215396747340637880}
+  - component: {fileID: 8620600637974638432}
   m_Layer: 0
   m_Name: ItemSocket
   m_TagString: Untagged
@@ -974,6 +975,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5084169762231686642}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8620600637974638432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5838084683101760209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab1995f5ae0792d4fbce843491f3f42f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swayAmount: 0.05
+  maxSway: 0.1
+  swaySmooth: 8
+  rotationAmount: 4
+  maxRotation: 5
+  rotationSmooth: 12
+  bobSpeed: 8
+  bobAmount: 0.02
 --- !u!1 &6180626312722026550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,12 +1208,6 @@ MonoBehaviour:
   player: {fileID: 2337029042048263466}
   lineOrigin: {fileID: 5370709835779489263}
   lineRenderer: {fileID: 778474557201024030}
-  ropeShootSpeed: 10
-  ropeMaxLength: 30
-  wobbleFrequency: 2
-  wobbleAmplitude: 1
-  numSegments: 20
-  ropeSegmentLength: 1
 --- !u!120 &778474557201024030
 LineRenderer:
   serializedVersion: 2
@@ -1246,7 +1261,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.41721916
+        value: 0.17881203
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1256,11 +1271,11 @@ LineRenderer:
       - serializedVersion: 3
         time: 1
         value: 0
-        inSlope: 0
-        outSlope: 0
+        inSlope: -0.4857782
+        outSlope: -0.4857782
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0
+        inWeight: 0.1799531
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2

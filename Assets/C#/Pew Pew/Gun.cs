@@ -23,7 +23,6 @@ public class Gun : MonoBehaviour
     public float recoilForce = 5f;
 
     [HideInInspector] public int bulletsLeft;
-    private int bulletsShot;
 
     private bool shooting;
     private bool readyToShoot;
@@ -55,10 +54,7 @@ public class Gun : MonoBehaviour
             StartReload();
 
         if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
-        {
-            bulletsShot = 0;
             Shoot();
-        }
     }
 
     void Shoot()
@@ -76,21 +72,30 @@ public class Gun : MonoBehaviour
         ApplyRecoil();
 
         bulletsLeft--;
-        bulletsShot++;
-
         Invoke(nameof(ResetShot), timeBetweenShots);
     }
 
     Vector3 GetDirectionWithSpread()
     {
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        Vector3 targetPoint = ray.GetPoint(100f);
-        Vector3 direction = targetPoint - firePoint.position;
+        Vector3 targetPoint;
 
+        if (Physics.Raycast(ray, out RaycastHit hit))
+            targetPoint = hit.point;
+        else
+            targetPoint = ray.GetPoint(100f);
+
+        //direction before spread
+        Vector3 direction = (targetPoint - firePoint.position).normalized;
+
+        //apply spread on local X and Y axes
         float xSpread = Random.Range(-spread, spread);
         float ySpread = Random.Range(-spread, spread);
 
-        return (direction + new Vector3(xSpread, ySpread, 0)).normalized;
+        //spread applied in firePoint's local space then converted to world
+        Vector3 spreadDirection = Quaternion.Euler(ySpread, xSpread, 0) * direction;
+
+        return spreadDirection.normalized;
     }
 
     void ApplyRecoil()
