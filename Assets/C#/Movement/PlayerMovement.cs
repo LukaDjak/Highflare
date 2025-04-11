@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float groundDrag;
 
     [Header("Jump Settings")]
     [SerializeField] private float jumpForce;
@@ -57,6 +58,12 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 moveDirection = (orientation.right * xInput + orientation.forward * zInput).normalized;
         Vector3 targetVelocity = moveDirection * desiredMoveSpeed;
+
+        //handle ground drag
+        if (IsGrounded())
+            rb.drag = groundDrag;
+        else
+            rb.drag = 0;
 
         //maintain Y velocity while setting X/Z velocity
         rb.velocity = new Vector3(targetVelocity.x, rb.velocity.y, targetVelocity.z);

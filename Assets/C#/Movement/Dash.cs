@@ -11,9 +11,9 @@ public class Dash : MonoBehaviour
     [SerializeField] private ParticleSystem dashBurst;
 
     [Header("Dashing")]
-    public float dashForce = 20f;
-    public float dashUpForce = 5f;
-    public float dashDuration = 0.25f;
+    [SerializeField] private float dashForce = 20f;
+    [SerializeField] private float dashUpForce = 5f;
+    [SerializeField] private float dashDuration = 0.25f;
 
     [Header("Input")]
     public KeyCode dashKey = KeyCode.LeftShift;
