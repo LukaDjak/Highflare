@@ -24,14 +24,14 @@ public class Dash : MonoBehaviour
     {
         if (Input.GetKeyDown(dashKey) && canDash && !pm.IsGrounded())
             StartCoroutine(PerformDash());
-        if (pm.IsGrounded())
+        if (pm.IsGrounded() && !pm.ms.isSliding)
             canDash = true;
     }
 
     private IEnumerator PerformDash()
     {
         canDash = false;
-        pm.isDashing = true;
+        pm.ms.isDashing = true;
 
         if (dashBurst)
             dashBurst.Play();
@@ -41,14 +41,15 @@ public class Dash : MonoBehaviour
 
         Vector3 dashDirection = orientation.forward * dashForce + orientation.up * dashUpForce;
 
-        //reset Y velocity and dash
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        //reset velocity and dash
+        Vector3 horizontalVel = new(rb.velocity.x, 0f, rb.velocity.z);
+        rb.velocity -= horizontalVel; //zero horizontal velocity, preserve vertical
         rb.AddForce(dashDirection, ForceMode.Impulse);
 
         yield return new WaitForSeconds(dashDuration);
 
         playerCam.DoFov(85f);
-        pm.isDashing = false;
+        pm.ms.isDashing = false;
     }
 
     public void ResetDash() => canDash = true;

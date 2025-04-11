@@ -4,6 +4,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
+    public MovementStates ms;
     private Rigidbody rb;
 
     [Header("Movement Settings")]
@@ -26,19 +27,13 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode crouchKey = KeyCode.LeftControl;
 
     private Vector3 originalScale;
-    private float desiredMoveSpeed;
-    RaycastHit slopeHit;
-
-    [HideInInspector] public bool isDashing;
-    [HideInInspector] public bool isSliding;
-    [HideInInspector] public bool isWallRunning;
+    public RaycastHit slopeHit;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; //prevent unwanted rotation
         originalScale = transform.localScale;
-        desiredMoveSpeed = moveSpeed;
     }
 
     void Update()
@@ -46,20 +41,20 @@ public class PlayerMovement : MonoBehaviour
         Move();
         Crouch();
         Jump();
+
+        //handle ground drag
+        rb.drag = IsGrounded() ? groundDrag : 0;
     }
 
     private void Move()
     {
-        if (isDashing) return;
+        if (ms.isDashing) return;
 
         float xInput = Input.GetAxisRaw("Horizontal");
         float zInput = Input.GetAxisRaw("Vertical");
 
         Vector3 moveDirection = (orientation.right * xInput + orientation.forward * zInput).normalized;
-        Vector3 targetVelocity = moveDirection * desiredMoveSpeed;
-
-        //handle ground drag
-        rb.drag = IsGrounded()? groundDrag : 0;
+        Vector3 targetVelocity = moveDirection * ms.moveSpeed;
 
         //maintain Y velocity while setting X/Z velocity
         rb.velocity = new Vector3(targetVelocity.x, rb.velocity.y, targetVelocity.z);
@@ -79,27 +74,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void Crouch()
     {
-        if (isDashing || isWallRunning) return;
+        if (ms.isDashing || ms.isWallRunning || !IsGrounded()) return;
         if (Input.GetKeyDown(crouchKey))
         {
-            //isCrouching = true;
+            ms.isCrouching = true;
             transform.localScale = new Vector3(originalScale.x, originalScale.y * 0.5f, originalScale.z);
-            desiredMoveSpeed = crouchSpeed;
         }
         else if (Input.GetKeyUp(crouchKey))
         {
-            //isCrouching = false;
+            ms.isCrouching = false;
             transform.localScale = originalScale;
-            desiredMoveSpeed = moveSpeed;
         }
     }
 
     private void LimitVelocity()
     {
+        if (ms.keepMomentum) return;
+
         Vector3 horizontalVelocity = new(rb.velocity.x, 0f, rb.velocity.z);
-        if (horizontalVelocity.magnitude > moveSpeed)
+        if (horizontalVelocity.magnitude > ms.moveSpeed)
         {
-            Vector3 limitedVelocity = horizontalVelocity.normalized * moveSpeed;
+            Vector3 limitedVelocity = horizontalVelocity.normalized * ms.moveSpeed;
             rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
         }
     }

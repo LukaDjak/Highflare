@@ -20,7 +20,6 @@ public class WallRun : MonoBehaviour
     [SerializeField] private float wallExitCooldown = 0.2f;
 
     bool wallLeft, wallRight;
-    bool isWallRunning;
     bool exitingWall;
     float exitWallTimer;
     float wallRunTimer;
@@ -37,7 +36,7 @@ public class WallRun : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isWallRunning)
+        if (pm.ms.isWallRunning)
             WallRunMovement();
     }
 
@@ -51,7 +50,7 @@ public class WallRun : MonoBehaviour
     {
         if ((wallLeft || wallRight) && !pm.IsGrounded() && !exitingWall)
         {
-            if (!isWallRunning)
+            if (!pm.ms.isWallRunning)
                 StartWallRun();
 
             wallRunTimer -= Time.deltaTime;
@@ -63,19 +62,19 @@ public class WallRun : MonoBehaviour
         }
         else if (exitingWall)
         {
-            if (isWallRunning)
+            if (pm.ms.isWallRunning)
                 StopWallRun();
 
             exitWallTimer -= Time.deltaTime;
             if (exitWallTimer <= 0) exitingWall = false;
         }
-        else if (isWallRunning)
+        else if (pm.ms.isWallRunning)
             StopWallRun();
     }
 
     void StartWallRun()
     {
-        isWallRunning = true;
+        pm.ms.isWallRunning = true;
         wallRunTimer = maxWallRunTime;
         rb.useGravity = false;
         dash.ResetDash();
@@ -117,7 +116,7 @@ public class WallRun : MonoBehaviour
 
     void StopWallRun()
     {
-        isWallRunning = false;
+        pm.ms.isWallRunning = false;
         rb.useGravity = true;
 
         cam.DoFov(85f);
