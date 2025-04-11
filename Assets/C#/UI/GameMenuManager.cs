@@ -11,6 +11,7 @@ public class GameMenuManager : MonoBehaviour
     [SerializeField] private GameObject winMenu;
 
     private bool isPaused = false;
+    private bool isGameOver = false;
 
     private void Start()
     {
@@ -21,7 +22,7 @@ public class GameMenuManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !isGameOver)
         {
             if (isPaused)
                 ResumeGame();
@@ -43,6 +44,8 @@ public class GameMenuManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        if (isGameOver) return;
+
         Time.timeScale = 1f;
         isPaused = false;
         background.SetActive(false);
@@ -54,6 +57,7 @@ public class GameMenuManager : MonoBehaviour
 
     public void ShowGameOver()
     {
+        isGameOver = true;
         Time.timeScale = 0.5f; //slow down time
         background.SetActive(true);
         gameOverMenu.SetActive(true);
@@ -76,6 +80,7 @@ public class GameMenuManager : MonoBehaviour
 
     public void ShowWinScreen()
     {
+        isGameOver = true;
         Time.timeScale = 0.5f;
         background.SetActive(true);
         winMenu.SetActive(true);

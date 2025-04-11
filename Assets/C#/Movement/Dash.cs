@@ -51,8 +51,5 @@ public class Dash : MonoBehaviour
         pm.isDashing = false;
     }
 
-    public void ResetDash()
-    {
-        canDash = true;
-    }
+    public void ResetDash() => canDash = true;
 }

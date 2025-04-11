@@ -4,6 +4,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
+    private Rigidbody rb;
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed;
@@ -16,23 +17,21 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float groundCheckDistance = 1.2f;
     private float nextJumpTime;
 
-    [Header("Crouch Settings")]
+    [Header("Crouch & Slide Settings")]
     [SerializeField] private float crouchSpeed;
-
-    [Header("Slide Settings")]
     [SerializeField] private float maxSlopeAngle = 40f;
 
     [Header("Keybinds")]
-    [SerializeField] private KeyCode jumpKey = KeyCode.Space;
+    public KeyCode jumpKey = KeyCode.Space;
     public KeyCode crouchKey = KeyCode.LeftControl;
 
     private Vector3 originalScale;
-
-    private Rigidbody rb;
     private float desiredMoveSpeed;
     RaycastHit slopeHit;
 
     [HideInInspector] public bool isDashing;
+    [HideInInspector] public bool isSliding;
+    [HideInInspector] public bool isWallRunning;
 
     void Start()
     {
@@ -44,12 +43,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        HandleMovement();
-        HandleCrouch();
-        HandleJump();
+        Move();
+        Crouch();
+        Jump();
     }
 
-    void HandleMovement()
+    private void Move()
     {
         if (isDashing) return;
 
@@ -60,10 +59,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 targetVelocity = moveDirection * desiredMoveSpeed;
 
         //handle ground drag
-        if (IsGrounded())
-            rb.drag = groundDrag;
-        else
-            rb.drag = 0;
+        rb.drag = IsGrounded()? groundDrag : 0;
 
         //maintain Y velocity while setting X/Z velocity
         rb.velocity = new Vector3(targetVelocity.x, rb.velocity.y, targetVelocity.z);
@@ -71,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
         LimitVelocity();
     }
 
-    void HandleJump()
+    private void Jump()
     {
         if (Input.GetKey(jumpKey) && IsGrounded() && Time.time >= nextJumpTime)
         {
@@ -81,8 +77,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void HandleCrouch()
+    private void Crouch()
     {
+        if (isDashing || isWallRunning) return;
         if (Input.GetKeyDown(crouchKey))
         {
             //isCrouching = true;
@@ -97,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void LimitVelocity()
+    private void LimitVelocity()
     {
         Vector3 horizontalVelocity = new(rb.velocity.x, 0f, rb.velocity.z);
         if (horizontalVelocity.magnitude > moveSpeed)
@@ -110,14 +107,10 @@ public class PlayerMovement : MonoBehaviour
     public bool OnSlope()
     {
         if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, originalScale.y * 0.5f + 0.3f))
-        {
-            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle < maxSlopeAngle && angle != 0;
-        }
+            return Vector3.Angle(Vector3.up, slopeHit.normal) < maxSlopeAngle && Vector3.Angle(Vector3.up, slopeHit.normal) != 0;
         return false;
     }
 
     public bool IsGrounded() => Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
-
     public Vector3 GetSlopeMoveDirection(Vector3 direction) => Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
 }

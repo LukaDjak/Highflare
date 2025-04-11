@@ -1,11 +1,10 @@
-using System;
 using UnityEngine;
 
 public class Sliding : MonoBehaviour
 {
     [SerializeField] private Transform orientation;
     private PlayerMovement pm;
-    Rigidbody rb;
+    private Rigidbody rb;
 
     [Header("Sliding")]
     public float maxSlideTime;
@@ -13,16 +12,12 @@ public class Sliding : MonoBehaviour
     private float slideTimer;
 
     Vector3 originalScale;
-
-    bool isSliding = false;
-
     float xInput, zInput;
 
     private void Start()
     {
         pm = GetComponent<PlayerMovement>();
         rb = GetComponent<Rigidbody>();
-
         originalScale = transform.localScale;
     }
 
@@ -34,23 +29,21 @@ public class Sliding : MonoBehaviour
         if (Input.GetKeyDown(pm.crouchKey) && (xInput != 0 || zInput != 0))
             StartSlide();
 
-        if (Input.GetKeyUp(pm.crouchKey) && isSliding)
+        if (Input.GetKeyUp(pm.crouchKey) && pm.isSliding)
             StopSlide();
     }
 
     private void FixedUpdate()
     {
-        if (isSliding)
+        if (pm.isSliding)
             SlidingMovement();
     }
 
-
     private void StartSlide()
     {
-        //check if player is wallrunning later on
+        if (pm.isWallRunning) return;
 
-        isSliding = true;
-
+        pm.isSliding = true;
         transform.localScale = new Vector3(transform.localScale.x, originalScale.y * .5f, transform.localScale.z);
         rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
 
@@ -64,7 +57,6 @@ public class Sliding : MonoBehaviour
         if (!pm.OnSlope() || rb.velocity.y > -0.1f)
         {
             rb.AddForce(inputDirection.normalized * slideForce, ForceMode.Force);
-
             slideTimer -= Time.deltaTime;
         }
 
@@ -78,7 +70,7 @@ public class Sliding : MonoBehaviour
 
     private void StopSlide()
     {
-        isSliding = false;
+        pm.isSliding = false;
         transform.localScale = new Vector3(transform.localScale.x, originalScale.y, transform.localScale.z);
     }
 }
