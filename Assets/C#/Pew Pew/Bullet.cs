@@ -53,8 +53,7 @@ public class Bullet : MonoBehaviour
             bounceCombine = PhysicMaterialCombine.Maximum
         };
 
-        var col = GetComponent<Collider>();
-        if (col != null)
+        if (TryGetComponent<Collider>(out var col))
             col.material = physMat;
     }
 
