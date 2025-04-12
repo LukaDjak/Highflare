@@ -28,7 +28,7 @@ public class PickUpController : MonoBehaviour
 
         //raycast to find weapon
         Ray ray = new(Camera.main.transform.position, Camera.main.transform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, pickUpRange, gunLayer))
+        if (Physics.SphereCast(ray, 0.5f, out RaycastHit hit, pickUpRange, gunLayer))
         {
             if (hit.collider.CompareTag("Gun"))
                 PickUp(hit.collider.gameObject);

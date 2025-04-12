@@ -68,7 +68,7 @@ public class MovementStates : MonoBehaviour
                     desiredMoveSpeed = currentSpeed;
             }
             else
-                desiredMoveSpeed = walkSpeed + 2;
+                desiredMoveSpeed = walkSpeed;
         }
         else if (isCrouching)
         {

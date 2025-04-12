@@ -107,7 +107,7 @@ public class WallRun : MonoBehaviour
         exitWallTimer = wallExitCooldown;
 
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
-        Vector3 forceToApply = 0.4f * wallJumpForce * transform.up + wallNormal * wallJumpForce;
+        Vector3 forceToApply = 0.6f * wallJumpForce * transform.up + wallNormal * wallJumpForce;
 
         //reset y velocity and add force
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);

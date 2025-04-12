@@ -62,13 +62,7 @@ public class Bullet : MonoBehaviour
     {
         currentCollisions++;
 
-        if (currentCollisions >= maxCollisions && !hasExploded)
-        {
-            Explode();
-            return;
-        }
-
-        // Example: interact with enemy
+        //example: interact with enemy
         if (((1 << collision.gameObject.layer) & enemyLayer) != 0)
         {
             if (explodeOnImpact) Explode();
@@ -80,6 +74,12 @@ public class Bullet : MonoBehaviour
         {
             if (explodeOnImpact) Explode();
             else HandleDestructibleHit(collision.gameObject);
+        }
+
+        if (currentCollisions >= maxCollisions && !hasExploded)
+        {
+            Explode();
+            return;
         }
     }
 
@@ -93,10 +93,7 @@ public class Bullet : MonoBehaviour
             foreach (Collider col in hitColliders)
             {
                 if (col.TryGetComponent<Rigidbody>(out var hitRb))
-                {
                     hitRb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
-                }
-
                 //add explosion effect
             }
         }
@@ -105,8 +102,11 @@ public class Bullet : MonoBehaviour
 
     void HandleEnemyHit(GameObject enemy)
     {
-        // Placeholder — later we'll call damage logic or ragdoll
-        Debug.Log("Enemy hit: " + enemy.name);
+        if (enemy.TryGetComponent<Enemy>(out var hitEnemy))
+        {
+            hitEnemy.DoRagdoll(true);
+            Debug.Log("Enemy hit: " + enemy.name);
+        }
     }
 
     void HandleDestructibleHit(GameObject obj)
