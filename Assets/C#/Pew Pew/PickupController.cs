@@ -15,6 +15,7 @@ public class PickUpController : MonoBehaviour
     private GameObject equippedWeapon;
     private Rigidbody gunRb;
     private Collider gunCol;
+    private Animator gunAnim;
 
     void Update()
     {
@@ -40,6 +41,7 @@ public class PickUpController : MonoBehaviour
         equippedWeapon = weapon;
         gunRb = weapon.GetComponent<Rigidbody>();
         gunCol = weapon.GetComponent<Collider>();
+        gunAnim = weapon.GetComponent<Animator>();
 
         if (weapon.TryGetComponent<Gun>(out var gun))
             gun.enabled = true;
@@ -47,16 +49,18 @@ public class PickUpController : MonoBehaviour
         //disable physics
         gunRb.useGravity = false;
         gunCol.enabled = false;
+        gunAnim.enabled = true;
 
         //attach to socket
         weapon.transform.DOMove(itemSocket.position, 0.3f).SetEase(Ease.OutQuad);
-        weapon.transform.DORotateQuaternion(itemSocket.rotation, 0.3f).SetEase(Ease.OutQuad).OnComplete(() =>
+        weapon.transform.DORotateQuaternion(itemSocket.rotation, 0.2f).SetEase(Ease.OutQuad).OnComplete(() =>
         {
             weapon.transform.SetParent(itemSocket);
             weapon.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            weapon.transform.localRotation = Quaternion.identity;
         });
 
-        gameObject.layer = LayerMask.NameToLayer("Clipping");
+        weapon.layer = LayerMask.NameToLayer("Clipping");
 
         //reset velocity
         gunRb.velocity = Vector3.zero;
@@ -67,12 +71,13 @@ public class PickUpController : MonoBehaviour
     {
         if (equippedWeapon == null) return;
 
-        gameObject.layer = LayerMask.NameToLayer("Gun");
-
         //detach and enable physics
         equippedWeapon.transform.SetParent(null);
         gunRb.useGravity = true;
         gunCol.enabled = true;
+        gunAnim.enabled = false;
+
+        equippedWeapon.layer = LayerMask.NameToLayer("Gun");
 
         //apply force + carry player's momentum
         gunRb.velocity = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>().velocity;
@@ -85,5 +90,6 @@ public class PickUpController : MonoBehaviour
         equippedWeapon = null;
         gunRb = null;
         gunCol = null;
+        gunAnim = null;
     }
 }

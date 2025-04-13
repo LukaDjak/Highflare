@@ -30,6 +30,7 @@ public class Gun : MonoBehaviour
 
     private Rigidbody playerRb;
     private Camera cam;
+    private Animator anim;
 
     void Start()
     {
@@ -37,6 +38,7 @@ public class Gun : MonoBehaviour
         readyToShoot = true;
         cam = Camera.main;
         playerRb = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
     }
 
     void Update() => HandleInput();
@@ -70,6 +72,7 @@ public class Gun : MonoBehaviour
         }
 
         ApplyRecoil();
+        anim.SetTrigger("Shoot");
 
         bulletsLeft--;
         Invoke(nameof(ResetShot), timeBetweenShots);
@@ -112,6 +115,8 @@ public class Gun : MonoBehaviour
     void StartReload()
     {
         reloading = true;
+        anim.SetFloat("Duration", reloadTime);
+        anim.SetTrigger("Reload");
         Invoke(nameof(FinishReload), reloadTime);
     }
 

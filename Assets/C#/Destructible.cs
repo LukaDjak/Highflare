@@ -25,9 +25,9 @@ public class Destructible: MonoBehaviour
     private void DestroyObject()
     {
         Debug.Log("Fracture");
-        //if (fracturedObjectPrefab != null)
-            //Instantiate(fracturedObjectPrefab, transform.position, transform.rotation);
-        //Destroy(gameObject);
+        if (fracturedObjectPrefab != null)
+            Instantiate(fracturedObjectPrefab, transform.position, transform.rotation);
         isDestroyed = true;
+        Destroy(gameObject);
     }
 }

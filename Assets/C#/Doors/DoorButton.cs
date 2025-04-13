@@ -14,7 +14,10 @@ public class DoorButton : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, 3f))
             {
                 if (hit.collider.gameObject == gameObject)
+                {
                     door.ToggleDoor();
+                    GetComponent<ButtonFeedback>().Press();
+                }
             }
         }
     }

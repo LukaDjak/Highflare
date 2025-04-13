@@ -11,6 +11,7 @@ public class PressurePlate : MonoBehaviour
         {
             triggered = true;
             door.ToggleDoor();
+            GetComponent<ButtonFeedback>().Press();
         }
     }
 
@@ -18,5 +19,6 @@ public class PressurePlate : MonoBehaviour
     {
         triggered = false;
         door.ToggleDoor();
+        GetComponent<ButtonFeedback>().Release(); 
     }
 }
