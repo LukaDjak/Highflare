@@ -52,12 +52,11 @@ public class PickUpController : MonoBehaviour
         gunAnim.enabled = true;
 
         //attach to socket
-        weapon.transform.DOMove(itemSocket.position, 0.3f).SetEase(Ease.OutQuad);
+        weapon.transform.DOMove(itemSocket.position, 0.2f).SetEase(Ease.OutQuad);
         weapon.transform.DORotateQuaternion(itemSocket.rotation, 0.2f).SetEase(Ease.OutQuad).OnComplete(() =>
         {
             weapon.transform.SetParent(itemSocket);
             weapon.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-            weapon.transform.localRotation = Quaternion.identity;
         });
 
         weapon.layer = LayerMask.NameToLayer("Clipping");

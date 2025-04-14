@@ -4,6 +4,7 @@ public class Bullet : MonoBehaviour
 {
     [Header("References")]
     private Rigidbody rb;
+    [SerializeField] private GameObject bulletImpact;
 
     [Header("Physics Settings")]
     public bool useGravity = false;
@@ -22,7 +23,6 @@ public class Bullet : MonoBehaviour
 
     [Header("Target Interaction")]
     public LayerMask enemyLayer;
-    public LayerMask destructibleLayer;
 
     private bool hasExploded = false;
 
@@ -39,9 +39,7 @@ public class Bullet : MonoBehaviour
     {
         lifetime -= Time.deltaTime;
         if (lifetime <= 0f && !hasExploded)
-        {
             Explode();
-        }
     }
 
     void SetupPhysicsMaterial()
@@ -68,13 +66,6 @@ public class Bullet : MonoBehaviour
             else HandleEnemyHit(collision.gameObject);
         }
 
-        // Example: interact with destructible
-        if (((1 << collision.gameObject.layer) & destructibleLayer) != 0)
-        {
-            if (explodeOnImpact) Explode();
-            else HandleDestructibleHit(collision.gameObject);
-        }
-
         if (currentCollisions >= maxCollisions && !hasExploded)
         {
             Explode();
@@ -93,9 +84,12 @@ public class Bullet : MonoBehaviour
             {
                 if (col.TryGetComponent<Rigidbody>(out var hitRb))
                     hitRb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
-                //add explosion effect
+                //explosion effect
             }
         }
+
+        Quaternion impactRotation = Quaternion.Euler(Camera.main.transform.eulerAngles + new Vector3(-Camera.main.transform.eulerAngles.x * 2, 180f, 0));
+        Instantiate(bulletImpact, transform.position, impactRotation);
         Destroy(gameObject);
     }
 
@@ -105,15 +99,6 @@ public class Bullet : MonoBehaviour
         {
             hitEnemy.DoRagdoll(true);
             Debug.Log("Enemy hit: " + enemy.name);
-        }
-    }
-
-    void HandleDestructibleHit(GameObject obj)
-    {
-        // Placeholder — trigger breakable object behavior
-        if (obj.TryGetComponent(out Destructible destructible))
-        {
-            Debug.Log("Destroy" + destructible.name);
         }
     }
 

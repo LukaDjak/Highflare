@@ -26,6 +26,7 @@ public class Grab : MonoBehaviour
 
     void GrabObject()
     {
+        if (GameObject.Find("ItemSocket").transform.childCount != 0 || GameManager.isGameOver) return;
         if (Physics.Raycast(cam.position, cam.forward, out hit, 10f, whatIsGrabbable))
         {
             if (hit.transform.GetComponent<Rigidbody>() != null)

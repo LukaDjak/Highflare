@@ -11,18 +11,18 @@ public class GameMenuManager : MonoBehaviour
     [SerializeField] private GameObject winMenu;
 
     private bool isPaused = false;
-    private bool isGameOver = false;
 
     private void Start()
     {
         Time.timeScale = 1f;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        GameManager.isGameOver = false;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !isGameOver)
+        if (Input.GetKeyDown(KeyCode.Escape) && !GameManager.isGameOver)
         {
             if (isPaused)
                 ResumeGame();
@@ -44,7 +44,7 @@ public class GameMenuManager : MonoBehaviour
 
     public void ResumeGame()
     {
-        if (isGameOver) return;
+        if (GameManager.isGameOver) return;
 
         Time.timeScale = 1f;
         isPaused = false;
@@ -57,7 +57,7 @@ public class GameMenuManager : MonoBehaviour
 
     public void ShowGameOver()
     {
-        isGameOver = true;
+        GameManager.isGameOver = true;
         Time.timeScale = 0.5f; //slow down time
         background.SetActive(true);
         gameOverMenu.SetActive(true);
@@ -80,7 +80,7 @@ public class GameMenuManager : MonoBehaviour
 
     public void ShowWinScreen()
     {
-        isGameOver = true;
+        GameManager.isGameOver = true;
         Time.timeScale = 0.5f;
         background.SetActive(true);
         winMenu.SetActive(true);

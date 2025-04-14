@@ -22,6 +22,12 @@ public class Gun : MonoBehaviour
     [Header("Recoil Settings")]
     public float recoilForce = 5f;
 
+    [Header("Effects")]
+    [SerializeField] private ParticleSystem muzzleFlash;
+    [SerializeField] private AudioClip shootSound;
+    [SerializeField] private AudioClip reloadSound;
+    private AudioSource audioSource;
+
     [HideInInspector] public int bulletsLeft;
 
     private bool shooting;
@@ -38,6 +44,7 @@ public class Gun : MonoBehaviour
         readyToShoot = true;
         cam = Camera.main;
         playerRb = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
     }
 
@@ -45,7 +52,7 @@ public class Gun : MonoBehaviour
 
     void HandleInput()
     {
-        if (transform.parent == null) return;
+        if (transform.parent == null || GameManager.isGameOver) return;
 
         if (allowButtonHold)
             shooting = Input.GetMouseButton(0);
@@ -73,6 +80,11 @@ public class Gun : MonoBehaviour
 
         ApplyRecoil();
         anim.SetTrigger("Shoot");
+        muzzleFlash.Play();
+
+        audioSource.pitch = Random.Range(0.8f, 1.1f);
+        audioSource.PlayOneShot(shootSound);
+        audioSource.pitch = 1f;
 
         bulletsLeft--;
         Invoke(nameof(ResetShot), timeBetweenShots);
