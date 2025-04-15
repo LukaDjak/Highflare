@@ -92,23 +92,23 @@ public class Gun : MonoBehaviour
 
     Vector3 GetDirectionWithSpread()
     {
-        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        Vector3 targetPoint;
+        Ray ray = cam.ViewportPointToRay(new(.5f, .5f, 0));
 
+        Vector3 targetPoint;
         if (Physics.Raycast(ray, out RaycastHit hit))
             targetPoint = hit.point;
         else
-            targetPoint = ray.GetPoint(100f);
+            targetPoint = ray.GetPoint(75);
 
-        //direction before spread
-        Vector3 direction = (targetPoint - firePoint.position).normalized;
+        //calculate direction from gun to attack point
+        Vector3 directionWithoutSpread = targetPoint - firePoint.position;
 
         //apply spread on local X and Y axes
         float xSpread = Random.Range(-spread, spread);
         float ySpread = Random.Range(-spread, spread);
 
         //spread applied in firePoint's local space then converted to world
-        Vector3 spreadDirection = Quaternion.Euler(ySpread, xSpread, 0) * direction;
+        Vector3 spreadDirection = Quaternion.Euler(ySpread, xSpread, 0) * directionWithoutSpread;
 
         return spreadDirection.normalized;
     }
