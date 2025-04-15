@@ -18,8 +18,7 @@ public class MovementStates : MonoBehaviour
     [SerializeField] TMP_Text stateTxt;
     [SerializeField] TMP_Text speedTxt;
 
-    private float desiredMoveSpeed, lastDesiredMoveSpeed;
-
+    [HideInInspector] public float desiredMoveSpeed, lastDesiredMoveSpeed;
     [HideInInspector] public bool isDashing, isWallRunning, isSliding, isCrouching, keepMomentum;
 
     private Rigidbody rb;

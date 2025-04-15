@@ -6,7 +6,7 @@ public class Grappler : MonoBehaviour
     [SerializeField] private LayerMask grappleLayer;
     [SerializeField] private float maxGrappleDistance = 30f;
 
-    [Header("Spinning Thingy")]
+    [Header("UI Indicator")]
     [SerializeField] private RectTransform uiGrappleIndicator;
     [SerializeField] private Canvas canvas;
     [SerializeField] private float scaleSpeed = 5f;
@@ -15,25 +15,17 @@ public class Grappler : MonoBehaviour
     [Header("References")]
     [SerializeField] private Camera cam;
     [SerializeField] private Transform player;
-    [SerializeField] private Transform lineOrigin;
-    [SerializeField] private LineRenderer lineRenderer;
+    public Transform lineOrigin;
 
     private SpringJoint springJoint;
     private Vector3 grapplePoint;
     private bool isGrappling = false;
     private bool shouldHideIndicator = false;
 
-    void Start() => lineRenderer.positionCount = 0;
-
     void Update()
     {
-        if (Input.GetMouseButtonDown(1))
-            StartGrapple();
-        else if (Input.GetMouseButtonUp(1))
-            StopGrapple();
-
-        if (springJoint && lineRenderer.positionCount >= 2)
-            DrawRope();
+        if (Input.GetMouseButtonDown(1)) StartGrapple();
+        else if (Input.GetMouseButtonUp(1)) StopGrapple();
 
         UpdateUIIndicator();
     }
@@ -47,18 +39,14 @@ public class Grappler : MonoBehaviour
             springJoint.autoConfigureConnectedAnchor = false;
             springJoint.connectedAnchor = grapplePoint;
 
-            //hiding spinning thing, mark as grappling
-            isGrappling = shouldHideIndicator = true;
-
-            //adjusting physics properties
-            float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
-            springJoint.maxDistance = distanceFromPoint * 0.7f;
-            springJoint.minDistance = distanceFromPoint * 0.2f;
+            float distance = Vector3.Distance(player.position, grapplePoint);
+            springJoint.maxDistance = distance * 0.7f;
+            springJoint.minDistance = distance * 0.2f;
             springJoint.spring = 10f;
             springJoint.damper = 1.5f;
             springJoint.massScale = 4f;
 
-            lineRenderer.positionCount = 2;
+            isGrappling = shouldHideIndicator = true;
         }
     }
 
@@ -66,22 +54,12 @@ public class Grappler : MonoBehaviour
     {
         if (springJoint)
             Destroy(springJoint);
-        lineRenderer.positionCount = 0;
-        isGrappling = shouldHideIndicator = false;
-    }
 
-    void DrawRope()
-    {
-        if (lineRenderer.positionCount >= 2)
-        {
-            lineRenderer.SetPosition(0, lineOrigin.position);
-            lineRenderer.SetPosition(1, grapplePoint);
-        }
+        isGrappling = shouldHideIndicator = false;
     }
 
     void UpdateUIIndicator()
     {
-        //handle scale-down when grappling
         if (shouldHideIndicator)
         {
             uiGrappleIndicator.localScale = Vector3.Lerp(uiGrappleIndicator.localScale, Vector3.zero, Time.deltaTime * scaleSpeed);
@@ -89,7 +67,7 @@ public class Grappler : MonoBehaviour
             {
                 uiGrappleIndicator.localScale = Vector3.zero;
                 uiGrappleIndicator.gameObject.SetActive(false);
-                shouldHideIndicator = false; //done hiding
+                shouldHideIndicator = false;
             }
             return;
         }
@@ -102,10 +80,9 @@ public class Grappler : MonoBehaviour
 
         if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out RaycastHit hit, maxGrappleDistance, grappleLayer))
         {
-            Vector3 screenPos = cam.WorldToScreenPoint(hit.point);
+            Vector3 screenPos = cam.WorldToScreenPoint(hit.transform.position);
             uiGrappleIndicator.gameObject.SetActive(true);
             uiGrappleIndicator.position = screenPos;
-
             uiGrappleIndicator.localEulerAngles += new Vector3(0f, 0f, rotationSpeed * Time.deltaTime);
             uiGrappleIndicator.localScale = Vector3.Lerp(uiGrappleIndicator.localScale, Vector3.one, Time.deltaTime * scaleSpeed);
         }
@@ -116,4 +93,7 @@ public class Grappler : MonoBehaviour
                 uiGrappleIndicator.gameObject.SetActive(false);
         }
     }
+
+    public bool IsGrappling() => springJoint != null;
+    public Vector3 GetGrapplePoint() => grapplePoint;
 }

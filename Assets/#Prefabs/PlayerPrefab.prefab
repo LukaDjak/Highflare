@@ -862,6 +862,8 @@ MonoBehaviour:
   wallrunSpeed: 15
   stateTxt: {fileID: 0}
   speedTxt: {fileID: 0}
+  desiredMoveSpeed: 0
+  lastDesiredMoveSpeed: 0
   isDashing: 0
   isWallRunning: 0
   isSliding: 0
@@ -1019,6 +1021,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7952451057537861747}
   - component: {fileID: 8288504246448147727}
+  - component: {fileID: 7828114538731420346}
   - component: {fileID: 2940812169197216428}
   m_Layer: 0
   m_Name: Grappler
@@ -1060,12 +1063,62 @@ MonoBehaviour:
   maxGrappleDistance: 30
   uiGrappleIndicator: {fileID: 0}
   canvas: {fileID: 0}
-  scaleSpeed: 10
+  scaleSpeed: 20
   rotationSpeed: 180
   cam: {fileID: 3148901071255800547}
   player: {fileID: 7648400688229003067}
-  lineOrigin: {fileID: 0}
-  lineRenderer: {fileID: 2940812169197216428}
+  lineOrigin: {fileID: 6265827889933868848}
+--- !u!114 &7828114538731420346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7280512991476810542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7717f9a3bb986e489ab7e2bd6a6cefb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quality: 1000
+  damper: 14
+  strength: 1000
+  velocity: 20
+  waveCount: 4
+  waveHeight: 4
+  ac:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.3001086
+      outSlope: 0.3001086
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.07520361
+    - serializedVersion: 3
+      time: 0.6609071
+      value: 0.04823457
+      inSlope: -0.08092568
+      outSlope: -0.08092568
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.18110834
+      outWeight: 0.47818536
+    - serializedVersion: 3
+      time: 0.99002075
+      value: -0.0009422302
+      inSlope: -0.0043451516
+      outSlope: -0.0043451516
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!120 &2940812169197216428
 LineRenderer:
   serializedVersion: 2
