@@ -82,9 +82,8 @@ public class Gun : MonoBehaviour
         anim.SetTrigger("Shoot");
         muzzleFlash.Play();
 
-        audioSource.pitch = Random.Range(0.8f, 1.1f);
+        audioSource.pitch = Random.Range(0.9f, 1.1f);
         audioSource.PlayOneShot(shootSound);
-        audioSource.pitch = 1f;
 
         bulletsLeft--;
         Invoke(nameof(ResetShot), timeBetweenShots);
@@ -129,6 +128,8 @@ public class Gun : MonoBehaviour
         reloading = true;
         anim.SetFloat("Duration", reloadTime);
         anim.SetTrigger("Reload");
+        audioSource.pitch = 1.2f;
+        audioSource.PlayOneShot(reloadSound);
         Invoke(nameof(FinishReload), reloadTime);
     }
 

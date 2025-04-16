@@ -528,7 +528,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0918a79ff367d1d4d969af8cde434929, type: 2}
+  - {fileID: 2100000, guid: 4ae03a01e3fc4ba4581acdbfbdf06172, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4849,7 +4849,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0918a79ff367d1d4d969af8cde434929, type: 2}
+  - {fileID: 2100000, guid: 4ae03a01e3fc4ba4581acdbfbdf06172, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8268,7 +8268,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0918a79ff367d1d4d969af8cde434929, type: 2}
+  - {fileID: 2100000, guid: 4ae03a01e3fc4ba4581acdbfbdf06172, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8916,7 +8916,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IsGlobal: 1
-  priority: 0
+  priority: 1
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: d592378e2372d2645a6335b49df84419, type: 2}
@@ -9452,7 +9452,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: be7935c66d807d349811085a9b840e16, type: 2}
   - {fileID: 2100000, guid: f2e67f67f7b7f514f805c93f23f9cf00, type: 2}
-  - {fileID: 2100000, guid: 0918a79ff367d1d4d969af8cde434929, type: 2}
+  - {fileID: 2100000, guid: 4ae03a01e3fc4ba4581acdbfbdf06172, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10149,7 +10149,7 @@ MonoBehaviour:
   recoilForce: 1
   muzzleFlash: {fileID: 1291225065}
   shootSound: {fileID: 8300000, guid: 349c2f9ba618e21489e8500b2ef5caeb, type: 3}
-  reloadSound: {fileID: 0}
+  reloadSound: {fileID: 8300000, guid: 6a1619fa029316e4badb35655a030d45, type: 3}
   bulletsLeft: 0
 --- !u!1 &2949706313233468349
 GameObject:
@@ -10605,78 +10605,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3148901071255800547, guid: 26e4ad0082073344a87bde043f30d2b3,
         type: 3}
-      propertyPath: near clip plane
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148901071255800547, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_OcclusionCulling
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148901071255800547, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_BackGroundColor.a
+      propertyPath: m_Enabled
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148901071255800547, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148901071255800547, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148901071255800547, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148901071255800547, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 562038647
-      objectReference: {fileID: 0}
-    - target: {fileID: 3637987179501430881, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_Depth
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3637987179501430881, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: far clip plane
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 3637987179501430881, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: near clip plane
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3637987179501430881, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_BackGroundColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3637987179501430881, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3637987179501430881, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3637987179501430881, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3637987179501430881, guid: 26e4ad0082073344a87bde043f30d2b3,
-        type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 1073741824
       objectReference: {fileID: 0}
     - target: {fileID: 3825833727341809416, guid: 26e4ad0082073344a87bde043f30d2b3,
         type: 3}
@@ -10691,7 +10621,7 @@ PrefabInstance:
     - target: {fileID: 4875230546146770158, guid: 26e4ad0082073344a87bde043f30d2b3,
         type: 3}
       propertyPath: m_Antialiasing
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4875230546146770158, guid: 26e4ad0082073344a87bde043f30d2b3,
         type: 3}
@@ -10701,7 +10631,7 @@ PrefabInstance:
     - target: {fileID: 4875230546146770158, guid: 26e4ad0082073344a87bde043f30d2b3,
         type: 3}
       propertyPath: m_RenderPostProcessing
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5836019973370029146, guid: 26e4ad0082073344a87bde043f30d2b3,
         type: 3}
@@ -12541,7 +12471,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 0.4
-  m_Pitch: 0.9
+  m_Pitch: 1.2
   Loop: 0
   Mute: 0
   Spatialize: 0
