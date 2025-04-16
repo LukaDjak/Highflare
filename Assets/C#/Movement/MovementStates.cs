@@ -13,18 +13,20 @@ public class MovementStates : MonoBehaviour
     public float slideSpeed;
     public float dashSpeed;
     public float wallrunSpeed;
+    public float airSpeed;
+    public float grappleSpeed;
+
+    [Header("Multipliers")]
+    [SerializeField] private float speedIncreaseMultiplier;
+    [SerializeField] private float slopeIncreaseMultiplier;
 
     [Header("Debugging UI")]
     [SerializeField] TMP_Text stateTxt;
     [SerializeField] TMP_Text speedTxt;
 
-    [HideInInspector] public float desiredMoveSpeed, lastDesiredMoveSpeed;
-    [HideInInspector] public bool isDashing, isWallRunning, isSliding, isCrouching, keepMomentum;
-
+    [HideInInspector] public float desiredMoveSpeed, lastDesiredMoveSpeed, moveSpeed;
+    [HideInInspector] public bool isDashing, isWallRunning, isSliding, isCrouching, isGrappling, keepMomentum;
     private Rigidbody rb;
-    private Coroutine lerpSpeedCoroutine;
-    [HideInInspector] public float moveSpeed;
-    private float lerpDuration;
 
     private void Start()
     {
@@ -37,72 +39,82 @@ public class MovementStates : MonoBehaviour
 
     private void StateHandler()
     {
+        //DASHING
         if (isDashing)
         {
             state = MovementState.Dash;
             desiredMoveSpeed = dashSpeed;
         }
+
+        //WALLRUNNING
         else if (isWallRunning)
         {
             state = MovementState.Wallrun;
             desiredMoveSpeed = wallrunSpeed;
+
         }
+
+        else if(isGrappling)
+        {
+            state = MovementState.Grapple;
+            desiredMoveSpeed = grappleSpeed;
+            keepMomentum = true;
+        }
+
+        // SLIDING
         else if (isSliding)
         {
             state = MovementState.Slide;
 
+            //INCREASE SPEED
             if (pm.OnSlope() && rb.velocity.y < 0.1f)
             {
-                float currentSpeed = new Vector3(rb.velocity.x, 0f, rb.velocity.z).magnitude;
-
-                //only increase to slideSpeed if current speed is lower
-                if (currentSpeed < slideSpeed)
-                {
-                    desiredMoveSpeed = slideSpeed;
-                    keepMomentum = true;
-                    lerpDuration = 5f;
-                }
-                else
-                    //we're already faster, don't reduce it
-                    desiredMoveSpeed = currentSpeed;
+                desiredMoveSpeed = slideSpeed;
+                keepMomentum = true;
             }
             else
                 desiredMoveSpeed = walkSpeed;
         }
+
+        // CROUCHING
         else if (isCrouching)
         {
             state = MovementState.Crouch;
             desiredMoveSpeed = crouchSpeed;
         }
-        else if (!pm.IsGrounded())
-        {
-            state = MovementState.Air;
-            desiredMoveSpeed = moveSpeed;
-            keepMomentum = true;
-            lerpDuration = .5f;
-        }
-        else
-        {
-            if (state == MovementState.Slide)
-                keepMomentum = true; // just came from sliding
 
+        // WALKING
+        else if (pm.IsGrounded())
+        {
             state = MovementState.Walk;
             desiredMoveSpeed = walkSpeed;
-            lerpDuration = 5f;
         }
 
-
-        if (desiredMoveSpeed != lastDesiredMoveSpeed && keepMomentum)
-        {
-            if (lerpSpeedCoroutine != null)
-                StopCoroutine(lerpSpeedCoroutine);
-
-            lerpSpeedCoroutine = StartCoroutine(LerpMoveSpeed(lerpDuration));
-        }
+        // AIR
         else
-            moveSpeed = desiredMoveSpeed;
+        {
+            state = MovementState.Air;
+
+            if (moveSpeed < airSpeed)
+                desiredMoveSpeed = airSpeed;
+        }
+
+        bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
+
+        if (desiredMoveSpeedHasChanged)
+        {
+            if (keepMomentum)
+            {
+                StopAllCoroutines();
+                StartCoroutine(LerpMoveSpeed());
+            }
+            else
+                moveSpeed = desiredMoveSpeed;
+        }
 
         lastDesiredMoveSpeed = desiredMoveSpeed;
+
+        //DEACTIVATE KEEP MOMENTUM
         if (Mathf.Abs(desiredMoveSpeed - moveSpeed) < 0.1f) keepMomentum = false;
 
         UpdateUI();
@@ -119,25 +131,36 @@ public class MovementStates : MonoBehaviour
             MovementState.Slide => "Sliding",
             MovementState.Dash => "Dashing",
             MovementState.Wallrun => "Wallrunning",
+            MovementState.Grapple => "Grappling",
             _ => "Unknown, fix ur code dumba**",
         };
     }
 
-    IEnumerator LerpMoveSpeed(float duration)
+    IEnumerator LerpMoveSpeed()
     {
         float time = 0;
+        float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
         float startValue = moveSpeed;
 
-        while (time < duration)
+        while (time < difference)
         {
-            moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / duration);
-            time += Time.deltaTime;
+            moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
+
+            if (pm.OnSlope())
+            {
+                float slopeAngle = Vector3.Angle(Vector3.up, pm.slopeHit.normal);
+                float slopeAngleIncrease = 1 + (slopeAngle / 90f);
+
+                time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
+            }
+            else
+                time += Time.deltaTime * speedIncreaseMultiplier;
+
             yield return null;
         }
 
         moveSpeed = desiredMoveSpeed;
         keepMomentum = false;
-        lerpDuration = 0;
     }
 }
 
@@ -148,5 +171,6 @@ public enum MovementState
     Crouch,
     Slide,
     Dash,
-    Wallrun
+    Wallrun,
+    Grapple
 }

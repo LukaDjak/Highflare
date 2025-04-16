@@ -19,7 +19,6 @@ public class Grappler : MonoBehaviour
 
     private SpringJoint springJoint;
     private Vector3 grapplePoint;
-    private bool isGrappling = false;
     private bool shouldHideIndicator = false;
 
     void Update()
@@ -46,7 +45,7 @@ public class Grappler : MonoBehaviour
             springJoint.damper = 4f;
             springJoint.massScale = 4f;
 
-            isGrappling = shouldHideIndicator = true;
+            player.GetComponent<PlayerMovement>().ms.isGrappling = shouldHideIndicator = true;
         }
     }
 
@@ -55,7 +54,7 @@ public class Grappler : MonoBehaviour
         if (springJoint)
             Destroy(springJoint);
 
-        isGrappling = shouldHideIndicator = false;
+        player.GetComponent<PlayerMovement>().ms.isGrappling = shouldHideIndicator = false;
     }
 
     void UpdateUIIndicator()
@@ -72,7 +71,7 @@ public class Grappler : MonoBehaviour
             return;
         }
 
-        if (isGrappling)
+        if (player.GetComponent<PlayerMovement>().ms.isGrappling)
         {
             uiGrappleIndicator.gameObject.SetActive(false);
             return;

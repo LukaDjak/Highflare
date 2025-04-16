@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Crouch()
     {
-        if (ms.isDashing || ms.isWallRunning || !IsGrounded()) return;
+        if (ms.isDashing || ms.isWallRunning || !IsGrounded() || ms.isSliding) return;
         if (Input.GetKeyDown(crouchKey))
         {
             ms.isCrouching = true;

@@ -14,6 +14,10 @@ public class Sliding : MonoBehaviour
     Vector3 originalScale;
     float xInput, zInput;
 
+    private float lastSlopeSpeed;
+    private float slopeMomentumTime;
+    [SerializeField] private float momentumKeepTime = 0.5f;
+
     private void Start()
     {
         pm = GetComponent<PlayerMovement>();
@@ -41,7 +45,7 @@ public class Sliding : MonoBehaviour
 
     private void StartSlide()
     {
-        if (pm.ms.isWallRunning) return;
+        if (pm.ms.isWallRunning || pm.ms.isGrappling) return;
 
         pm.ms.isSliding = true;
         transform.localScale = new Vector3(transform.localScale.x, originalScale.y * .5f, transform.localScale.z);
@@ -49,12 +53,14 @@ public class Sliding : MonoBehaviour
 
         slideTimer = maxSlideTime;
 
-        //clamp velocity if entering slide with too much speed
-        Vector3 horizontalVelocity = new(rb.velocity.x, 0f, rb.velocity.z);
-        if (horizontalVelocity.magnitude > pm.ms.slideSpeed)
+        if (!pm.OnSlope())
         {
-            Vector3 clamped = horizontalVelocity.normalized * pm.ms.slideSpeed;
-            rb.velocity = new Vector3(clamped.x, rb.velocity.y, clamped.z);
+            Vector3 horizontalVelocity = new(rb.velocity.x, 0f, rb.velocity.z);
+            if (horizontalVelocity.magnitude > pm.ms.slideSpeed)
+            {
+                Vector3 clamped = horizontalVelocity.normalized * pm.ms.slideSpeed;
+                rb.velocity = new Vector3(clamped.x, rb.velocity.y, clamped.z);
+            }
         }
     }
 
@@ -62,24 +68,55 @@ public class Sliding : MonoBehaviour
     {
         Vector3 inputDirection = orientation.forward * zInput + orientation.right * xInput;
 
-        if (pm.IsGrounded() && (!pm.OnSlope() || rb.velocity.y > -0.1f))
+        if (pm.OnSlope())
         {
-            //flat surface slide
-            rb.AddForce(inputDirection.normalized * slideForce, ForceMode.Force);
-            slideTimer -= Time.deltaTime;
+            float slopeAngle = Vector3.Angle(Vector3.up, pm.slopeHit.normal);
+            Vector3 moveDir = pm.GetSlopeMoveDirection(inputDirection).normalized;
+
+            //check if going downhill
+            bool isGoingDownhill = Vector3.Dot(moveDir, Vector3.down) > 0f;
+
+            rb.AddForce(Vector3.down * 80f, ForceMode.Force); //stick to slope
+
+            if (isGoingDownhill)
+            {
+                //boost downhill
+                float slopeBoost = 1f + (slopeAngle / 45f);
+                rb.AddForce(slideForce * slopeBoost * moveDir, ForceMode.Force);
+
+                //save momentum and reset slide timer
+                lastSlopeSpeed = rb.velocity.magnitude;
+                slopeMomentumTime = Time.time + momentumKeepTime;
+                slideTimer = maxSlideTime;
+            }
+            else
+            {
+                //sliding up or flat slope: act like flat surface
+                rb.AddForce(slideForce * moveDir, ForceMode.Force);
+                slideTimer -= Time.fixedDeltaTime;
+
+                if (slideTimer <= 0f)
+                    StopSlide();
+            }
         }
         else
         {
-            //slope slide
-            float slopeAngle = Vector3.Angle(Vector3.up, pm.slopeHit.normal);
-            float slopeMultiplier = 2f + (slopeAngle / 45f); //more angle, more force
-            Vector3 slopeDir = pm.GetSlopeMoveDirection(inputDirection);
+            Vector3 moveDir = inputDirection.normalized;
 
-            rb.AddForce(slideForce * slopeMultiplier * slopeDir, ForceMode.Force);
+            //maintain momentum after leaving slope
+            if (Time.time < slopeMomentumTime)
+            {
+                Vector3 newVel = moveDir * lastSlopeSpeed;
+                rb.velocity = new Vector3(newVel.x, rb.velocity.y, newVel.z);
+            }
+            else
+                rb.AddForce(moveDir * slideForce, ForceMode.Force);
+
+            //decrease slide timer when off slope
+            slideTimer -= Time.fixedDeltaTime;
+            if (slideTimer <= 0f)
+                StopSlide();
         }
-
-        if (slideTimer <= 0)
-            StopSlide();
     }
 
     private void StopSlide()
