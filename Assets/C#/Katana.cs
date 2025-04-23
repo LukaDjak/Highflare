@@ -4,7 +4,10 @@ public class Katana : MonoBehaviour
 {
     [SerializeField] private ParticleSystem slashEffect;
     [SerializeField] private AudioClip slashClip;
-    
+
+    [SerializeField] private float swingCooldown = 0.6f;
+    private float nextSwingTime = 0f;
+
     private Animator animator;
     private AudioSource audioSource;
 
@@ -18,14 +21,26 @@ public class Katana : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButton(1) && Time.time >= nextSwingTime)
         {
-            swingToRight = !swingToRight;
-            animator.SetBool("SwingToRight", swingToRight);
-            animator.SetTrigger("Shing");
+            nextSwingTime = Time.time + swingCooldown;
+            SwingKatana();
+        }
+    }
 
-            if (slashClip) audioSource.PlayOneShot(slashClip);
-            if (slashEffect) slashEffect.Play();
+    private void SwingKatana()
+    {
+        swingToRight = !swingToRight;
+        animator.SetBool("SwingToRight", swingToRight);
+        animator.SetTrigger("Shing");
+
+        if (slashClip)
+            audioSource.PlayOneShot(slashClip);
+
+        if (slashEffect)
+        {
+            slashEffect.transform.localRotation = Quaternion.Euler(0, 0, swingToRight ? 0f : 180f);
+            slashEffect.Play();
         }
     }
 
@@ -33,5 +48,12 @@ public class Katana : MonoBehaviour
     public void Shing()
     {
         Debug.Log("Shing shing shing... Shing shing");
+
+        //overlap sphere
+        //if enemies in that sphere, slice them
+        //if destructible, destroy it
+        //if collided with anything, leave a shing decal
     }
+
+    //add code here for grappling towards enemies
 }

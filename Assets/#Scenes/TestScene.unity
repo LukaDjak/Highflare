@@ -2830,7 +2830,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 8570853792105811291}
+    m_TransformParent: {fileID: 9116048166818794016}
     m_Modifications:
     - target: {fileID: 1173243701402730150, guid: 74c549d1b06b6b140a1fd9536eea637f,
         type: 3}
@@ -2850,17 +2850,17 @@ PrefabInstance:
     - target: {fileID: 1173243701402730150, guid: 74c549d1b06b6b140a1fd9536eea637f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.11
-      objectReference: {fileID: 0}
-    - target: {fileID: 1173243701402730150, guid: 74c549d1b06b6b140a1fd9536eea637f,
-        type: 3}
-      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1173243701402730150, guid: 74c549d1b06b6b140a1fd9536eea637f,
         type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 1173243701402730150, guid: 74c549d1b06b6b140a1fd9536eea637f,
+        type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.64
+      value: 0.73
       objectReference: {fileID: 0}
     - target: {fileID: 1173243701402730150, guid: 74c549d1b06b6b140a1fd9536eea637f,
         type: 3}
@@ -2917,6 +2917,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: KatanaSlash
       objectReference: {fileID: 0}
+    - target: {fileID: 5503505460791601945, guid: 74c549d1b06b6b140a1fd9536eea637f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 5729379207388846900, guid: 74c549d1b06b6b140a1fd9536eea637f,
         type: 3}
       propertyPath: lengthInSec
@@ -2939,8 +2944,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7364936370289906279, guid: 74c549d1b06b6b140a1fd9536eea637f,
         type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364936370289906279, guid: 74c549d1b06b6b140a1fd9536eea637f,
+        type: 3}
       propertyPath: simulationSpeed
-      value: 1.5
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7364936370289906279, guid: 74c549d1b06b6b140a1fd9536eea637f,
+        type: 3}
+      propertyPath: startDelay.scalar
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 7364936370289906279, guid: 74c549d1b06b6b140a1fd9536eea637f,
         type: 3}
@@ -2950,17 +2965,17 @@ PrefabInstance:
     - target: {fileID: 7364936370289906279, guid: 74c549d1b06b6b140a1fd9536eea637f,
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.6392157
+      value: 0.99215686
       objectReference: {fileID: 0}
     - target: {fileID: 7364936370289906279, guid: 74c549d1b06b6b140a1fd9536eea637f,
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.4582642
+      value: 0.8163453
       objectReference: {fileID: 0}
     - target: {fileID: 7364936370289906279, guid: 74c549d1b06b6b140a1fd9536eea637f,
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.r
-      value: 0.24313724
+      value: 0.043137245
       objectReference: {fileID: 0}
     - target: {fileID: 7981800728490180044, guid: 74c549d1b06b6b140a1fd9536eea637f,
         type: 3}
@@ -11741,7 +11756,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9059582950319232993}
-  m_Mesh: {fileID: 7991704601645392608, guid: 0e956eb46361ad04e8e57d3d3e15180a, type: 3}
+  m_Mesh: {fileID: 7991704601645392608, guid: f1b71e67abbb5c14496b7b17778d1d02, type: 3}
 --- !u!1 &4719206740251291891
 GameObject:
   m_ObjectHideFlags: 0
@@ -13260,7 +13275,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: f2e67f67f7b7f514f805c93f23f9cf00, type: 2}
-  - {fileID: 2100000, guid: be7935c66d807d349811085a9b840e16, type: 2}
+  - {fileID: 2100000, guid: 4ae03a01e3fc4ba4581acdbfbdf06172, type: 2}
   - {fileID: 2100000, guid: e0f547b1eb685eb4cb7a696ce3279469, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -13880,14 +13895,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9059582950319232993}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.17364816, z: 0, w: 0.9848078}
-  m_LocalPosition: {x: -0.66, y: -0.64, z: 0.476}
-  m_LocalScale: {x: 0.7030099, y: 0.70301, z: 0.70301}
+  m_LocalRotation: {x: 0.38651755, y: -0.43954068, z: -0.53099215, w: 0.61274433}
+  m_LocalPosition: {x: -0.85, y: -0.73, z: 0.24}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1875867482}
+  m_Children: []
   m_Father: {fileID: 9116048166818794016}
-  m_LocalEulerAnglesHint: {x: 0, y: 20, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.395, y: -71.65, z: -82.108}
 --- !u!4 &8574689044385818165
 Transform:
   m_ObjectHideFlags: 0
@@ -14280,6 +14294,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slashEffect: {fileID: 1875867480}
   slashClip: {fileID: 0}
+  swingCooldown: 0.6
 --- !u!95 &9059582950319232995
 Animator:
   serializedVersion: 5
@@ -14316,6 +14331,7 @@ Transform:
   m_Children:
   - {fileID: 7019841379191957444}
   - {fileID: 8570853792105811291}
+  - {fileID: 1875867482}
   - {fileID: 7297624032087768551}
   m_Father: {fileID: 5904627782095314348}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
