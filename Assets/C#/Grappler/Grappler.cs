@@ -102,7 +102,6 @@ public class Grappler : MonoBehaviour
         }
     }
 
-
     public bool IsGrappling() => springJoint != null;
     public Vector3 GetGrapplePoint() => grapplePoint;
 }

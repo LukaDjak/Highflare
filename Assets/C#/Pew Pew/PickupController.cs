@@ -91,4 +91,28 @@ public class PickUpController : MonoBehaviour
         gunCol = null;
         gunAnim = null;
     }
+
+    public void DockEquippedWeapon()
+    {
+        if (equippedWeapon == null) return;
+
+        Transform gunTransform = equippedWeapon.transform;
+
+        gunTransform.DOKill(); //cancel any active tweens
+
+        Vector3 dockedPos = new(.3f, -.2f, -.4f);
+        Vector3 dockedRot = new(-10f, 45f, -55f);
+
+        float dockDuration = 5f / 60f;
+        float resetDelay = 15f / 60f;
+
+        gunTransform.DOLocalMove(dockedPos, dockDuration).SetEase(Ease.OutQuad);
+        gunTransform.DOLocalRotate(dockedRot, dockDuration).SetEase(Ease.OutQuad);
+
+        DOVirtual.DelayedCall(resetDelay, () =>
+        {
+            gunTransform.DOLocalMove(Vector3.zero, dockDuration).SetEase(Ease.OutQuad);
+            gunTransform.DOLocalRotate(Vector3.zero, dockDuration).SetEase(Ease.OutQuad);
+        });
+    }
 }
