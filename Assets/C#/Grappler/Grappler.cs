@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Grappler : MonoBehaviour
 {
     [Header("Grappling Settings")]
     [SerializeField] private LayerMask grappleLayer;
+    [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private float maxGrappleDistance = 30f;
 
     [Header("UI Indicator")]
@@ -23,33 +25,49 @@ public class Grappler : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(1)) StartGrapple();
-        else if (Input.GetMouseButtonUp(1)) StopGrapple();
+        if (Input.GetMouseButtonDown(1)) //enemy grappling
+            TryStartGrapple();
+        else if (Input.GetMouseButton(1) && !IsGrappling()) //grapple point grappling
+            TryStartGrapple();
+        else if (Input.GetMouseButtonUp(1)) //stop grappling when rmb is released
+            StopGrapple();
 
         UpdateUIIndicator();
     }
 
-    void StartGrapple()
+
+    private void TryStartGrapple()
     {
-        if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out RaycastHit hit, maxGrappleDistance, grappleLayer))
+        //check if the player is aiming at an enemy within range
+        if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out RaycastHit hit, maxGrappleDistance, enemyLayer))
         {
-            grapplePoint = hit.point;
-            springJoint = player.gameObject.AddComponent<SpringJoint>();
-            springJoint.autoConfigureConnectedAnchor = false;
-            springJoint.connectedAnchor = grapplePoint;
-
-            float distance = Vector3.Distance(player.position, grapplePoint);
-            springJoint.maxDistance = distance * 0.7f;
-            springJoint.minDistance = distance * 0.2f;
-            springJoint.spring = 25f;
-            springJoint.damper = 4f;
-            springJoint.massScale = 4f;
-
-            player.GetComponent<PlayerMovement>().ms.isGrappling = shouldHideIndicator = true;
+            Enemy enemy = hit.transform.GetComponent<Enemy>();
+            if (enemy != null && !enemy.isDead) //only grapple to living enemies
+                StartGrapple(hit.point);
         }
+        else if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out hit, maxGrappleDistance, grappleLayer))
+            StartGrapple(hit.point); //grapple to a point with regular spring strength
     }
 
-    void StopGrapple()
+    public void StartGrapple(Vector3 targetPoint)
+    {
+        grapplePoint = targetPoint;
+        springJoint = player.gameObject.AddComponent<SpringJoint>();
+        springJoint.autoConfigureConnectedAnchor = false;
+        springJoint.connectedAnchor = grapplePoint;
+
+        float distance = Vector3.Distance(player.position, grapplePoint);
+        springJoint.maxDistance = distance * 0.7f;  // Keep the maximum distance reasonable
+        springJoint.minDistance = 0.5f; // Set a small minimum distance to keep the player close to the target point
+        springJoint.spring = 25f;  // Use the provided spring strength
+        springJoint.damper = 1f;  // Lower damper for a smoother pull
+        springJoint.massScale = 4f;  // Adjust mass scale for proper force application
+
+        // Make sure the player is pulled by the spring joint when grappling to an enemy
+        player.GetComponent<PlayerMovement>().ms.isGrappling = shouldHideIndicator = true;
+    }
+
+    public void StopGrapple()
     {
         if (springJoint)
             Destroy(springJoint);
@@ -104,4 +122,5 @@ public class Grappler : MonoBehaviour
 
     public bool IsGrappling() => springJoint != null;
     public Vector3 GetGrapplePoint() => grapplePoint;
+    public bool IsGrappleTargetAvailable() => Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out _, maxGrappleDistance, grappleLayer);
 }

@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        if (ms.isDashing) return;
+        if (ms.isDashing || ms.isGrappling) return;
 
         float xInput = Input.GetAxisRaw("Horizontal");
         float zInput = Input.GetAxisRaw("Vertical");
