@@ -16,6 +16,7 @@ public class PickUpController : MonoBehaviour
     private Rigidbody gunRb;
     private Collider gunCol;
     private Animator gunAnim;
+    private QuickOutline outline;
 
     void Update()
     {
@@ -42,6 +43,7 @@ public class PickUpController : MonoBehaviour
         gunRb = weapon.GetComponent<Rigidbody>();
         gunCol = weapon.GetComponent<Collider>();
         gunAnim = weapon.GetComponent<Animator>();
+        outline = weapon.GetComponent<QuickOutline>();
 
         if (weapon.TryGetComponent<Gun>(out var gun))
             gun.enabled = true;
@@ -49,6 +51,7 @@ public class PickUpController : MonoBehaviour
         //disable physics
         gunRb.useGravity = false;
         gunCol.enabled = false;
+        outline.enabled = false;
         gunAnim.enabled = true;
 
         //attach to socket
@@ -74,6 +77,7 @@ public class PickUpController : MonoBehaviour
         equippedWeapon.transform.SetParent(null);
         gunRb.useGravity = true;
         gunCol.enabled = true;
+        outline.enabled = true;
         gunAnim.enabled = false;
 
         equippedWeapon.layer = LayerMask.NameToLayer("Gun");

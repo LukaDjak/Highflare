@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Grab : MonoBehaviour
 {
@@ -10,11 +11,18 @@ public class Grab : MonoBehaviour
     LineRenderer lr;
     SpringJoint joint;
 
+    [Header("Crosshair UI")]
+    [SerializeField] private Image crosshairImage;
+    [SerializeField] private Sprite crosshair;
+    [SerializeField] private Sprite grabIcon;
+
     private void Start() => cam = Camera.main.transform;
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0)) //later on, grabbing can only occur if player doesn't hold a weapon
+        CheckForGrabbable();
+
+        if (Input.GetMouseButtonDown(0))
             GrabObject();
 
         if (Input.GetMouseButtonUp(0))
@@ -22,6 +30,19 @@ public class Grab : MonoBehaviour
 
         if (grabbedObj)
             HoldGrab();
+    }
+
+    void CheckForGrabbable()
+    {
+        if (grabbedObj != null || GameObject.Find("ItemSocket").transform.childCount != 0)
+        {
+            crosshairImage.sprite = crosshair;
+            return; //while holding, don't switch sprite
+        }
+        if (Physics.Raycast(cam.position, cam.forward, out hit, 10f, whatIsGrabbable))
+            crosshairImage.sprite = grabIcon;
+        else
+            crosshairImage.sprite = crosshair;
     }
 
     void GrabObject()

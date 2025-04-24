@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Katana : MonoBehaviour
 {
@@ -51,7 +50,6 @@ public class Katana : MonoBehaviour
             {
                 if (!grappler.IsGrappling())
                     grappler.StartGrapple(grappler.GetGrapplePoint());
-
                 return; //don't swing the katana if aiming at a grapple point
             }
 
