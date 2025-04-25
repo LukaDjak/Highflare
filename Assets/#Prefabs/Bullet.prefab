@@ -150,7 +150,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletImpact: {fileID: 4965871588991335729, guid: 2b5d5ee66e46efc45bcab25fb16bc529,
     type: 3}
-  impactSound: {fileID: 8300000, guid: eba1866442e5f704c91687b157c480b9, type: 3}
+  explosion: {fileID: 8899007706382649148, guid: fa9f32ee878481744b552d31c910fee6,
+    type: 3}
   useGravity: 0
   bounciness: 0
   maxLifetime: 10

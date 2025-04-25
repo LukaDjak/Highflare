@@ -5,6 +5,7 @@ public class Bullet : MonoBehaviour
     [Header("References")]
     private Rigidbody rb;
     [SerializeField] private GameObject bulletImpact;
+    [SerializeField] private GameObject explosion;
 
     [Header("Physics Settings")]
     public bool useGravity = false;
@@ -82,9 +83,13 @@ public class Bullet : MonoBehaviour
             Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
             foreach (Collider col in hitColliders)
             {
+                if(col.CompareTag("Enemy"))
+                    col.GetComponent<Enemy>().DoRagdoll(true);
+
                 if (col.TryGetComponent<Rigidbody>(out var hitRb))
-                    hitRb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
-                //explosion effect
+                    hitRb.AddExplosionForce(explosionForce * hitRb.mass, transform.position, explosionRadius);
+
+                Instantiate(explosion, transform.position, Quaternion.identity);
             }
         }
 

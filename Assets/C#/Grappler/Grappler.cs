@@ -45,7 +45,6 @@ public class Grappler : MonoBehaviour
     {
         if (springJoint)
             Destroy(springJoint);
-
         player.GetComponent<PlayerMovement>().ms.isGrappling = false;
     }
 
