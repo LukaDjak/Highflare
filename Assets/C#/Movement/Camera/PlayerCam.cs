@@ -5,20 +5,14 @@ public class PlayerCam : MonoBehaviour
     [SerializeField] private float sensX;
     [SerializeField] private float sensY;
 
-    public Transform orientation;
-    public Transform camHolder;
+    [Header("References")]
+    [SerializeField] private Transform orientation;
+    [SerializeField] private Transform camHolder;
+    [SerializeField] private PlayerMovement pm;
+    [SerializeField] private ParticleSystem speedPs;
 
     float xRotation;
     float yRotation;
-
-    //Rigidbody rb;
-    //ParticleSystem speedPS;
-
-    //private void Start()
-    //{    
-    //    rb = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
-    //    speedPS = GetComponentInChildren<ParticleSystem>(true);
-    //}
 
     private void Update()
     {
@@ -39,11 +33,15 @@ public class PlayerCam : MonoBehaviour
     public void DoFov(float endValue) => Camera.main.DOFieldOfView(endValue, 0.33f);
     public void DoTilt(float zTilt) => transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.33f);
 
-    //private void LateUpdate() => ChangeParticleAlpha(rb.velocity.magnitude);
-    //void ChangeParticleAlpha(float playerSpeed)
-    //{
-    //    var main = speedPS.main;
-    //    if (playerSpeed <= 12) main.startColor = new Color(1f, 1f, 1f, 0f);
-    //    else main.startColor = new Color(1f, 1f, 1f, playerSpeed / 120);
-    //}
+    private void LateUpdate() => ChangeParticleAlpha();
+    void ChangeParticleAlpha()
+    {
+        var main = speedPs.main;
+        if (pm.ms.moveSpeed <= 12) speedPs.Stop();
+        else
+        {
+            if(!speedPs.isPlaying) speedPs.Play(); //optimizejšn
+            main.startColor = new Color(1f, 1f, 1f, pm.ms.moveSpeed / 50);
+        }
+    }
 }

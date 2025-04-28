@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletImpact: {fileID: 4965871588991335729, guid: 2b5d5ee66e46efc45bcab25fb16bc529,
     type: 3}
-  explosion: {fileID: 8899007706382649148, guid: fa9f32ee878481744b552d31c910fee6,
+  explosion: {fileID: 4296847197965120894, guid: fa9f32ee878481744b552d31c910fee6,
     type: 3}
   useGravity: 0
   bounciness: 0

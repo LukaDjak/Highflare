@@ -6,6 +6,7 @@ public class Katana : MonoBehaviour
     [SerializeField] private Transform hitOrigin;
     [SerializeField] private ParticleSystem slashEffect;
     [SerializeField] private AudioClip slashClip;
+    [SerializeField] private AudioClip hitClip;
     [SerializeField] private Grappler grappler;
 
     [Header("Katana Properties")]
@@ -19,15 +20,13 @@ public class Katana : MonoBehaviour
     private float nextSwingTime;
     private bool swingToRight = false;
 
-    // Grapple position & rotation
+    //grapple position & rotation
     private Vector3 defaultLocalPosition;
     private Quaternion defaultLocalRotation;
     private readonly Vector3 grappleLocalPosition = new(0.83f, -0.54f, 0.8f);
     private readonly Quaternion grappleLocalRotation = Quaternion.Euler(111f, -6f, 3f);
 
-    private Vector3 grappleKatanaLocalPos = new(0.83f, -0.54f, 0.8f);
-    private Quaternion grappleKatanaLocalRot = Quaternion.Euler(111f, -6f, 3f);
-    private readonly float transitionSpeed = 3f; // Adjusted for smooth movement
+    private readonly float transitionSpeed = 5f;
 
     private void Start()
     {
@@ -99,9 +98,9 @@ public class Katana : MonoBehaviour
                 Vector3 directionToTarget = transform.position - grappler.GetGrapplePoint();  //inverted direction for -Z axis
                 if (directionToTarget.sqrMagnitude > 0.001f)
                 {
-                    //create a temporary rotation for -Z axis
                     Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * (transitionSpeed * 0.5f));
+                    float rotateSpeed = 360f; //degrees per second
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
                 }
             }
         }
@@ -163,6 +162,7 @@ public class Katana : MonoBehaviour
         }
     }
 
+    //called on animation clip
     public void Shing()
     {
         RaycastHit[] hits = Physics.SphereCastAll(
@@ -173,6 +173,12 @@ public class Katana : MonoBehaviour
             hitMask,
             QueryTriggerInteraction.Ignore
         );
+
+        if (hits.Length > 0)
+        {
+            audioSource.pitch = Random.Range(.9f, 1.1f);
+            audioSource.PlayOneShot(hitClip);
+        }
 
         foreach (RaycastHit hit in hits)
         {
