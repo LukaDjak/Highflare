@@ -18,6 +18,9 @@ public class PickUpController : MonoBehaviour
     private Animator gunAnim;
     private QuickOutline outline;
 
+    private Tween dockTween;
+    private bool isGrappling = false;
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E)) TryPickUp();
@@ -26,9 +29,8 @@ public class PickUpController : MonoBehaviour
 
     void TryPickUp()
     {
-        if (equippedWeapon != null) return; //already holding a weapon
+        if (equippedWeapon != null) return;
 
-        //raycast to find weapon
         Ray ray = new(Camera.main.transform.position, Camera.main.transform.forward);
         if (Physics.SphereCast(ray, 0.5f, out RaycastHit hit, pickUpRange, gunLayer))
         {
@@ -48,13 +50,11 @@ public class PickUpController : MonoBehaviour
         if (weapon.TryGetComponent<Gun>(out var gun))
             gun.enabled = true;
 
-        //disable physics
         gunRb.useGravity = false;
         gunCol.enabled = false;
         outline.enabled = false;
         gunAnim.enabled = true;
 
-        //attach to socket
         weapon.transform.DOMove(itemSocket.position, 0.2f).SetEase(Ease.OutQuad);
         weapon.transform.DORotateQuaternion(itemSocket.rotation, 0.2f).SetEase(Ease.OutQuad).OnComplete(() =>
         {
@@ -64,7 +64,6 @@ public class PickUpController : MonoBehaviour
 
         weapon.layer = LayerMask.NameToLayer("Clipping");
 
-        //reset velocity
         gunRb.velocity = Vector3.zero;
         gunRb.angularVelocity = Vector3.zero;
     }
@@ -73,7 +72,6 @@ public class PickUpController : MonoBehaviour
     {
         if (equippedWeapon == null) return;
 
-        //detach and enable physics
         equippedWeapon.transform.SetParent(null);
         gunRb.useGravity = true;
         gunCol.enabled = true;
@@ -82,11 +80,9 @@ public class PickUpController : MonoBehaviour
 
         equippedWeapon.layer = LayerMask.NameToLayer("Gun");
 
-        //apply force + carry player's momentum
         gunRb.velocity = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>().velocity;
         gunRb.AddForce(Camera.main.transform.forward * dropForwardForce + Vector3.up * dropUpwardForce, ForceMode.Impulse);
 
-        //clear references
         if (equippedWeapon.TryGetComponent<Gun>(out var gun))
             gun.enabled = false;
 
@@ -96,27 +92,56 @@ public class PickUpController : MonoBehaviour
         gunAnim = null;
     }
 
-    public void DockEquippedWeapon()
+    // Called from Katana swing
+    public void DockEquippedWeaponTemporary()
     {
-        if (equippedWeapon == null) return;
+        if (equippedWeapon == null || isGrappling) return;
+
+        dockTween?.Kill();
 
         Transform gunTransform = equippedWeapon.transform;
-
-        gunTransform.DOKill(); //cancel any active tweens
-
-        Vector3 dockedPos = new(.3f, -.2f, -.4f);
-        Vector3 dockedRot = new(-10f, 45f, -55f);
-
         float dockDuration = 5f / 60f;
         float resetDelay = 15f / 60f;
 
-        gunTransform.DOLocalMove(dockedPos, dockDuration).SetEase(Ease.OutQuad);
-        gunTransform.DOLocalRotate(dockedRot, dockDuration).SetEase(Ease.OutQuad);
+        // Dock
+        gunTransform.DOLocalMove(new Vector3(.3f, -.2f, -.4f), dockDuration).SetEase(Ease.OutQuad);
+        gunTransform.DOLocalRotate(new Vector3(-10f, 45f, -55f), dockDuration).SetEase(Ease.OutQuad);
 
-        DOVirtual.DelayedCall(resetDelay, () =>
+        // Reset back to normal after short delay
+        dockTween = DOVirtual.DelayedCall(resetDelay, () =>
         {
             gunTransform.DOLocalMove(Vector3.zero, dockDuration).SetEase(Ease.OutQuad);
             gunTransform.DOLocalRotate(Vector3.zero, dockDuration).SetEase(Ease.OutQuad);
         });
+    }
+
+    // Called when grapple starts
+    public void DockWeaponForGrapple()
+    {
+        if (equippedWeapon == null) return;
+
+        isGrappling = true;
+        dockTween?.Kill();
+
+        Transform gunTransform = equippedWeapon.transform;
+        float dockDuration = 0.15f;
+
+        gunTransform.DOLocalMove(new Vector3(-0.75f, -0.13f, -0.08f), dockDuration).SetEase(Ease.OutQuad);
+        gunTransform.DOLocalRotate(new Vector3(0f, 0f, 75f), dockDuration).SetEase(Ease.OutQuad);
+    }
+
+    // Called when grapple ends
+    public void ResetWeaponAfterGrapple()
+    {
+        if (equippedWeapon == null) return;
+
+        isGrappling = false;
+        dockTween?.Kill();
+
+        Transform gunTransform = equippedWeapon.transform;
+        float dockDuration = 0.15f;
+
+        gunTransform.DOLocalMove(Vector3.zero, dockDuration).SetEase(Ease.OutQuad);
+        gunTransform.DOLocalRotate(Vector3.zero, dockDuration).SetEase(Ease.OutQuad);
     }
 }

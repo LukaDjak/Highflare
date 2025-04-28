@@ -26,6 +26,7 @@ public class Grappler : MonoBehaviour
 
     public void StartGrapple(Vector3 targetPoint)
     {
+        FindObjectOfType<PickUpController>().DockWeaponForGrapple();
         grapplePoint = targetPoint;
         springJoint = player.gameObject.AddComponent<SpringJoint>();
         springJoint.autoConfigureConnectedAnchor = false;
@@ -43,6 +44,7 @@ public class Grappler : MonoBehaviour
 
     public void StopGrapple()
     {
+        FindObjectOfType<PickUpController>().ResetWeaponAfterGrapple();
         if (springJoint)
             Destroy(springJoint);
         player.GetComponent<PlayerMovement>().ms.isGrappling = false;

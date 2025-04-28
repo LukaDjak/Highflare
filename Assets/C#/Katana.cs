@@ -27,11 +27,13 @@ public class Katana : MonoBehaviour
     private readonly Quaternion grappleLocalRotation = Quaternion.Euler(111f, -6f, 3f);
 
     private readonly float transitionSpeed = 5f;
+    private Collider col;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        col = GetComponent<Collider>();
 
         // Cache original transform
         defaultLocalPosition = transform.localPosition;
@@ -147,7 +149,7 @@ public class Katana : MonoBehaviour
         animator.SetBool("SwingToRight", swingToRight);
         animator.SetTrigger("Shing");
 
-        FindObjectOfType<PickUpController>().DockEquippedWeapon();
+        FindObjectOfType<PickUpController>().DockEquippedWeaponTemporary();
 
         if (slashClip)
         {
@@ -165,6 +167,7 @@ public class Katana : MonoBehaviour
     //called on animation clip
     public void Shing()
     {
+        col.enabled = true;
         RaycastHit[] hits = Physics.SphereCastAll(
             hitOrigin.position,
             hitRadius,
@@ -184,7 +187,10 @@ public class Katana : MonoBehaviour
         {
             if (hit.transform.CompareTag("Enemy"))
                 hit.transform.GetComponent<Enemy>().DoRagdoll(true);
+            if (hit.transform.CompareTag("Barrel"))
+                hit.transform.GetComponent<Barrel>().TakeDamage(25);
         }
+        col.enabled = false;
     }
 
     private bool IsCloseToEnemy() => Vector3.Distance(transform.position, grappler.GetGrapplePoint()) < hitRange + 2f;

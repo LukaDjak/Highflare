@@ -16,14 +16,8 @@ public class Barrel : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet"))
             Explode();
-
         else
-        {
-            health -= rb.velocity.magnitude;
-            if (health <= 0) Explode();
-        }
-
-        Debug.Log(health);
+            TakeDamage(rb.velocity.magnitude);
     }
 
     private void Explode()
@@ -49,5 +43,11 @@ public class Barrel : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0) Explode();
     }
 }
