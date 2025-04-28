@@ -12,7 +12,6 @@ public class Katana : MonoBehaviour
     [Header("Katana Properties")]
     [SerializeField] private float swingCooldown = 0.6f;
     [SerializeField] private float hitRange = 2f;
-    [SerializeField] private float hitRadius = 0.7f;
     [SerializeField] private LayerMask hitMask;
 
     private Animator animator;
@@ -28,12 +27,14 @@ public class Katana : MonoBehaviour
 
     private readonly float transitionSpeed = 5f;
     private Collider col;
+    private PickUpController controller;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         col = GetComponent<Collider>();
+        controller = FindObjectOfType<PickUpController>();
 
         // Cache original transform
         defaultLocalPosition = transform.localPosition;
@@ -52,6 +53,7 @@ public class Katana : MonoBehaviour
                 if (IsCloseToEnemy())
                 {
                     grappler.StopGrapple();
+                    controller.ResetWeaponAfterGrapple();
                     SwingKatana();
                     nextSwingTime = Time.time + swingCooldown;
                 }
@@ -60,6 +62,7 @@ public class Katana : MonoBehaviour
 
             if (grappler.TryGetGrappleTarget(out Vector3 point))
             {
+                controller.DockWeaponForGrapple();
                 grappler.StartGrapple(point);
                 return;
             }
@@ -68,8 +71,11 @@ public class Katana : MonoBehaviour
             nextSwingTime = Time.time + swingCooldown;
         }
 
-        if (Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonUp(1) && grappler.IsGrappling())
+        {
+            controller.ResetWeaponAfterGrapple();
             grappler.StopGrapple();
+        }
     }
 
     private bool reachedGrapplePose = false;
@@ -168,13 +174,15 @@ public class Katana : MonoBehaviour
     public void Shing()
     {
         col.enabled = true;
-        RaycastHit[] hits = Physics.SphereCastAll(
-            hitOrigin.position,
-            hitRadius,
+        Vector3 boxHalfExtents = new(0.05f, hitRange * 0.5f,  0.05f); //width, height, depth (half of size)
+        Quaternion boxRotation = hitOrigin.rotation * Quaternion.Euler(90f, 0f, 0f);
+
+        RaycastHit[] hits = Physics.BoxCastAll(
+            hitOrigin.position + new Vector3(0, -.2f, 0),
+            boxHalfExtents,
             hitOrigin.forward,
-            hitRange,
-            hitMask,
-            QueryTriggerInteraction.Ignore
+            boxRotation,
+            hitMask
         );
 
         if (hits.Length > 0)
@@ -189,6 +197,13 @@ public class Katana : MonoBehaviour
                 hit.transform.GetComponent<Enemy>().DoRagdoll(true);
             if (hit.transform.CompareTag("Barrel"))
                 hit.transform.GetComponent<Barrel>().TakeDamage(25);
+
+            Rigidbody rb = hit.rigidbody;
+            if (rb != null && !hit.transform.CompareTag("Player"))
+            {
+                float upwardForce = 10f * rb.mass; // you can tweak this value!
+                rb.AddForce(Vector3.up * upwardForce + GameObject.Find("Orientation").transform.forward * upwardForce / 2, ForceMode.Impulse);
+            }
         }
         col.enabled = false;
     }
@@ -199,6 +214,8 @@ public class Katana : MonoBehaviour
     {
         if (!hitOrigin) return;
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(hitOrigin.position + hitOrigin.forward * hitRange, hitRadius);
+        Vector3 boxHalfExtents = new(0.05f, hitRange * 0.5f,  0.05f);
+        Gizmos.matrix = Matrix4x4.TRS(hitOrigin.position + new Vector3(0, -.2f, 0), hitOrigin.rotation * Quaternion.Euler(90f, 0f, 0f), Vector3.one);
+        Gizmos.DrawWireCube(Vector3.zero, boxHalfExtents * 2f);
     }
 }

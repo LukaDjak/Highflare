@@ -16,6 +16,7 @@ public class PickUpController : MonoBehaviour
     private Rigidbody gunRb;
     private Collider gunCol;
     private Animator gunAnim;
+
     private QuickOutline outline;
 
     private Tween dockTween;
