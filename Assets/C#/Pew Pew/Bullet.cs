@@ -6,6 +6,8 @@ public class Bullet : MonoBehaviour
     private Rigidbody rb;
     [SerializeField] private GameObject bulletImpact;
     [SerializeField] private GameObject explosion;
+    [SerializeField] private AudioClip bulletImpactClip;
+    [SerializeField] private AudioClip explosionClip;
 
     [Header("Physics Settings")]
     public bool useGravity = false;
@@ -90,11 +92,13 @@ public class Bullet : MonoBehaviour
                     hitRb.AddExplosionForce(explosionForce * hitRb.mass, transform.position, explosionRadius);
 
                 Instantiate(explosion, transform.position, Quaternion.identity);
+                SoundManager.instance.PlaySound(explosionClip, explosion.transform.position, .7f);
             }
         }
 
         Quaternion impactRotation = Quaternion.Euler(Camera.main.transform.eulerAngles + new Vector3(-Camera.main.transform.eulerAngles.x * 2, 180f, 0));
         Instantiate(bulletImpact, transform.position, impactRotation);
+        SoundManager.instance.PlaySound(bulletImpactClip, transform.position);
         Destroy(gameObject);
     }
 

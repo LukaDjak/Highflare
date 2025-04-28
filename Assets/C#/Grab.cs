@@ -59,7 +59,7 @@ public class Grab : MonoBehaviour
                 joint.minDistance = 0f;
                 joint.maxDistance = 0f;
                 joint.damper = 2f;
-                joint.spring = 30f;
+                joint.spring = 15f;
                 joint.massScale = 10f * grabbedObj.GetComponent<Rigidbody>().mass;
 
                 grabbedObj.GetComponent<Rigidbody>().angularDrag = 5f;

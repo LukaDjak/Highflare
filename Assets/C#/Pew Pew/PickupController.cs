@@ -26,6 +26,8 @@ public class PickUpController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E)) TryPickUp();
         if (Input.GetKeyDown(KeyCode.Q)) Drop();
+
+        if (GameManager.isGameOver && equippedWeapon != null) Drop();
     }
 
     void TryPickUp()

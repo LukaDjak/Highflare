@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Timeline;
 
@@ -26,7 +27,6 @@ public class Gun : MonoBehaviour
     [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private AudioClip shootSound;
     [SerializeField] private AudioClip reloadSound;
-    private AudioSource audioSource;
 
     [HideInInspector] public int bulletsLeft;
 
@@ -44,7 +44,6 @@ public class Gun : MonoBehaviour
         readyToShoot = true;
         cam = Camera.main;
         playerRb = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
-        audioSource = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
     }
 
@@ -52,7 +51,7 @@ public class Gun : MonoBehaviour
 
     void HandleInput()
     {
-        if (transform.parent == null || GameManager.isGameOver) return;
+        if (transform.parent == null || GameManager.isGameOver || Time.timeScale == 0) return;
 
         if (allowButtonHold)
             shooting = Input.GetMouseButton(0);
@@ -82,8 +81,7 @@ public class Gun : MonoBehaviour
         anim.SetTrigger("Shoot");
         muzzleFlash.Play();
 
-        audioSource.pitch = Random.Range(0.9f, 1.1f);
-        audioSource.PlayOneShot(shootSound);
+        SoundManager.instance.PlaySound(shootSound, firePoint.position, .7f, Random.Range(.9f, 1.1f), 0);
 
         bulletsLeft--;
         Invoke(nameof(ResetShot), timeBetweenShots);
@@ -117,6 +115,8 @@ public class Gun : MonoBehaviour
         if (playerRb != null)
         {
             Vector3 recoilDir = -cam.transform.forward * recoilForce;
+
+            if(recoilForce >= 10) playerRb.velocity = Vector3.zero;
             playerRb.AddForce(recoilDir, ForceMode.Impulse);
         }
     }
@@ -126,14 +126,13 @@ public class Gun : MonoBehaviour
     void StartReload()
     {
         reloading = true;
-        anim.SetFloat("Duration", reloadTime);
+        anim.SetFloat("Duration", 2f / reloadTime);
         anim.SetTrigger("Reload");
-        audioSource.pitch = 1.2f;
-        audioSource.PlayOneShot(reloadSound);
-        Invoke(nameof(FinishReload), reloadTime);
+        SoundManager.instance.PlaySound(reloadSound, transform.position, .7f, 1.2f, 0);
     }
 
-    void FinishReload()
+    //called on animation clip
+    public void FinishReload()
     {
         bulletsLeft = magazineSize;
         reloading = false;

@@ -9,6 +9,7 @@ public class GameMenuManager : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject gameOverMenu;
     [SerializeField] private GameObject winMenu;
+    private AudioListener audioListener;
 
     private bool isPaused = false;
 
@@ -18,6 +19,7 @@ public class GameMenuManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         GameManager.isGameOver = false;
+        audioListener = Camera.main.GetComponent<AudioListener>();
     }
 
     void Update()
@@ -34,6 +36,7 @@ public class GameMenuManager : MonoBehaviour
     public void PauseGame()
     {
         Time.timeScale = 0f;
+        AudioListener.pause = true;
         isPaused = true;
         background.SetActive(true);
         pauseMenu.SetActive(true);
@@ -47,6 +50,7 @@ public class GameMenuManager : MonoBehaviour
         if (GameManager.isGameOver) return;
 
         Time.timeScale = 1f;
+        AudioListener.pause = false;
         isPaused = false;
         background.SetActive(false);
         pauseMenu.SetActive(false);

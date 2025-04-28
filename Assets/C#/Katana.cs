@@ -6,7 +6,9 @@ public class Katana : MonoBehaviour
     [SerializeField] private Transform hitOrigin;
     [SerializeField] private ParticleSystem slashEffect;
     [SerializeField] private AudioClip slashClip;
+    [SerializeField] private AudioClip grappleClip;
     [SerializeField] private AudioClip hitClip;
+    [SerializeField] private AudioClip enemyHitClip;
     [SerializeField] private Grappler grappler;
 
     [Header("Katana Properties")]
@@ -15,7 +17,6 @@ public class Katana : MonoBehaviour
     [SerializeField] private LayerMask hitMask;
 
     private Animator animator;
-    private AudioSource audioSource;
     private float nextSwingTime;
     private bool swingToRight = false;
 
@@ -32,7 +33,6 @@ public class Katana : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        audioSource = GetComponent<AudioSource>();
         col = GetComponent<Collider>();
         controller = FindObjectOfType<PickUpController>();
 
@@ -43,9 +43,11 @@ public class Katana : MonoBehaviour
 
     private void Update()
     {
+        if(GameManager.isGameOver) return;
+
         HandleTransform();
 
-        // RMB Hold (Slash / Grapple)
+        //RMB Hold (Slash / Grapple)
         if (Input.GetMouseButton(1) && Time.time >= nextSwingTime)
         {
             if (grappler.IsGrappling())
@@ -64,6 +66,8 @@ public class Katana : MonoBehaviour
             {
                 controller.DockWeaponForGrapple();
                 grappler.StartGrapple(point);
+                if (grappleClip)
+                    SoundManager.instance.PlaySound(grappleClip, transform.position, 1, Random.Range(.9f, 1.1f));
                 return;
             }
 
@@ -133,7 +137,7 @@ public class Katana : MonoBehaviour
         {
             if (animator.enabled) animator.enabled = false;
 
-            // Smoothly move to grapple position and rotation
+            //smoothly move to grapple position and rotation
             transform.SetLocalPositionAndRotation(
                 Vector3.Lerp(transform.localPosition, grappleLocalPosition, Time.deltaTime * transitionSpeed), 
                 Quaternion.Lerp(transform.localRotation, grappleLocalRotation, Time.deltaTime * transitionSpeed));
@@ -142,7 +146,7 @@ public class Katana : MonoBehaviour
         {
             if (!animator.enabled) animator.enabled = true;
 
-            // Smoothly return to original position and rotation
+            //smoothly return to original position and rotation
             transform.SetLocalPositionAndRotation(
                 Vector3.Lerp(transform.localPosition, defaultLocalPosition, Time.deltaTime * transitionSpeed), 
                 Quaternion.Lerp(transform.localRotation, defaultLocalRotation, Time.deltaTime * transitionSpeed));
@@ -158,11 +162,7 @@ public class Katana : MonoBehaviour
         FindObjectOfType<PickUpController>().DockEquippedWeaponTemporary();
 
         if (slashClip)
-        {
-            audioSource.pitch = Random.Range(0.9f, 1.1f);
-            audioSource.PlayOneShot(slashClip);
-        }
-
+            SoundManager.instance.PlaySound(slashClip, transform.position, 1, Random.Range(.9f, 1.1f), 1, transform);
         if (slashEffect)
         {
             slashEffect.transform.localRotation = Quaternion.Euler(0, 0, swingToRight ? 0f : 180f);
@@ -174,7 +174,7 @@ public class Katana : MonoBehaviour
     public void Shing()
     {
         col.enabled = true;
-        Vector3 boxHalfExtents = new(0.05f, hitRange * 0.5f,  0.05f); //width, height, depth (half of size)
+        Vector3 boxHalfExtents = new(0.05f, hitRange * 0.5f,  0.05f);
         Quaternion boxRotation = hitOrigin.rotation * Quaternion.Euler(90f, 0f, 0f);
 
         RaycastHit[] hits = Physics.BoxCastAll(
@@ -186,22 +186,23 @@ public class Katana : MonoBehaviour
         );
 
         if (hits.Length > 0)
-        {
-            audioSource.pitch = Random.Range(.9f, 1.1f);
-            audioSource.PlayOneShot(hitClip);
-        }
+            SoundManager.instance.PlaySound(hitClip, transform.position, .7f, Random.Range(.9f, 1.1f), 1, transform);
+
 
         foreach (RaycastHit hit in hits)
         {
             if (hit.transform.CompareTag("Enemy"))
+            {
+                SoundManager.instance.PlaySound(enemyHitClip, hit.transform.position);
                 hit.transform.GetComponent<Enemy>().DoRagdoll(true);
+            }
             if (hit.transform.CompareTag("Barrel"))
                 hit.transform.GetComponent<Barrel>().TakeDamage(25);
 
             Rigidbody rb = hit.rigidbody;
             if (rb != null && !hit.transform.CompareTag("Player"))
             {
-                float upwardForce = 10f * rb.mass; // you can tweak this value!
+                float upwardForce = 7f * rb.mass;
                 rb.AddForce(Vector3.up * upwardForce + GameObject.Find("Orientation").transform.forward * upwardForce / 2, ForceMode.Impulse);
             }
         }

@@ -4,6 +4,7 @@ public class Barrel : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
     [SerializeField] private GameObject explosionParticles;
+    [SerializeField] private AudioClip explosionClip;
 
     [SerializeField] private float explosionRadius;
     [SerializeField] private float explosionForce;
@@ -37,8 +38,8 @@ public class Barrel : MonoBehaviour
                 if (col.TryGetComponent<Rigidbody>(out var hitRb))
                     hitRb.AddExplosionForce(explosionForce * hitRb.mass, transform.position, explosionRadius);
 
-                GameObject explosion = Instantiate(explosionParticles, transform.position, Quaternion.identity);
-                explosion.GetComponent<AudioSource>().pitch = Random.Range(0.9f, 1.1f);
+                Instantiate(explosionParticles, transform.position, Quaternion.identity);
+                SoundManager.instance.PlaySound(explosionClip, transform.position, .7f, Random.Range(0.9f, 1.1f));
             }
         }
 
