@@ -95,7 +95,7 @@ public class PickUpController : MonoBehaviour
         gunAnim = null;
     }
 
-    // Called from Katana swing
+    //called from Katana swing
     public void DockEquippedWeaponTemporary()
     {
         if (equippedWeapon == null || isGrappling) return;
@@ -106,11 +106,11 @@ public class PickUpController : MonoBehaviour
         float dockDuration = 5f / 60f;
         float resetDelay = 15f / 60f;
 
-        // Dock
+        //dock
         gunTransform.DOLocalMove(new Vector3(.3f, -.2f, -.4f), dockDuration).SetEase(Ease.OutQuad);
         gunTransform.DOLocalRotate(new Vector3(-10f, 45f, -55f), dockDuration).SetEase(Ease.OutQuad);
 
-        // Reset back to normal after short delay
+        //reset back to normal after short delay
         dockTween = DOVirtual.DelayedCall(resetDelay, () =>
         {
             gunTransform.DOLocalMove(Vector3.zero, dockDuration).SetEase(Ease.OutQuad);
@@ -118,7 +118,7 @@ public class PickUpController : MonoBehaviour
         });
     }
 
-    // Called when grapple starts
+    //called when grapple starts
     public void DockWeaponForGrapple()
     {
         if (equippedWeapon == null) return;
@@ -133,7 +133,7 @@ public class PickUpController : MonoBehaviour
         gunTransform.DOLocalRotate(new Vector3(0f, 0f, 75f), dockDuration).SetEase(Ease.OutQuad);
     }
 
-    // Called when grapple ends
+    //called when grapple ends
     public void ResetWeaponAfterGrapple()
     {
         if (equippedWeapon == null) return;
