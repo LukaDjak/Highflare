@@ -37,7 +37,11 @@ public class WallRun : MonoBehaviour
     void FixedUpdate()
     {
         if (pm.ms.isWallRunning)
-            WallRunMovement();
+        {
+            ApplyWallGravity(); //always apply gravity
+            if (Input.GetAxisRaw("Vertical") > 0)
+                WallRunMovement(); //only apply movement when moving (logic xD)
+        }
     }
 
     void CheckForWall()
@@ -55,7 +59,11 @@ public class WallRun : MonoBehaviour
 
             wallRunTimer -= Time.deltaTime;
             if (wallRunTimer <= 0)
+            {
+                exitingWall = true;
+                exitWallTimer = wallExitCooldown;
                 StopWallRun();
+            }
 
             if (Input.GetKeyDown(jumpKey))
                 WallJump();
@@ -93,11 +101,8 @@ public class WallRun : MonoBehaviour
         if (Vector3.Dot(wallForward, orientation.forward) < 0)
             wallForward = -wallForward;
 
+        // Apply movement along the wall
         rb.velocity = new Vector3(wallForward.x * wallRunForce, rb.velocity.y, wallForward.z * wallRunForce);
-
-        //build up custom gravity over time
-        currentWallGravity += Time.deltaTime * wallGravityForce;
-        rb.AddForce(Vector3.down * currentWallGravity, ForceMode.Force);
     }
 
     private void WallJump()
@@ -112,6 +117,12 @@ public class WallRun : MonoBehaviour
         //reset y velocity and add force
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(forceToApply, ForceMode.Impulse);
+    }
+
+    void ApplyWallGravity()
+    {
+        currentWallGravity += Time.fixedDeltaTime * wallGravityForce;
+        rb.AddForce(Vector3.down * currentWallGravity, ForceMode.Force);
     }
 
     void StopWallRun()

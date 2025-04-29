@@ -158,8 +158,8 @@ MonoBehaviour:
   maxLifetime: 3
   maxCollisions: 1
   explodeOnImpact: 0
-  explosionRadius: 10
-  explosionForce: 1000
+  explosionRadius: 5
+  explosionForce: 1500
   enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
