@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -42,8 +42,10 @@ public class PlayerMovement : MonoBehaviour
         Crouch();
         Jump();
 
-        //handle ground drag
-        rb.drag = IsGrounded() ? groundDrag : 0;
+        if (ms.isGrappling)
+            rb.drag = 0; // ⚡️ disable drag while grappling
+        else
+            rb.drag = IsGrounded() ? groundDrag : 0;
     }
 
     private void Move()

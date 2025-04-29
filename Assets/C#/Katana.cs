@@ -62,10 +62,17 @@ public class Katana : MonoBehaviour
                 return;
             }
 
-            if (grappler.TryGetGrappleTarget(out Vector3 point))
+            if (grappler.TryGetGrappleTarget(out Vector3 point, out bool isEnemy))
             {
                 controller.DockWeaponForGrapple();
-                grappler.StartGrapple(point);
+                if (isEnemy)
+                {
+                    GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>().velocity = Vector3.zero;
+                    grappler.StartGrapple(point, spring: 100f, damper: 5f, massScale: 1.5f); // 💥 stronger pull
+                }
+                else
+                    grappler.StartGrapple(point); // default values
+
                 if (grappleClip)
                     SoundManager.instance.PlaySound(grappleClip, transform.position, 1, Random.Range(.9f, 1.1f));
                 return;

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 217975354156626041}
   - component: {fileID: 3846850725599134392}
   m_Layer: 11
-  m_Name: RifleBullet
+  m_Name: ExplosiveBullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -153,13 +153,13 @@ MonoBehaviour:
     type: 3}
   bulletImpactClip: {fileID: 8300000, guid: a0da4ffebb3378f4ba887fd1c5df6f0c, type: 3}
   explosionClip: {fileID: 8300000, guid: 8e56bd8c0047cf242b2070e53390ac39, type: 3}
-  useGravity: 0
-  bounciness: 0
-  maxLifetime: 10
+  useGravity: 1
+  bounciness: 0.415
+  maxLifetime: 3
   maxCollisions: 1
   explodeOnImpact: 0
-  explosionRadius: 0
-  explosionForce: 0
+  explosionRadius: 10
+  explosionForce: 1000
   enemyLayer:
     serializedVersion: 2
     m_Bits: 1024

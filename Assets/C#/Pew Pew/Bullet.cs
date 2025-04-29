@@ -90,10 +90,10 @@ public class Bullet : MonoBehaviour
 
                 if (col.TryGetComponent<Rigidbody>(out var hitRb))
                     hitRb.AddExplosionForce(explosionForce * hitRb.mass, transform.position, explosionRadius);
-
-                Instantiate(explosion, transform.position, Quaternion.identity);
-                SoundManager.instance.PlaySound(explosionClip, explosion.transform.position, .7f);
             }
+            GameObject explosionParticle = Instantiate(explosion, transform.position, Quaternion.identity);
+            Destroy(explosionParticle, 5f);
+            SoundManager.instance.PlaySound(explosionClip, transform.position, .7f);
         }
 
         Quaternion impactRotation = Quaternion.Euler(Camera.main.transform.eulerAngles + new Vector3(-Camera.main.transform.eulerAngles.x * 2, 180f, 0));

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -39,8 +39,18 @@ public class MovementStates : MonoBehaviour
 
     private void StateHandler()
     {
+        //GRAPPLING
+        if (isGrappling)
+        {
+            state = MovementState.Grapple;
+            desiredMoveSpeed = grappleSpeed;
+            keepMomentum = true;
+            UpdateUI();
+            return; // 👈 prevents any other state from being set
+        }
+
         //DASHING
-        if (isDashing)
+        else if (isDashing)
         {
             state = MovementState.Dash;
             desiredMoveSpeed = dashSpeed;
@@ -53,13 +63,7 @@ public class MovementStates : MonoBehaviour
             desiredMoveSpeed = wallrunSpeed;
 
         }
-
-        else if(isGrappling)
-        {
-            state = MovementState.Grapple;
-            desiredMoveSpeed = grappleSpeed;
-            keepMomentum = true;
-        }
+        
 
         // SLIDING
         else if (isSliding)

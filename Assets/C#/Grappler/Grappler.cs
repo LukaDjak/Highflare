@@ -24,21 +24,21 @@ public class Grappler : MonoBehaviour
 
     private void Update() => UpdateUIIndicator();
 
-    public void StartGrapple(Vector3 targetPoint)
+    public void StartGrapple(Vector3 targetPoint, float spring = 4.5f, float damper = 7f, float massScale = 4.5f)
     {
+        player.GetComponent<PlayerMovement>().ms.isGrappling = true;
         grapplePoint = targetPoint;
         springJoint = player.gameObject.AddComponent<SpringJoint>();
         springJoint.autoConfigureConnectedAnchor = false;
         springJoint.connectedAnchor = grapplePoint;
 
         float distance = Vector3.Distance(player.position, grapplePoint);
-        springJoint.maxDistance = distance * 0.7f;
-        springJoint.minDistance = 0.5f;
-        springJoint.spring = 25f;
-        springJoint.damper = 1f;
-        springJoint.massScale = 4f;
+        springJoint.maxDistance = distance * 0.8f;
+        springJoint.minDistance = 0f;
+        springJoint.spring = spring;
+        springJoint.damper = damper;
+        springJoint.massScale = massScale;
 
-        player.GetComponent<PlayerMovement>().ms.isGrappling = true;
     }
 
     public void StopGrapple()
@@ -51,28 +51,30 @@ public class Grappler : MonoBehaviour
     public bool IsGrappling() => springJoint != null;
     public Vector3 GetGrapplePoint() => grapplePoint;
 
-    public bool TryGetGrappleTarget(out Vector3 targetPoint)
+    public bool TryGetGrappleTarget(out Vector3 targetPoint, out bool isEnemy)
     {
-        //check if can grapple to the enemy first
         if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out RaycastHit hit, maxGrappleDistance, enemyLayer))
         {
             Enemy enemy = hit.transform.GetComponent<Enemy>();
             if (enemy != null && !enemy.isDead)
             {
                 targetPoint = hit.point;
+                isEnemy = true;
                 return true;
             }
         }
-        //then check if can grapple to the grapple point
         else if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out hit, maxGrappleDistance, grappleLayer))
         {
             targetPoint = hit.point;
+            isEnemy = false;
             return true;
         }
 
         targetPoint = Vector3.zero;
+        isEnemy = false;
         return false;
     }
+
 
     void UpdateUIIndicator()
     {
