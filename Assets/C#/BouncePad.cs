@@ -12,7 +12,7 @@ public class BouncePad : MonoBehaviour
         {
             if (bouncerClip)
                 SoundManager.instance.PlaySound(bouncerClip, transform.position);
-            other.collider.GetComponent<Rigidbody>().AddForce(useVelocity ? other.transform.up * bouncerStrength / 1.5f * other.collider.GetComponent<PlayerMovement>().ms.moveSpeed : 12f * bouncerStrength * other.transform.up, ForceMode.Impulse);
+            other.collider.GetComponent<Rigidbody>().AddForce(useVelocity ? other.transform.up * bouncerStrength / 1.5f * other.collider.GetComponent<OldPlayerMovement>().ms.moveSpeed : 12f * bouncerStrength * other.transform.up, ForceMode.Impulse);
             other.collider.GetComponent<Rigidbody>().AddForce(2f * bouncerStrength * other.transform.forward, ForceMode.Impulse);
         }
     }

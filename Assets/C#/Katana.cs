@@ -216,7 +216,7 @@ public class Katana : MonoBehaviour
         col.enabled = false;
     }
 
-    private bool IsCloseToEnemy() => Vector3.Distance(transform.position, grappler.GetGrapplePoint()) < hitRange + 2f;
+    private bool IsCloseToEnemy() => Vector3.Distance(transform.position, grappler.GetGrapplePoint()) < hitRange;
 
     private void OnDrawGizmosSelected()
     {

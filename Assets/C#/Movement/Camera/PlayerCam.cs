@@ -8,7 +8,7 @@ public class PlayerCam : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform orientation;
     [SerializeField] private Transform camHolder;
-    [SerializeField] private PlayerMovement pm;
+    [SerializeField] private OldPlayerMovement pm;
     [SerializeField] private ParticleSystem speedPs;
 
     float xRotation;

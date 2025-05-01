@@ -73,12 +73,14 @@ public class GameMenuManager : MonoBehaviour
     public void RestartLevel()
     {
         //add scene transition + loaderscene in the future
+        AudioListener.pause = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void GoToMainMenu()
     {
         //add scene transition + loaderscene in the future
+        AudioListener.pause = false;
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -96,6 +98,7 @@ public class GameMenuManager : MonoBehaviour
     public void AdvanceToNextLevel()
     {
         Time.timeScale = 1f;
+        AudioListener.pause = false;
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex + 1);
     }

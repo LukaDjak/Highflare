@@ -5,7 +5,7 @@ using UnityEngine;
 public class MovementStates : MonoBehaviour
 {
     public MovementState state;
-    public PlayerMovement pm;
+    public OldPlayerMovement pm;
 
     [Header("Speed")]
     public float walkSpeed;
@@ -63,14 +63,12 @@ public class MovementStates : MonoBehaviour
             desiredMoveSpeed = wallrunSpeed;
 
         }
-        
+
 
         // SLIDING
         else if (isSliding)
         {
             state = MovementState.Slide;
-
-            //INCREASE SPEED
             if (pm.OnSlope() && rb.velocity.y < 0.1f)
             {
                 desiredMoveSpeed = slideSpeed;

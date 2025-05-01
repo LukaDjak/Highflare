@@ -26,7 +26,8 @@ public class Grappler : MonoBehaviour
 
     public void StartGrapple(Vector3 targetPoint, float spring = 4.5f, float damper = 7f, float massScale = 4.5f)
     {
-        player.GetComponent<PlayerMovement>().ms.isGrappling = true;
+        //player.GetComponent<PlayerMovement>().ms.isGrappling = true;
+        player.GetComponent<YT_PlayerMovement>().isGrappling = true;
         grapplePoint = targetPoint;
         springJoint = player.gameObject.AddComponent<SpringJoint>();
         springJoint.autoConfigureConnectedAnchor = false;
@@ -38,16 +39,16 @@ public class Grappler : MonoBehaviour
         springJoint.spring = spring;
         springJoint.damper = damper;
         springJoint.massScale = massScale;
-
     }
 
     public void StopGrapple()
     {
         if (springJoint)
             Destroy(springJoint);
-        player.GetComponent<PlayerMovement>().ms.isGrappling = false;
+        player.GetComponent<YT_PlayerMovement>().isGrappling = false;
     }
 
+        //player.GetComponent<PlayerMovement>().ms.isGrappling = false;
     public bool IsGrappling() => springJoint != null;
     public Vector3 GetGrapplePoint() => grapplePoint;
 
@@ -67,10 +68,12 @@ public class Grappler : MonoBehaviour
         {
             targetPoint = hit.point;
             isEnemy = false;
+            Debug.Log(targetPoint);
             return true;
         }
 
         targetPoint = Vector3.zero;
+        Debug.Log(targetPoint);
         isEnemy = false;
         return false;
     }
@@ -90,7 +93,7 @@ public class Grappler : MonoBehaviour
             return;
         }
 
-        if (player.GetComponent<PlayerMovement>().ms.isGrappling)
+        if (/*player.GetComponent<PlayerMovement>().ms.isGrappling*/ player.GetComponent<YT_PlayerMovement>().isGrappling)
         {
             uiGrappleIndicator.gameObject.SetActive(false);
             return;

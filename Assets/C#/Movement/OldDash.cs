@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Dash : MonoBehaviour
+public class OldDash : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
     [SerializeField] private PlayerCam playerCam;
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private PlayerMovement pm;
+    [SerializeField] private OldPlayerMovement pm;
     [SerializeField] private ParticleSystem dashBurst;
 
     [Header("Dashing")]

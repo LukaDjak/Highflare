@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-public class WallRun : MonoBehaviour
+public class OldWallRun : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
     [SerializeField] private PlayerCam cam;
-    [SerializeField] private PlayerMovement pm;
+    [SerializeField] private OldPlayerMovement pm;
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private Dash dash;
+    [SerializeField] private OldDash dash;
 
     [Header("Wallrunning Settings")]
     [SerializeField] private float wallRunForce = 20f;

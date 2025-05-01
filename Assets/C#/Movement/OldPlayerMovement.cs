@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class OldPlayerMovement : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform orientation;
@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        if (ms.isDashing || ms.isGrappling) return;
+        if (ms.isDashing || ms.isGrappling || ms.isSliding) return;
 
         float xInput = Input.GetAxisRaw("Horizontal");
         float zInput = Input.GetAxisRaw("Vertical");
