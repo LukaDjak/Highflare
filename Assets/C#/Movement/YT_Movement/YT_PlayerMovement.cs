@@ -45,7 +45,7 @@ public class YT_PlayerMovement : MonoBehaviour
 
     [Header("Slope Handling")]
     [SerializeField] private float maxSlopeAngle;
-    private RaycastHit slopeHit;
+    public RaycastHit slopeHit;
     private bool exitingSlope;
 
     private float xInput, zInput;
@@ -54,8 +54,10 @@ public class YT_PlayerMovement : MonoBehaviour
 
     private float moveSpeed, desiredMoveSpeed, lastDesiredMoveSpeed;
     private MoveState state, lastState;
-    [HideInInspector] public bool isSliding, isDashing, isWallrunning, isGrappling;
+    [HideInInspector] public bool isSliding, isDashing, isWallrunning, isGrappling, isCrouching;
     bool keepMomentum;
+
+    public float GetMoveSpeed() => moveSpeed;
 
     private void Start()
     {
@@ -93,11 +95,15 @@ public class YT_PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(crouchKey) && xInput == 0 && zInput == 0)
         {
+            isCrouching = true;
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
         }
-        else if (Input.GetKeyUp(crouchKey))
+        else if (Input.GetKeyUp(crouchKey) && isCrouching)
+        {
+            isCrouching = false;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        }
     }
 
     private void StateHandler()
@@ -123,7 +129,7 @@ public class YT_PlayerMovement : MonoBehaviour
             state = MoveState.Sliding;
             desiredMoveSpeed = (OnSlope() && rb.velocity.y < .1f) ? slideSpeed : sprintSpeed;
         }
-        else if (Input.GetKey(crouchKey))
+        else if (isCrouching)
         {
             state = MoveState.Crouching;
             desiredMoveSpeed = crouchSpeed;

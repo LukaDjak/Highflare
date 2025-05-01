@@ -52,6 +52,8 @@ public class YT_Sliding : MonoBehaviour
         {
             rb.AddForce(inputDir.normalized * slideForce, ForceMode.Force);
             slideTimer -= Time.deltaTime;
+
+            rb.AddForce(-pm.slopeHit.normal * 100f, ForceMode.Force);
         }
         else
             rb.AddForce(pm.GetSlopeMoveDirection(inputDir) * slideForce, ForceMode.Force);

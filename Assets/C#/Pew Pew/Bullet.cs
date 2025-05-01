@@ -40,6 +40,7 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
+        if (useGravity) rb.AddForce(Vector3.up);
         lifetime -= Time.deltaTime;
         if (lifetime <= 0f && !hasExploded)
             Explode();

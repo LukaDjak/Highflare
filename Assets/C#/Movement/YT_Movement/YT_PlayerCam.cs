@@ -39,15 +39,15 @@ public class YT_PlayerCam : MonoBehaviour
     public void DoFov(float endValue) => Camera.main.DOFieldOfView(endValue, 0.33f);
     public void DoTilt(float zTilt) => transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.33f);
 
-    //private void LateUpdate() => ChangeParticleAlpha();
-    //void ChangeParticleAlpha()
-    //{
-    //    var main = speedPs.main;
-    //    if (pm.ms.moveSpeed <= 12) speedPs.Stop();
-    //    else
-    //    {
-    //        if (!speedPs.isPlaying) speedPs.Play(); //optimizejšn
-    //        main.startColor = new Color(1f, 1f, 1f, pm.ms.moveSpeed / 50);
-    //    }
-    //}
+    private void LateUpdate() => ChangeParticleAlpha();
+    void ChangeParticleAlpha()
+    {
+        var main = speedPs.main;
+        if (pm.GetMoveSpeed() <= 7) speedPs.Stop();
+        else
+        {
+            if (!speedPs.isPlaying) speedPs.Play(); //optimizejšn
+            main.startColor = new Color(1f, 1f, 1f, pm.GetMoveSpeed() / 50);
+        }
+    }
 }
