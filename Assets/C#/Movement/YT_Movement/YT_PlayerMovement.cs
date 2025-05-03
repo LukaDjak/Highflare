@@ -1,8 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using System.Diagnostics;
-
 
 public class YT_PlayerMovement : MonoBehaviour
 {
@@ -57,6 +55,9 @@ public class YT_PlayerMovement : MonoBehaviour
     [HideInInspector] public bool isSliding, isDashing, isWallrunning, isGrappling, isCrouching;
     bool keepMomentum;
 
+    private float movementDisabledTimer = 0f;
+    public bool MovementTemporarilyDisabled => movementDisabledTimer > 0f;
+
     public float GetMoveSpeed() => moveSpeed;
 
     private void Start()
@@ -69,17 +70,27 @@ public class YT_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        HandleInput();
-        SpeedControl();
-        StateHandler();
+        if (!MovementTemporarilyDisabled)
+        {
+            HandleInput();
+            SpeedControl();
+            StateHandler();
+        }
 
-        rb.drag = (IsGrounded() && !isGrappling) ? groundDrag : 0f;
+        rb.drag = (!MovementTemporarilyDisabled && IsGrounded() && !isGrappling) ? groundDrag : 0f;
 
         speedTxt.text = $"Speed: {rb.velocity.magnitude:F1}";
         stateTxt.text = state.ToString();
+
+        if (movementDisabledTimer > 0f)
+            movementDisabledTimer -= Time.deltaTime;
     }
 
-    private void FixedUpdate() => MovePlayer();
+    private void FixedUpdate()
+    {
+        if (!MovementTemporarilyDisabled)
+            MovePlayer();
+    }
 
     private void HandleInput()
     {
@@ -291,6 +302,13 @@ public class YT_PlayerMovement : MonoBehaviour
 
     public Vector3 GetSlopeMoveDirection(Vector3 direction) => Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     public bool IsGrounded() => Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundLayer);
+
+    public void ApplyExternalForce(Vector3 force, float disableDuration = 0.3f)
+    {
+        rb.velocity = Vector3.zero; // optional: clear current movement
+        rb.AddForce(force, ForceMode.Impulse);
+        movementDisabledTimer = disableDuration;
+    }
 }
 
 public enum MoveState { Walking, Crouching, Sliding, Dashing, Wallrunning, Grappling, Air }

@@ -38,8 +38,8 @@ public class GameManager : MonoBehaviour
         currentSceneName = loadSceneName;
     }
 
-    public void OnApplicationQuit()
-    {
-        //save the game data - records, unlocked levels, settings
-    }
+    //public void OnApplicationQuit()
+    //{
+    //    //save the game data - records, unlocked levels, settings
+    //}
 }
