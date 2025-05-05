@@ -5,38 +5,53 @@ public class YT_Sliding : MonoBehaviour
     [Header("References")]
     public Transform orientation, playerObj;
     public float maxSlideTime = 1.5f, slideForce = 400f, slideYScale = 0.5f;
-    public KeyCode slideKey = KeyCode.LeftControl;
 
-    float startYScale, slideTimer, xInput, zInput;
-    Rigidbody rb;
-    YT_PlayerMovement pm;
+    private float startYScale, slideTimer;
+    private Vector2 moveInput;
 
-    void Start()
+    private Rigidbody rb;
+    private YT_PlayerMovement pm;
+    private PlayerControls inputActions;
+
+    private void Awake()
+    {
+        inputActions = new PlayerControls();
+        inputActions.Player.Enable();
+
+        //subscribe to movement and slide actions
+        inputActions.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        inputActions.Player.Move.canceled += _ => moveInput = Vector2.zero;
+
+        inputActions.Player.Slide.performed += _ => OnSlidePressed();
+        inputActions.Player.Slide.canceled += _ => OnSlideReleased();
+    }
+
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
         pm = GetComponent<YT_PlayerMovement>();
         startYScale = playerObj.localScale.y;
     }
 
-    void Update()
-    {
-        xInput = Input.GetAxisRaw("Horizontal");
-        zInput = Input.GetAxisRaw("Vertical");
-
-        if (Input.GetKeyDown(slideKey) && (xInput != 0 || zInput != 0) && !pm.isGrappling)
-            StartSlide();
-
-        if (Input.GetKeyUp(slideKey) && pm.isSliding)
-            StopSlide();
-    }
-
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (pm.isSliding)
             SlidingMovement();
     }
 
-    void StartSlide()
+    private void OnSlidePressed()
+    {
+        if (moveInput.magnitude > 0.1f && !pm.isGrappling)
+            StartSlide();
+    }
+
+    private void OnSlideReleased()
+    {
+        if (pm.isSliding)
+            StopSlide();
+    }
+
+    private void StartSlide()
     {
         pm.isSliding = true;
         playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale, playerObj.localScale.z);
@@ -44,25 +59,23 @@ public class YT_Sliding : MonoBehaviour
         slideTimer = maxSlideTime;
     }
 
-    void SlidingMovement()
+    private void SlidingMovement()
     {
-        Vector3 inputDir = orientation.forward * zInput + orientation.right * xInput;
+        Vector3 inputDir = orientation.forward * moveInput.y + orientation.right * moveInput.x;
 
         if (!pm.OnSlope() || rb.velocity.y > -0.1f)
         {
             rb.AddForce(inputDir.normalized * slideForce, ForceMode.Force);
             slideTimer -= Time.deltaTime;
-
-            rb.AddForce(-pm.slopeHit.normal * 100f, ForceMode.Force);
+            rb.AddForce(-pm.slopeHit.normal * 100f, ForceMode.Force); // wall stickiness
         }
         else
             rb.AddForce(pm.GetSlopeMoveDirection(inputDir) * slideForce, ForceMode.Force);
-
-        if (slideTimer <= 0)
+        if (slideTimer <= 0f)
             StopSlide();
     }
 
-    void StopSlide()
+    private void StopSlide()
     {
         pm.isSliding = false;
         playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);

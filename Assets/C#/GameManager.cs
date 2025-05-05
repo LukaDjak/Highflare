@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Camera loaderCamera;
     private string currentSceneName;
 
+    public static Settings settings;
+
     private void Awake()
     {
         if (instance == null)
@@ -17,7 +19,17 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
+        settings ??= new Settings();
+
+        settings.sensX = PlayerPrefs.GetFloat("SensX", 1f);
+        settings.sensY = PlayerPrefs.GetFloat("SensY", 1f);
+        settings.audioVolume = PlayerPrefs.GetFloat("Audio", 1f);
+        settings.musicVolume = PlayerPrefs.GetFloat("Music", 1f);
+
+        //load saved game (if exists)
+
         //load main menu scene
+        //LoadScene("MainMenu");
     }
 
     public void LoadScene(string loadSceneName, string unloadSceneName = null)
@@ -38,8 +50,19 @@ public class GameManager : MonoBehaviour
         currentSceneName = loadSceneName;
     }
 
-    //public void OnApplicationQuit()
-    //{
-    //    //save the game data - records, unlocked levels, settings
-    //}
+    public void OnApplicationQuit()
+    {
+        //add: save the game
+        PlayerPrefs.SetFloat("SensX", settings.sensX);
+        PlayerPrefs.SetFloat("SensY", settings.sensY);
+        PlayerPrefs.SetFloat("Audio", settings.audioVolume);
+        PlayerPrefs.SetFloat("Music", settings.musicVolume);
+        PlayerPrefs.Save();
+    }
+}
+
+public class Settings
+{
+    public float sensX, sensY;
+    public float audioVolume, musicVolume;
 }

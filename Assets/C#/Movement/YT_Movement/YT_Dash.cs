@@ -7,16 +7,28 @@ public class YT_Dash : MonoBehaviour
     private Rigidbody rb;
     private YT_PlayerMovement pm;
 
-    [Header("Dash")]
+    [Header("Dash Settings")]
     [SerializeField] private float dashForce;
     [SerializeField] private float dashUpForce;
     [SerializeField] private float dashDuration;
 
-    [Header("Input")]
-    public KeyCode dashKey = KeyCode.LeftShift;
-
+    private PlayerControls input;
     private bool canDash = true;
-    Vector3 force;
+    private Vector3 force;
+
+    private void Awake() => input = new PlayerControls();
+
+    private void OnEnable()
+    {
+        input.Player.Enable();
+        input.Player.Dash.performed += ctx => TryDash(); // Subscribe to dash input
+    }
+
+    private void OnDisable()
+    {
+        input.Player.Dash.performed -= ctx => TryDash(); // Unsubscribe
+        input.Player.Disable();
+    }
 
     private void Start()
     {
@@ -26,10 +38,14 @@ public class YT_Dash : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(dashKey) && canDash && !pm.IsGrounded())
-            PerformDash();
         if ((pm.IsGrounded() && !pm.isSliding) || pm.isWallrunning)
             canDash = true;
+    }
+
+    private void TryDash()
+    {
+        if (canDash && !pm.IsGrounded())
+            PerformDash();
     }
 
     private void PerformDash()
@@ -41,7 +57,6 @@ public class YT_Dash : MonoBehaviour
         //CameraShake.Instance.Shake(3f, 0.2f);
 
         force = orientation.forward * dashForce + orientation.up * dashUpForce;
-
 
         Invoke(nameof(ApplyDashForce), 0.0025f);
         Invoke(nameof(ResetDash), dashDuration);

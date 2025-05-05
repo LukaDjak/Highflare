@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Windows;
 
 public class Katana : MonoBehaviour
 {
@@ -29,6 +30,18 @@ public class Katana : MonoBehaviour
     private readonly float transitionSpeed = 5f;
     private Collider col;
     private PickUpController controller;
+    private bool isUsingKatana;
+
+    private PlayerControls input;
+    private void Awake()
+    {
+        input = new PlayerControls();
+        input.Player.KatanaGrapple.started += _ => isUsingKatana = true;
+        input.Player.KatanaGrapple.canceled += _ => OnKatanaRelease();
+    }
+
+    private void OnEnable() => input.Enable();
+    private void OnDisable() => input.Disable();
 
     private void Start()
     {
@@ -43,12 +56,10 @@ public class Katana : MonoBehaviour
 
     private void Update()
     {
-        if(GameManager.isGameOver) return;
-
+        if (GameManager.isGameOver) return;
         HandleTransform();
 
-        //RMB Hold (Slash / Grapple)
-        if (Input.GetMouseButton(1) && Time.time >= nextSwingTime)
+        if (isUsingKatana && Time.time >= nextSwingTime)
         {
             if (grappler.IsGrappling())
             {
@@ -68,10 +79,10 @@ public class Katana : MonoBehaviour
                 if (isEnemy)
                 {
                     GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>().velocity = Vector3.zero;
-                    grappler.StartGrapple(point, spring: 100f, damper: 5f, massScale: 1.5f); // 💥 stronger pull
+                    grappler.StartGrapple(point, spring: 100f, damper: 5f, massScale: 1.5f);
                 }
                 else
-                    grappler.StartGrapple(point); // default values
+                    grappler.StartGrapple(point);
 
                 if (grappleClip)
                     SoundManager.instance.PlaySound(grappleClip, transform.position, 1, Random.Range(.9f, 1.1f));
@@ -81,8 +92,13 @@ public class Katana : MonoBehaviour
             SwingKatana();
             nextSwingTime = Time.time + swingCooldown;
         }
+    }
 
-        if (Input.GetMouseButtonUp(1) && grappler.IsGrappling())
+    private void OnKatanaRelease()
+    {
+        isUsingKatana = false;
+
+        if (grappler.IsGrappling())
         {
             controller.ResetWeaponAfterGrapple();
             grappler.StopGrapple();

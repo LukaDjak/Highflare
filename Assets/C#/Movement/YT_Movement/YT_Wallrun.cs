@@ -39,6 +39,23 @@ public class YT_Wallrun : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
 
+    private PlayerControls input;
+
+    private void Awake()
+    {
+        input = new PlayerControls();
+    }
+
+    private void OnEnable()
+    {
+        input.Player.Enable();
+    }
+
+    private void OnDisable()
+    {
+        input.Player.Disable();
+    }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -47,6 +64,10 @@ public class YT_Wallrun : MonoBehaviour
 
     private void Update()
     {
+        Vector2 move = input.Player.Move.ReadValue<Vector2>();
+        horizontalInput = move.x;
+        verticalInput = move.y;
+
         CheckForWalls();
         StateMachine();
     }
@@ -70,50 +91,37 @@ public class YT_Wallrun : MonoBehaviour
 
     private void StateMachine()
     {
-        // Get Inputs
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
-
-        // Check if looking too directly into wall
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
         float lookDot = Vector3.Dot(orientation.forward.normalized, -wallNormal);
         bool lookingIntoWall = lookDot > 0.5f;
 
-        // State 1 - Wallrunning
+        // Start Wallrun
         if ((wallLeft || wallRight) && verticalInput > 0 && IsAboveGround() && !exitingWall && !lookingIntoWall)
         {
             if (!pm.isWallrunning)
                 StartWallRun();
 
-            // Timer countdown
-            if (wallRunTimer > 0)
-                wallRunTimer -= Time.deltaTime;
-
-            if (wallRunTimer <= 0 && pm.isWallrunning)
+            wallRunTimer -= Time.deltaTime;
+            if (wallRunTimer <= 0)
             {
                 exitingWall = true;
                 exitWallTimer = exitWallTime;
             }
 
-            // Wall jump
-            if (Input.GetKeyDown(jumpKey))
+            if (input.Player.Jump.WasPressedThisFrame())
                 WallJump();
         }
-
-        // State 2 - Exiting wall
+        // Exit wallrun
         else if (exitingWall)
         {
             if (pm.isWallrunning)
                 StopWallRun();
 
-            if (exitWallTimer > 0)
-                exitWallTimer -= Time.deltaTime;
-
+            exitWallTimer -= Time.deltaTime;
             if (exitWallTimer <= 0)
                 exitingWall = false;
         }
-
-        // State 3 - Not wallrunning
+        // Not wallrunning
         else
         {
             if (pm.isWallrunning)
@@ -157,7 +165,7 @@ public class YT_Wallrun : MonoBehaviour
         pm.isWallrunning = false;
         rb.useGravity = true;
 
-        cam.DoFov(80f);
+        cam.DoFov(85f);
         cam.DoTilt(0f);
     }
 

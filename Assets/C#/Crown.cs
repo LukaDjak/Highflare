@@ -14,7 +14,7 @@ public class Crown : MonoBehaviour
             if(particle)
                 Instantiate(particle, transform.position, Quaternion.identity);
             FindObjectOfType<Timer>().enabled = false; //stop the game timer and save it if it's a record
-            FindObjectOfType<TransitionRoom>().OnCrownCollected(); //show a cutscene while opening that door
+            //FindObjectOfType<TransitionRoom>().OnCrownCollected(); //show a cutscene while opening that door
             Destroy(gameObject);
         }
     }

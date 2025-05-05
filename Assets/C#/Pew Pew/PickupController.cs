@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PickUpController : MonoBehaviour
 {
@@ -22,24 +23,49 @@ public class PickUpController : MonoBehaviour
     private Tween dockTween;
     private bool isGrappling = false;
 
+    private PlayerControls input;
+
+    void Awake()
+    {
+        input = new PlayerControls();
+        input.Player.WeaponPickup.performed += _ => Interact();
+        input.Player.WeaponDrop.performed += _ => Drop();
+    }
+    void OnEnable() => input.Enable();
+    void OnDisable() => input.Disable();
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E)) TryPickUp();
-        if (Input.GetKeyDown(KeyCode.Q)) Drop();
-
-        if (GameManager.isGameOver && equippedWeapon != null) Drop();
+        if (GameManager.isGameOver && equippedWeapon != null)
+            Drop();
     }
 
-    void TryPickUp()
+    void Interact()
     {
-        if (equippedWeapon != null) return;
+        if (TryGetNearbyWeapon(out GameObject weapon))
+        {
+            if (equippedWeapon != null)
+                Drop();
 
+            PickUp(weapon);
+        }
+        else
+            Drop(); // no weapon nearby — drop current
+    }
+
+    bool TryGetNearbyWeapon(out GameObject weapon)
+    {
+        weapon = null;
         Ray ray = new(Camera.main.transform.position, Camera.main.transform.forward);
         if (Physics.SphereCast(ray, 0.5f, out RaycastHit hit, pickUpRange, gunLayer))
         {
             if (hit.collider.CompareTag("Gun"))
-                PickUp(hit.collider.gameObject);
+            {
+                weapon = hit.collider.gameObject;
+                return true;
+            }
         }
+        return false;
     }
 
     void PickUp(GameObject weapon)

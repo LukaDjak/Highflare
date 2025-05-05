@@ -5,8 +5,11 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] private List<GameObject> panels = new();
     //[SerializeField] private AudioClip[] clickClips;
-    public void LoadLevel(string sceneName) => GameManager.instance.LoadScene(sceneName, "Main");
-
+    public void LoadLevel(string sceneName)
+    {
+        GameManager.instance.LoadScene("MainScene");
+        GameManager.instance.LoadScene(sceneName, "MainMenu");
+    }
     public void QuitGame() => Application.Quit();
 
     public void TogglePanel(int index)

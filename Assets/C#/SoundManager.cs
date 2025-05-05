@@ -9,6 +9,7 @@ public class SoundManager : MonoBehaviour
 
     [Header("Audio Settings")]
     [SerializeField] private int poolSize = 10;
+    [SerializeField] private AudioMixerGroup audioMixer;
 
     private List<AudioSource> audioSources;
 
@@ -26,6 +27,7 @@ public class SoundManager : MonoBehaviour
             AudioSource source = go.AddComponent<AudioSource>();
             source.playOnAwake = false;
             source.ignoreListenerPause = false; //this allows audio to be paused when the game is paused
+            source.outputAudioMixerGroup = audioMixer;
             audioSources.Add(source);
         }
     }

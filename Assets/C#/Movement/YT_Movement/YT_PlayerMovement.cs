@@ -33,10 +33,6 @@ public class YT_PlayerMovement : MonoBehaviour
     public float crouchYScale;
     private float startYScale;
 
-    [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode crouchKey = KeyCode.LeftControl;
-
     [Header("Ground Check")]
     [SerializeField] private float playerHeight;
     [SerializeField] private LayerMask groundLayer;
@@ -55,10 +51,20 @@ public class YT_PlayerMovement : MonoBehaviour
     [HideInInspector] public bool isSliding, isDashing, isWallrunning, isGrappling, isCrouching;
     bool keepMomentum;
 
+    private PlayerControls inputActions;
+    private Vector2 moveInput;
+
     private float movementDisabledTimer = 0f;
     public bool MovementTemporarilyDisabled => movementDisabledTimer > 0f;
-
     public float GetMoveSpeed() => moveSpeed;
+
+    private void OnEnable()
+    {
+        inputActions = new PlayerControls();
+        inputActions.Enable();
+    }
+
+    private void OnDisable() => inputActions.Disable();
 
     private void Start()
     {
@@ -94,23 +100,29 @@ public class YT_PlayerMovement : MonoBehaviour
 
     private void HandleInput()
     {
-        xInput = GameManager.isGameOver ? 0 : Input.GetAxisRaw("Horizontal");
-        zInput = GameManager.isGameOver ? 0 : Input.GetAxisRaw("Vertical");
+        moveInput = inputActions.Player.Move.ReadValue<Vector2>();
 
-        if (Input.GetKey(jumpKey) && readyToJump && IsGrounded() && !GameManager.isGameOver)
+        xInput = GameManager.isGameOver ? 0 : moveInput.x;
+        zInput = GameManager.isGameOver ? 0 : moveInput.y;
+
+        //JUMP
+        bool jumpHeld = inputActions.Player.Jump.ReadValue<float>() > 0.1f;
+        if (jumpHeld && readyToJump && IsGrounded() && !GameManager.isGameOver)
         {
             readyToJump = false;
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
         }
 
-        if (Input.GetKeyDown(crouchKey) && xInput == 0 && zInput == 0)
+        //CROUCH
+        bool crouchHeld = inputActions.Player.Crouch.ReadValue<float>() > 0.1f;
+        if (crouchHeld && !isCrouching && xInput == 0 && zInput == 0)
         {
             isCrouching = true;
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
         }
-        else if (Input.GetKeyUp(crouchKey) && isCrouching)
+        else if (!crouchHeld && isCrouching)
         {
             isCrouching = false;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);

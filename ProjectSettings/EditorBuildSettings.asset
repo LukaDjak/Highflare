@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/#Scenes/Highflare.unity
+    guid: c7c7f78b52e483b40bbc09ef2c0db726
+  - enabled: 1
+    path: Assets/#Scenes/MainMenu.unity
+    guid: e4d79a920b7d94b47896d6e36e536d91
+  - enabled: 1
     path: Assets/#Scenes/MainScene.unity
     guid: 00cd74e73e3fde64a9a9422f92e1fbc9
   - enabled: 1
@@ -14,4 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/#Scenes/TestScene.unity
     guid: f2f0df40c5d432544a746a71db6b41b6
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 456e34b8eabbc734dba9be5d1b96d5d3,
+      type: 2}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 98e10ddfc21a89c4b8c5c27930e31f1a,
+      type: 3}
