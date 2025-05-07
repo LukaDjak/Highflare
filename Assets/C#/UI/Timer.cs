@@ -1,11 +1,12 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class Timer : MonoBehaviour
 {
     [SerializeField] private TMP_Text timeText;
     private float elapsedTime = 0f;
+
+    private void OnEnable() => elapsedTime = 0f;
 
     void Update()
     {

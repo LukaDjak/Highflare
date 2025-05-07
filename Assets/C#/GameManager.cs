@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     public static Settings settings;
 
+    [HideInInspector] public int currentLevel = 1;
+
     private void Awake()
     {
         if (instance == null)
@@ -25,8 +27,7 @@ public class GameManager : MonoBehaviour
         settings.sensY = PlayerPrefs.GetFloat("SensY", 1f);
         settings.audioVolume = PlayerPrefs.GetFloat("Audio", 1f);
         settings.musicVolume = PlayerPrefs.GetFloat("Music", 1f);
-
-        //load saved game (if exists)
+        //currentLevel = PlayerPrefs.GetInt("Level", 1);
 
         //load main menu scene
         //LoadScene("MainMenu");
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
     public void OnApplicationQuit()
     {
         //add: save the game
+        //PlayerPrefs.SetInt("Level", currentLevel);
         PlayerPrefs.SetFloat("SensX", settings.sensX);
         PlayerPrefs.SetFloat("SensY", settings.sensY);
         PlayerPrefs.SetFloat("Audio", settings.audioVolume);

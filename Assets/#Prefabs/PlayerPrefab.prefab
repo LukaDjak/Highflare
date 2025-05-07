@@ -1416,8 +1416,6 @@ MonoBehaviour:
   jumpCooldown: 0.2
   airMultiplier: 0.4
   crouchYScale: 0.5
-  jumpKey: 32
-  crouchKey: 306
   playerHeight: 2
   groundLayer:
     serializedVersion: 2
@@ -1427,6 +1425,7 @@ MonoBehaviour:
   isDashing: 0
   isWallrunning: 0
   isGrappling: 0
+  isCrouching: 0
 --- !u!114 &3245341710480467933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1444,7 +1443,6 @@ MonoBehaviour:
   maxSlideTime: 0.75
   slideForce: 250
   slideYScale: 0.5
-  slideKey: 306
 --- !u!114 &2366307152461392893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1462,7 +1460,6 @@ MonoBehaviour:
   dashForce: 30
   dashUpForce: 4
   dashDuration: 0.25
-  dashKey: 304
 --- !u!114 &13295201189849277
 MonoBehaviour:
   m_ObjectHideFlags: 0

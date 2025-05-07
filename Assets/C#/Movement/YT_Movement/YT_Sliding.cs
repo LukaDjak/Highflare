@@ -16,14 +16,26 @@ public class YT_Sliding : MonoBehaviour
     private void Awake()
     {
         inputActions = new PlayerControls();
+    }
+
+    private void OnEnable()
+    {
         inputActions.Player.Enable();
 
-        //subscribe to movement and slide actions
-        inputActions.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        inputActions.Player.Move.canceled += _ => moveInput = Vector2.zero;
+        inputActions.Player.Move.performed += OnMovePerformed;
+        inputActions.Player.Move.canceled += OnMoveCanceled;
+        inputActions.Player.Slide.performed += OnSlidePerformed;
+        inputActions.Player.Slide.canceled += OnSlideCanceled;
+    }
 
-        inputActions.Player.Slide.performed += _ => OnSlidePressed();
-        inputActions.Player.Slide.canceled += _ => OnSlideReleased();
+    private void OnDisable()
+    {
+        inputActions.Player.Move.performed -= OnMovePerformed;
+        inputActions.Player.Move.canceled -= OnMoveCanceled;
+        inputActions.Player.Slide.performed -= OnSlidePerformed;
+        inputActions.Player.Slide.canceled -= OnSlideCanceled;
+
+        inputActions.Player.Disable();
     }
 
     private void Start()
@@ -39,17 +51,28 @@ public class YT_Sliding : MonoBehaviour
             SlidingMovement();
     }
 
-    private void OnSlidePressed()
+    private void OnMovePerformed(UnityEngine.InputSystem.InputAction.CallbackContext ctx)
+    {
+        moveInput = ctx.ReadValue<Vector2>();
+    }
+
+    private void OnMoveCanceled(UnityEngine.InputSystem.InputAction.CallbackContext _)
+    {
+        moveInput = Vector2.zero;
+    }
+
+    private void OnSlidePerformed(UnityEngine.InputSystem.InputAction.CallbackContext _)
     {
         if (moveInput.magnitude > 0.1f && !pm.isGrappling)
             StartSlide();
     }
 
-    private void OnSlideReleased()
+    private void OnSlideCanceled(UnityEngine.InputSystem.InputAction.CallbackContext _)
     {
         if (pm.isSliding)
             StopSlide();
     }
+
 
     private void StartSlide()
     {
