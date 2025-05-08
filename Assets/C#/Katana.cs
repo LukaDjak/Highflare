@@ -31,6 +31,7 @@ public class Katana : MonoBehaviour
     private Collider col;
     private PickUpController controller;
     private bool isUsingKatana;
+    private YT_PlayerMovement pm;
 
     private PlayerControls input;
     private void Awake()
@@ -48,6 +49,7 @@ public class Katana : MonoBehaviour
         animator = GetComponent<Animator>();
         col = GetComponent<Collider>();
         controller = FindObjectOfType<PickUpController>();
+        pm = GameObject.FindGameObjectWithTag("Player").GetComponent<YT_PlayerMovement>();
 
         // Cache original transform
         defaultLocalPosition = transform.localPosition;
@@ -78,7 +80,9 @@ public class Katana : MonoBehaviour
                 controller.DockWeaponForGrapple();
                 if (isEnemy)
                 {
-                    GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>().velocity = Vector3.zero;
+                    pm.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                    if(pm.IsGrounded())
+                        pm.GetComponent<Rigidbody>().AddForce(Vector3.up * 12f, ForceMode.Impulse);
                     grappler.StartGrapple(point, spring: 100f, damper: 5f, massScale: 1.5f);
                 }
                 else

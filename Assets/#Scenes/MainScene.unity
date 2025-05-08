@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000002, guid: 6b59ee835e8d8b742a573361b9da2d20,
+  m_LightingDataAsset: {fileID: 112000006, guid: 890c635abc9d8ea429c21cf4a880e4de,
     type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: ba3047eb4bf1764428532e85895d12db,
     type: 2}
@@ -4197,6 +4197,11 @@ PrefabInstance:
       propertyPath: uiGrappleIndicator
       value: 
       objectReference: {fileID: 1416716651}
+    - target: {fileID: 7135308418443400303, guid: 0e050f120ff8dd34784a33d1c338eded,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7309512673084985412, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
       propertyPath: m_Layer

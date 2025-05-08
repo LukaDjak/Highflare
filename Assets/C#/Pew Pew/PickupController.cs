@@ -1,6 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PickUpController : MonoBehaviour
 {
@@ -24,6 +24,7 @@ public class PickUpController : MonoBehaviour
     private bool isGrappling = false;
 
     private PlayerControls input;
+    private Scene gunOriginalScene;
 
     void Awake()
     {
@@ -47,6 +48,7 @@ public class PickUpController : MonoBehaviour
             if (equippedWeapon != null)
                 Drop();
 
+            CrosshairManager.Instance.ResetCrosshair();
             PickUp(weapon);
         }
         else
@@ -84,11 +86,12 @@ public class PickUpController : MonoBehaviour
         outline.enabled = false;
         gunAnim.enabled = true;
 
+        gunOriginalScene = weapon.scene;
         weapon.transform.DOMove(itemSocket.position, 0.2f).SetEase(Ease.OutQuad);
         weapon.transform.DORotateQuaternion(itemSocket.rotation, 0.2f).SetEase(Ease.OutQuad).OnComplete(() =>
         {
             weapon.transform.SetParent(itemSocket);
-            weapon.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            weapon.transform.SetLocalPositionAndRotation(Vector3.zero, itemSocket.rotation);
         });
 
         weapon.layer = LayerMask.NameToLayer("Clipping");
@@ -102,6 +105,10 @@ public class PickUpController : MonoBehaviour
         if (equippedWeapon == null) return;
 
         equippedWeapon.transform.SetParent(null);
+
+        if (gunOriginalScene.IsValid())
+            SceneManager.MoveGameObjectToScene(equippedWeapon, gunOriginalScene);
+
         gunRb.useGravity = true;
         gunCol.enabled = true;
         outline.enabled = true;

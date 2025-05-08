@@ -53,8 +53,7 @@ public class BouncePad : MonoBehaviour
             if (bouncerClip)
                 SoundManager.instance.PlaySound(bouncerClip, transform.position);
 
-            var player = other.collider.GetComponent<YT_PlayerMovement>();
-            if (player != null)
+            if (other.collider.TryGetComponent<YT_PlayerMovement>(out var player))
             {
                 Vector3 bounceDirection = transform.up.normalized;
                 float forceAmount = 10f * bouncerStrength;

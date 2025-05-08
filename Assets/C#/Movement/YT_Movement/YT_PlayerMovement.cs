@@ -317,8 +317,9 @@ public class YT_PlayerMovement : MonoBehaviour
 
     public void ApplyExternalForce(Vector3 force, float disableDuration = 0.3f)
     {
-        rb.velocity = Vector3.zero; // optional: clear current movement
+        //rb.velocity = Vector3.zero; // optional: clear current movement
         rb.AddForce(force, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * 6f, ForceMode.Impulse);
         movementDisabledTimer = disableDuration;
     }
 }
