@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
         settings.musicVolume = PlayerPrefs.GetFloat("Music", 1f);
         //currentLevel = PlayerPrefs.GetInt("Level", 1);
 
+        ApplySettings();
+
         //load main menu scene
         //LoadScene("MainMenu");
     }
@@ -60,6 +62,12 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetFloat("Audio", settings.audioVolume);
         PlayerPrefs.SetFloat("Music", settings.musicVolume);
         PlayerPrefs.Save();
+    }
+
+    private void ApplySettings()
+    {
+        if (TryGetComponent<SettingsMenu>(out var settingsMenu))
+            settingsMenu.ApplyAudioSettings();
     }
 }
 

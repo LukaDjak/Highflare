@@ -4,61 +4,40 @@ using UnityEngine.SceneManagement;
 
 public class TransitionRoom : MonoBehaviour
 {
-    private Door startDoor;
-    private Door endDoor;
-    private Timer timer;
+    [Header("References")]
+    public Door startDoor;
+    public Door endDoor;
 
-    private bool isTransitioning;
+    private Timer timer;
+    private Coroutine transitionCoroutine;
+
+    private bool isTransitioning = true;
     private bool shouldTransition = false;
     private bool startingGame = true;
-    private bool shouldCloseStartDoor = false;
-
-    private Coroutine transitionCoroutine;
-    private Vector3 savedPlayerPosition;
-    private Quaternion savedPlayerRotation;
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        isTransitioning = true;
-
-        startDoor.ToggleDoor(); // Open start door initially
+        SceneManager.sceneLoaded += OnSceneLoaded;
         timer = FindObjectOfType<Timer>();
     }
 
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
+    private void OnDestroy() => SceneManager.sceneLoaded -= OnSceneLoaded;
 
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
+    private void Start() => startDoor.ToggleDoor(); // Open start door at beginning
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Reacquire references
-        startDoor = GameObject.Find("StartDoor").GetComponent<Door>();
-        endDoor = GameObject.Find("EndDoor").GetComponent<Door>();
         timer = FindObjectOfType<Timer>();
-
-        if (shouldCloseStartDoor && startDoor != null)
-        {
-            startDoor.ToggleDoor(); // Close start door
-            shouldCloseStartDoor = false;
-
-            if (timer != null)
-                timer.enabled = true;
-        }
+        isTransitioning = true;
+        startDoor.ToggleDoor(); // Open door again for new level
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
 
-        if (!startingGame && shouldTransition && transitionCoroutine == null)
-            transitionCoroutine = StartCoroutine(HandleLoadingLevel());
+        if (shouldTransition && !startingGame && transitionCoroutine == null)
+            transitionCoroutine = StartCoroutine(HandleLevelTransition());
         else if (startingGame)
             startingGame = false;
     }
@@ -68,14 +47,14 @@ public class TransitionRoom : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         if (isTransitioning && transitionCoroutine != null)
-            StopCoroutine(HandleLoadingLevel());
+            StopCoroutine(transitionCoroutine);
 
         OnRoomExit();
     }
 
     private void OnRoomExit()
     {
-        startDoor.ToggleDoor(); // Close the start door
+        startDoor.ToggleDoor(); // Close start door
         isTransitioning = false;
 
         if (timer != null)
@@ -88,45 +67,28 @@ public class TransitionRoom : MonoBehaviour
             timer.enabled = false;
 
         shouldTransition = true;
-
-        // TODO: Trigger door open cutscene
-        endDoor.ToggleDoor(); // Open end door
+        endDoor.ToggleDoor(); // Open end door (eventually replaced with a cutscene)
     }
 
-    private IEnumerator HandleLoadingLevel()
+    private IEnumerator HandleLevelTransition()
     {
         isTransitioning = true;
 
         yield return new WaitForSeconds(1f);
+        endDoor.ToggleDoor(); // Close end door
 
-        endDoor.ToggleDoor(); //close end door
         GameManager.instance.currentLevel++;
+        Debug.Log($"Loading Level {GameManager.instance.currentLevel}");
 
         yield return new WaitForSeconds(2f);
-
-        shouldCloseStartDoor = true;
-
-        // 🟡 Save player's transform before unloading
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            savedPlayerPosition = player.transform.position;
-            savedPlayerRotation = player.transform.rotation;
-        }
 
         GameManager.instance.LoadScene(
             $"Level{GameManager.instance.currentLevel}",
             $"Level{GameManager.instance.currentLevel - 1}"
         );
 
-        // 🟢 Restore position on new player after loading
-        GameObject newPlayer = GameObject.FindGameObjectWithTag("Player");
-        if (newPlayer != null)
-            newPlayer.transform.SetPositionAndRotation(savedPlayerPosition, savedPlayerRotation);
+        yield return new WaitForSeconds(1f); // Let things settle
 
-        yield return new WaitForSeconds(1f); // Wait for scene load to complete
-
-        // The door and timer are reset in OnSceneLoaded
         isTransitioning = false;
         shouldTransition = false;
         transitionCoroutine = null;

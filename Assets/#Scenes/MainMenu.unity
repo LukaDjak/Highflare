@@ -343,8 +343,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1529972938}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+        m_MethodName: NewGame
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3284,8 +3284,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1529972938}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+        m_MethodName: LoadEndless
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4248,6 +4248,10 @@ MonoBehaviour:
   sensYText: {fileID: 850947552}
   audioText: {fileID: 2009013769}
   musicText: {fileID: 773994392}
+  sensXSlider: {fileID: 368510699}
+  sensYSlider: {fileID: 2044562270}
+  audioSlider: {fileID: 1993732890}
+  musicSlider: {fileID: 716386573}
 --- !u!1 &681242676
 GameObject:
   m_ObjectHideFlags: 0
@@ -5459,8 +5463,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1529972938}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+        m_MethodName: LoadTesting
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7130,6 +7134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0ad6941232f5204cb8d0b06fbc1405c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  continueButton: {fileID: 2007369051}
   panels:
   - {fileID: 243117783}
   - {fileID: 933176393}
@@ -8466,8 +8471,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1529972938}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+        m_MethodName: Continue
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

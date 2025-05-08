@@ -68,12 +68,10 @@ public class Grappler : MonoBehaviour
         {
             targetPoint = hit.point;
             isEnemy = false;
-            Debug.Log(targetPoint);
             return true;
         }
 
         targetPoint = Vector3.zero;
-        Debug.Log(targetPoint);
         isEnemy = false;
         return false;
     }

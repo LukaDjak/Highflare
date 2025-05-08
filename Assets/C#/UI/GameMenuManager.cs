@@ -74,14 +74,17 @@ public class GameMenuManager : MonoBehaviour
     {
         //add scene transition + loaderscene in the future
         AudioListener.pause = false;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameManager.instance.LoadScene("MainScene", "MainScene");
+        string scene = SceneManager.GetSceneAt(2).name; //second scene under loader scene = Level
+        GameManager.instance.LoadScene(scene, scene);
     }
 
     public void GoToMainMenu()
     {
         //add scene transition + loaderscene in the future
         AudioListener.pause = false;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(2).buildIndex);
+        GameManager.instance.LoadScene("MainMenu", "MainScene");
     }
 
     public void ShowWinScreen()

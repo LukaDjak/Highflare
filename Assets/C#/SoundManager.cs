@@ -1,7 +1,7 @@
-using UnityEngine;
-using System.Collections.Generic;
+﻿using UnityEngine;
 using UnityEngine.Audio;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SoundManager : MonoBehaviour
 {
@@ -11,22 +11,26 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private int poolSize = 10;
     [SerializeField] private AudioMixerGroup audioMixer;
 
-    private List<AudioSource> audioSources;
+    private readonly List<AudioSource> audioSources = new();
 
     private void Awake()
     {
         if (instance == null)
             instance = this;
+        else
+            Destroy(gameObject);
+        CreateAudioPool();
+    }
 
-        //create a pool of AudioSources
-        audioSources = new List<AudioSource>();
+    private void CreateAudioPool()
+    {
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject go = new("PooledAudioSource_" + i);
-            go.transform.parent = transform;
-            AudioSource source = go.AddComponent<AudioSource>();
+            var sourceGO = new GameObject($"PooledAudioSource_{i}");
+            sourceGO.transform.SetParent(transform);
+            var source = sourceGO.AddComponent<AudioSource>();
             source.playOnAwake = false;
-            source.ignoreListenerPause = false; //this allows audio to be paused when the game is paused
+            source.ignoreListenerPause = false;
             source.outputAudioMixerGroup = audioMixer;
             audioSources.Add(source);
         }
@@ -37,61 +41,55 @@ public class SoundManager : MonoBehaviour
         if (clip == null) return;
 
         //prevent duplicate sound nearby
-        foreach (AudioSource source in audioSources)
+        foreach (var source in audioSources)
         {
-            if (source.isPlaying && source.clip == clip)
-            {
-                float distance = Vector3.Distance(source.transform.position, position);
-                if (distance < .001f)
-                    return; //skip playing the same sound too close
-            }
+            if (source.isPlaying && source.clip == clip &&
+                Vector3.Distance(source.transform.position, position) < 0.001f)
+                return;
         }
 
-        AudioSource availableSource = GetAvailableSource();
-        if (availableSource == null) return;
+        var sourceToUse = GetAvailableSource();
+        if (sourceToUse == null) return;
 
+        //set position and parenting
         if (parent != null)
         {
-            availableSource.transform.SetParent(parent);
-            availableSource.transform.localPosition = Vector3.zero;
+            sourceToUse.transform.SetParent(parent);
+            sourceToUse.transform.localPosition = Vector3.zero;
         }
         else
         {
-            availableSource.transform.position = position;
-            availableSource.transform.parent = null;
+            sourceToUse.transform.SetParent(null);
+            sourceToUse.transform.position = position;
         }
 
-        availableSource.clip = clip;
-        availableSource.volume = volume;
-        availableSource.pitch = pitch;
-        availableSource.spatialBlend = spatialBlend;
-        availableSource.Play();
-
-        if(parent != transform)
-            StartCoroutine(DetachAfterPlay(availableSource, clip.length));
+        sourceToUse.clip = clip;
+        sourceToUse.volume = volume;
+        sourceToUse.pitch = pitch;
+        sourceToUse.spatialBlend = spatialBlend;
+        sourceToUse.Play();
+        StartCoroutine(DetachAfterPlay(sourceToUse));
     }
-
 
     private AudioSource GetAvailableSource()
     {
-        foreach (AudioSource source in audioSources)
+        foreach (var source in audioSources)
         {
             if (!source.isPlaying)
                 return source;
         }
-        Debug.LogWarning("No free AudioSources available, increase the pool size!");
+        Debug.LogWarning("No free AudioSources available — consider increasing pool size.");
         return null;
     }
 
-    private IEnumerator DetachAfterPlay(AudioSource source, float delay)
+    private IEnumerator DetachAfterPlay(AudioSource source)
     {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitWhile(() => source != null && source.isPlaying);
 
-        //reset back under SoundManager
         if (source != null)
         {
             source.transform.SetParent(transform);
-            source.clip = null; //optional: clear clip to mark as "available" faster
+            source.clip = null;
         }
     }
 }
