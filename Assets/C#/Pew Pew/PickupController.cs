@@ -48,7 +48,7 @@ public class PickUpController : MonoBehaviour
             if (equippedWeapon != null)
                 Drop();
 
-            CrosshairManager.Instance.ResetCrosshair();
+            CrosshairManager.instance.ResetCrosshair();
             PickUp(weapon);
         }
         else
@@ -72,6 +72,7 @@ public class PickUpController : MonoBehaviour
 
     void PickUp(GameObject weapon)
     {
+        CrosshairManager.instance.ResetCrosshair();
         equippedWeapon = weapon;
         gunRb = weapon.GetComponent<Rigidbody>();
         gunCol = weapon.GetComponent<Collider>();
@@ -99,7 +100,7 @@ public class PickUpController : MonoBehaviour
         gunRb.velocity = Vector3.zero;
         gunRb.angularVelocity = Vector3.zero;
     }
-
+        
     void Drop()
     {
         if (equippedWeapon == null) return;

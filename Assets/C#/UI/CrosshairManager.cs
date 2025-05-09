@@ -10,16 +10,16 @@ public class CrosshairManager : MonoBehaviour
     [SerializeField] private Sprite crosshair;
     private Coroutine fillRoutine;
 
-    public static CrosshairManager Instance { get; private set; }
+    public static CrosshairManager instance { get; private set; }
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        Instance = this;
+        instance = this;
     }
 
     /// <summary>

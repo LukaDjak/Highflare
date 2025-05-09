@@ -32,14 +32,11 @@ public class Grab : MonoBehaviour
     void CheckForGrabbable()
     {
         if (grabbedObj != null || GameObject.Find("ItemSocket").transform.childCount != 0)
-        {
-            CrosshairManager.Instance.ResetCrosshair();
             return;
-        }
         if (Physics.Raycast(cam.position, cam.forward, out hit, 10f, whatIsGrabbable))
-            CrosshairManager.Instance.SetCrosshair(grabIcon);
+            CrosshairManager.instance.SetCrosshair(grabIcon);
         else
-            CrosshairManager.Instance.ResetCrosshair();
+            CrosshairManager.instance.ResetCrosshair();
     }
 
     void GrabObject()

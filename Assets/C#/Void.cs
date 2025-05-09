@@ -20,7 +20,7 @@ public class Void : MonoBehaviour
         {
             if (player.position.y < deathYLevel)
             {
-                FindObjectOfType<GameMenuManager>().ShowGameOver();
+                FindObjectOfType<PauseMenu>().ShowGameOver();
                 yield break; //stop the coroutine after restarting the scene
             }
             yield return new WaitForSeconds(0.1f); //check every 0.1 seconds - better than checking in Update()
