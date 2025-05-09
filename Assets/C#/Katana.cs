@@ -56,6 +56,8 @@ public class Katana : MonoBehaviour
         defaultLocalRotation = transform.localRotation;
     }
 
+
+    //TODO: remove ability to aim and stick grappler through walls and other objects
     private void Update()
     {
         if (GameManager.isGameOver) return;

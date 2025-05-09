@@ -16,7 +16,11 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(LoadWithTransition("MainScene", levelName));
     }
 
-    public void NewGame() => StartCoroutine(LoadWithTransition("MainScene", "Level1"));
+    public void NewGame()
+    {
+        GameManager.instance.currentLevel = 1;
+        StartCoroutine(LoadWithTransition("MainScene", "Level1"));
+    }
     public void LoadEndless() => StartCoroutine(LoadWithTransition("MainScene", "Endless"));
     public void LoadTesting() => StartCoroutine(LoadWithTransition("MainScene", "Movement"));
     public void QuitGame() => Application.Quit();

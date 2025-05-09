@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 56966e9cb40d0cb40a924beea6a97cc6
+guid: a3cb36afb3a1c554596deee7c9133138
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,12 +7,12 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: PrimaryColor
-    second: {fileID: 2100000, guid: be7935c66d807d349811085a9b840e16, type: 2}
+      name: GlowMaterial
+    second: {fileID: 2100000, guid: 4ae03a01e3fc4ba4581acdbfbdf06172, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Screen
+      name: SecondaryColor
     second: {fileID: 2100000, guid: f2e67f67f7b7f514f805c93f23f9cf00, type: 2}
   materials:
     materialImportMode: 2
@@ -45,7 +45,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.4
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -62,7 +62,7 @@ ModelImporter:
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
-    bakeAxisConversion: 0
+    bakeAxisConversion: 1
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
@@ -100,7 +100,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.4
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

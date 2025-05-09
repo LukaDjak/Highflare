@@ -4333,12 +4333,17 @@ PrefabInstance:
     - target: {fileID: 5992446052911000143, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: openPositionOffset.x
-      value: 0
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992446052911000143, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: openPositionOffset.y
+      value: 3.1
       objectReference: {fileID: 0}
     - target: {fileID: 5992446052911000143, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: openPositionOffset.z
-      value: 0
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 6089877039731764040, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
