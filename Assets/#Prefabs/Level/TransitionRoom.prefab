@@ -2270,6 +2270,7 @@ MonoBehaviour:
   openSpeed: 2
   autoClose: 0
   autoCloseDelay: 3
+  isOpen: 0
 --- !u!1 &1401152317786109606
 GameObject:
   m_ObjectHideFlags: 0
@@ -2928,6 +2929,7 @@ MonoBehaviour:
   openSpeed: 2
   autoClose: 0
   autoCloseDelay: 3
+  isOpen: 0
 --- !u!1 &4675243453883275623
 GameObject:
   m_ObjectHideFlags: 0

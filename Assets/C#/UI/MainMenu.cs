@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -37,6 +38,15 @@ public class MainMenu : MonoBehaviour
         yield return new WaitForSeconds(.45f);
 
         GameManager.instance.LoadScene(baseScene);
-        GameManager.instance.LoadScene(levelScene, "MainMenu");
+
+        //load level scene and wait until it's fully loaded
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync(levelScene, LoadSceneMode.Additive);
+        while (!loadOp.isDone)
+            yield return null;
+
+        Scene loadedScene = SceneManager.GetSceneByName(levelScene);
+        if (loadedScene.IsValid())
+            SceneManager.SetActiveScene(loadedScene);
+        SceneManager.UnloadSceneAsync("MainMenu");
     }
 }

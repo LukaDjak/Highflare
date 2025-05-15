@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 2868835832659926917}
   - component: {fileID: 3189107817306691540}
   - component: {fileID: 7979718801592990429}
-  - component: {fileID: 7202296830411791187}
   - component: {fileID: 5520330395479694883}
+  - component: {fileID: 7202296830411791187}
   m_Layer: 8
   m_Name: Barrel
   m_TagString: Barrel
@@ -112,25 +112,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &7202296830411791187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7058116728642297319}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f8aeff39d69a8d4d8b13b52dbbcc362, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rb: {fileID: 7979718801592990429}
-  explosionParticles: {fileID: 4296847197965120894, guid: fa9f32ee878481744b552d31c910fee6,
-    type: 3}
-  explosionClip: {fileID: 8300000, guid: 8e56bd8c0047cf242b2070e53390ac39, type: 3}
-  explosionRadius: 5
-  explosionForce: 1500
+  m_CollisionDetection: 1
 --- !u!64 &5520330395479694883
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -153,3 +135,21 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 8108563764783910780, guid: 0c99d558029de40499bcc42225e2bb1b, type: 3}
+--- !u!114 &7202296830411791187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7058116728642297319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8aeff39d69a8d4d8b13b52dbbcc362, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 7979718801592990429}
+  explosionParticles: {fileID: 4296847197965120894, guid: fa9f32ee878481744b552d31c910fee6,
+    type: 3}
+  explosionClip: {fileID: 8300000, guid: 8e56bd8c0047cf242b2070e53390ac39, type: 3}
+  explosionRadius: 5
+  explosionForce: 1500

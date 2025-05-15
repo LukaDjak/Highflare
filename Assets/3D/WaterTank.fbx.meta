@@ -17,6 +17,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: OdvodTexture
+    second: {fileID: 2100000, guid: f2e67f67f7b7f514f805c93f23f9cf00, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: PrimaryColor
     second: {fileID: 2100000, guid: be7935c66d807d349811085a9b840e16, type: 2}
   - first:

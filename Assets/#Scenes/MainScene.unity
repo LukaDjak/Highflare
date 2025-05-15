@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 0.08
   m_AmbientMode: 3
-  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
+  m_SubtractiveShadowColor: {r: 0.52156866, g: 0.5529412, b: 0.6313726, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 12ccb828343c3405fb94289774b51aad, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -36,7 +36,7 @@ RenderSettings:
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 2
   m_ReflectionIntensity: 1
-  m_CustomReflection: {fileID: 0}
+  m_CustomReflection: {fileID: 8900000, guid: a46a9c046a856504a8d1784b380c55d9, type: 3}
   m_Sun: {fileID: 0}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: dc0a6e96bd83c394e98f9fb2513322ea,
+  m_LightingDataAsset: {fileID: 112000006, guid: ddf9fbf8a18e33d408cbad87bfa92322,
     type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: ba3047eb4bf1764428532e85895d12db,
     type: 2}
@@ -4298,7 +4298,7 @@ PrefabInstance:
     - target: {fileID: 212395928136243251, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 4176
+      value: 4212
       objectReference: {fileID: 0}
     - target: {fileID: 353962521612535360, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
@@ -4508,7 +4508,7 @@ PrefabInstance:
     - target: {fileID: 5006042337663539203, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 18134
+      value: 18170
       objectReference: {fileID: 0}
     - target: {fileID: 5077638891119524234, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
@@ -4580,6 +4580,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 757520941}
+    - target: {fileID: 6133924805975032189, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: f2e67f67f7b7f514f805c93f23f9cf00, type: 2}
     - target: {fileID: 6351965100117065085, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_Mesh
@@ -4588,7 +4593,7 @@ PrefabInstance:
     - target: {fileID: 6351965100117065085, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 4137
+      value: 4173
       objectReference: {fileID: 0}
     - target: {fileID: 6539000095666364404, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
