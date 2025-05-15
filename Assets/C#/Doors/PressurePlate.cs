@@ -4,12 +4,14 @@ public class PressurePlate : MonoBehaviour
 {
     public Door door;
     private bool triggered;
+    private string currentObject;
 
     private void OnTriggerEnter(Collider other)
     {
         if (!triggered)
         {
             triggered = true;
+            currentObject = other.name;
             door.ToggleDoor();
             GetComponent<ButtonFeedback>().Press();
         }
@@ -17,8 +19,12 @@ public class PressurePlate : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        triggered = false;
-        door.ToggleDoor();
-        GetComponent<ButtonFeedback>().Release(); 
+        if(triggered && other.name == currentObject)
+        {
+            triggered = false;
+            currentObject = null;
+            door.ToggleDoor();
+            GetComponent<ButtonFeedback>().Release();
+        }
     }
 }

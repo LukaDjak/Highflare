@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9317ca641b7e1244486a9636120569d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pressedOffset: {x: 0, y: 0, z: -0.075}
+  pressedOffset: {x: 0, y: -0.135, z: 0}
   pressSpeed: 10
   autoRelease: 0
   releaseDelay: 0.2

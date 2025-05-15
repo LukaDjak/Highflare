@@ -9,7 +9,7 @@ public class Door : MonoBehaviour
     [SerializeField] private bool autoClose = false;
     [SerializeField] private float autoCloseDelay = 3f;
 
-    private bool isOpen;
+    [HideInInspector] public bool isOpen;
     private Vector3 closedPosition;
     private Coroutine moveCoroutine;
 

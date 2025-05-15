@@ -23,13 +23,18 @@ public class TransitionRoom : MonoBehaviour
 
     private void OnDestroy() => SceneManager.sceneLoaded -= OnSceneLoaded;
 
-    private void Start() => startDoor.ToggleDoor(); // Open start door at beginning
+    private void Start()
+    {
+        if(!startDoor.isOpen)
+            startDoor.ToggleDoor(); // Open start door at beginning
+    }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         timer = FindObjectOfType<Timer>();
         isTransitioning = true;
-        startDoor.ToggleDoor(); // Open door again for new level
+        if (!startDoor.isOpen)
+            startDoor.ToggleDoor(); // Open door again for new level
     }
 
     private void OnTriggerEnter(Collider other)
