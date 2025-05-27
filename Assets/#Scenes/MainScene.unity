@@ -4192,6 +4192,16 @@ PrefabInstance:
       propertyPath: stateTxt
       value: 
       objectReference: {fileID: 1177423854}
+    - target: {fileID: 702364759860426878, guid: 0e050f120ff8dd34784a33d1c338eded,
+        type: 3}
+      propertyPath: grappleSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 702364759860426878, guid: 0e050f120ff8dd34784a33d1c338eded,
+        type: 3}
+      propertyPath: maxSlopeAngle
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 2366307152461392893, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
       propertyPath: m_Enabled
@@ -4510,6 +4520,21 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 18170
       objectReference: {fileID: 0}
+    - target: {fileID: 5006042337663539203, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: m_SelectedEdges.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006042337663539203, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: m_SelectedFaces.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5006042337663539203, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: m_SelectedVertices.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5077638891119524234, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_Mesh
@@ -4538,7 +4563,7 @@ PrefabInstance:
     - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_Intensity
-      value: 90
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
@@ -4553,7 +4578,7 @@ PrefabInstance:
     - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 133.24438
+      value: 87.60405
       objectReference: {fileID: 0}
     - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
