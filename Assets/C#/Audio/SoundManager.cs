@@ -28,7 +28,10 @@ public class SoundManager : MonoBehaviour
         {
             var sourceGO = new GameObject($"PooledAudioSource_{i}");
             sourceGO.transform.SetParent(transform);
+
+            sourceGO.AddComponent<AudioFollower>();
             var source = sourceGO.AddComponent<AudioSource>();
+
             source.playOnAwake = false;
             source.ignoreListenerPause = false;
             source.outputAudioMixerGroup = audioMixer;
@@ -40,7 +43,6 @@ public class SoundManager : MonoBehaviour
     {
         if (clip == null) return;
 
-        //prevent duplicate sound nearby
         foreach (var source in audioSources)
         {
             if (source.isPlaying && source.clip == clip &&
@@ -51,15 +53,15 @@ public class SoundManager : MonoBehaviour
         var sourceToUse = GetAvailableSource();
         if (sourceToUse == null) return;
 
-        //set position and parenting
+        var follow = sourceToUse.GetComponent<AudioFollower>();
         if (parent != null)
         {
-            sourceToUse.transform.SetParent(parent);
-            sourceToUse.transform.localPosition = Vector3.zero;
+            follow.SetTarget(parent);
+            sourceToUse.transform.position = parent.position;
         }
         else
         {
-            sourceToUse.transform.SetParent(null);
+            follow.SetTarget(null);
             sourceToUse.transform.position = position;
         }
 
@@ -68,6 +70,7 @@ public class SoundManager : MonoBehaviour
         sourceToUse.pitch = pitch;
         sourceToUse.spatialBlend = spatialBlend;
         sourceToUse.Play();
+
         StartCoroutine(DetachAfterPlay(sourceToUse));
     }
 
@@ -88,6 +91,7 @@ public class SoundManager : MonoBehaviour
 
         if (source != null)
         {
+            source.GetComponent<AudioFollower>().SetTarget(null);
             source.transform.SetParent(transform);
             source.clip = null;
         }
