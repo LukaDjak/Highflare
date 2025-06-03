@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
-using TMPro;
 
 public class YT_PlayerMovement : MonoBehaviour
-{
-    [SerializeField] private TMP_Text speedTxt, stateTxt;
+{ 
     [SerializeField] private Transform orientation;
 
     [Header("Movement Speed")]
@@ -84,9 +82,6 @@ public class YT_PlayerMovement : MonoBehaviour
         }
 
         rb.drag = (!MovementTemporarilyDisabled && IsGrounded() && !isGrappling) ? groundDrag : 0f;
-
-        speedTxt.text = $"Speed: {rb.velocity.magnitude:F1}";
-        stateTxt.text = state.ToString();
 
         if (movementDisabledTimer > 0f)
             movementDisabledTimer -= Time.deltaTime;
