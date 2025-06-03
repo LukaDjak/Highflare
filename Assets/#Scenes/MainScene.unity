@@ -4177,11 +4177,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 13295201189849277, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 702364759860426878, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
       propertyPath: speedTxt
@@ -4200,12 +4195,17 @@ PrefabInstance:
     - target: {fileID: 702364759860426878, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
       propertyPath: maxSlopeAngle
-      value: 50
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 702364759860426878, guid: 0e050f120ff8dd34784a33d1c338eded,
+        type: 3}
+      propertyPath: enemyPullSpeed
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2366307152461392893, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3782507142442422670, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}

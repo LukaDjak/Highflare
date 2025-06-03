@@ -87,6 +87,7 @@ public class TransitionRoom : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
+        FindObjectOfType<PickUpController>().DropAndDestroyWeapon();
         GameManager.instance.LoadScene(
             $"Level{GameManager.instance.currentLevel}",
             $"Level{GameManager.instance.currentLevel - 1}"

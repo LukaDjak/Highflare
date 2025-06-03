@@ -181,4 +181,10 @@ public class PickUpController : MonoBehaviour
         gunTransform.DOLocalMove(Vector3.zero, dockDuration).SetEase(Ease.OutQuad);
         gunTransform.DOLocalRotate(Vector3.zero, dockDuration).SetEase(Ease.OutQuad);
     }
+
+    public void DropAndDestroyWeapon()
+    {
+        if (equippedWeapon == null) return;
+        Destroy(equippedWeapon);
+    }
 }

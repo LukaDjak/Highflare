@@ -175,7 +175,7 @@ public class YT_Wallrun : MonoBehaviour
         exitWallTimer = exitWallTime;
 
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
-        Vector3 jumpForce = transform.up * wallJumpUpForce + wallNormal * wallJumpSideForce;
+        Vector3 jumpForce = orientation.up * wallJumpUpForce + wallNormal * wallJumpSideForce + orientation.forward * wallJumpSideForce;
 
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z); // reset Y
         rb.AddForce(jumpForce, ForceMode.Impulse);
