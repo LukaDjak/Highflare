@@ -71,7 +71,7 @@ public class Gun : MonoBehaviour
         for (int i = 0; i < bulletsPerTap; i++)
         {
             Vector3 direction = GetDirectionWithSpread();
-            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity, transform);
+            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity, GameObject.Find("Level").transform);
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(direction * shootForce, ForceMode.Impulse);
         }

@@ -1,44 +1,41 @@
 ﻿using UnityEngine;
-using UnityEngine.Windows;
 
 public class Katana : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform hitOrigin;
     [SerializeField] private ParticleSystem slashEffect;
-    [SerializeField] private AudioClip slashClip;
-    [SerializeField] private AudioClip grappleClip;
-    [SerializeField] private AudioClip hitClip;
-    [SerializeField] private AudioClip enemyHitClip;
+    [SerializeField] private AudioClip slashClip, grappleClip, hitClip, enemyHitClip;
     [SerializeField] private Grappler grappler;
 
-    [Header("Katana Properties")]
+    [Header("Properties")]
     [SerializeField] private float swingCooldown = 0.6f;
     [SerializeField] private float hitRange = 2f;
     [SerializeField] private LayerMask hitMask;
 
     private Animator animator;
-    private float nextSwingTime;
-    private bool swingToRight = false;
-
-    //grapple position & rotation
-    private Vector3 defaultLocalPosition;
-    private Quaternion defaultLocalRotation;
-    private readonly Vector3 grappleLocalPosition = new(0.83f, -0.54f, 0.8f);
-    private readonly Quaternion grappleLocalRotation = Quaternion.Euler(111f, -6f, 3f);
-
-    private readonly float transitionSpeed = 5f;
     private Collider col;
-    private PickUpController controller;
+    private float nextSwingTime;
+    private bool swingToRight;
     private bool isUsingKatana;
-    private YT_PlayerMovement pm;
+    private bool hasGrappled = false;
 
+    private Vector3 defaultPos;
+    private Quaternion defaultRot;
+    private readonly Vector3 grapplePos = new(0.83f, -0.54f, 0.8f);
+    private readonly Quaternion grappleRot = Quaternion.Euler(111f, -6f, 3f);
+
+    private const float transitionSpeed = 5f;
+
+    private PickUpController controller;
+    private YT_PlayerMovement pm;
     private PlayerControls input;
+
     private void Awake()
     {
         input = new PlayerControls();
         input.Player.KatanaGrapple.started += _ => isUsingKatana = true;
-        input.Player.KatanaGrapple.canceled += _ => OnKatanaRelease();
+        input.Player.KatanaGrapple.canceled += _ => ReleaseKatana();
     }
 
     private void OnEnable() => input.Enable();
@@ -51,18 +48,22 @@ public class Katana : MonoBehaviour
         controller = FindObjectOfType<PickUpController>();
         pm = GameObject.FindGameObjectWithTag("Player").GetComponent<YT_PlayerMovement>();
 
-        // Cache original transform
-        defaultLocalPosition = transform.localPosition;
-        defaultLocalRotation = transform.localRotation;
+        defaultPos = transform.localPosition;
+        defaultRot = transform.localRotation;
     }
 
-
-    //TODO: remove ability to aim and stick grappler through walls and other objects
     private void Update()
     {
-        if (GameManager.isGameOver) return;
-        HandleTransform();
+        if (GameManager.isGameOver)
+        {
+            if (pm.isGrappling)
+                grappler.StopGrapple();
+            return;
+        }
 
+        UpdateTransform();
+
+        //only proceed if the grapple button is being held
         if (isUsingKatana && Time.time >= nextSwingTime)
         {
             if (grappler.IsGrappling())
@@ -71,39 +72,48 @@ public class Katana : MonoBehaviour
                 {
                     grappler.StopGrapple();
                     controller.ResetWeaponAfterGrapple();
-                    SwingKatana();
+                    PerformSwing();
                     nextSwingTime = Time.time + swingCooldown;
                 }
                 return;
             }
 
-            if (grappler.TryGetGrappleTarget(out Vector3 point, out bool isEnemy))
+            if (!hasGrappled)
             {
-                controller.DockWeaponForGrapple();
-                if (isEnemy)
+                if (grappler.TryGetGrappleTarget(out Vector3 point, out bool isEnemy))
                 {
-                    pm.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                    if(pm.IsGrounded())
-                        pm.GetComponent<Rigidbody>().AddForce(Vector3.up * 12f, ForceMode.Impulse);
-                    grappler.StartGrapple(point, spring: 100f, damper: 5f, massScale: 1.5f);
+                    controller.DockWeaponForGrapple();
+
+                    if (isEnemy)
+                    {
+                        // Pull instantly toward enemy, no physics
+                        Rigidbody rb = pm.GetComponent<Rigidbody>();
+                        rb.velocity = Vector3.zero;
+
+                        if (pm.IsGrounded())
+                            rb.AddForce(Vector3.up * 12f, ForceMode.Impulse);
+
+                        grappler.StartGrapple(point, isEnemy);
+                    }
+                    else
+                        grappler.StartGrapple(point, isEnemy);
+
+                    hasGrappled = true; // ✅ prevent re-triggering
+                    return;
                 }
-                else
-                    grappler.StartGrapple(point);
 
-                if (grappleClip)
-                    SoundManager.instance.PlaySound(grappleClip, transform.position, 1, Random.Range(.9f, 1.1f));
-                return;
+                //no valid target — just swing
+                PerformSwing();
+                nextSwingTime = Time.time + swingCooldown;
+                hasGrappled = true;
             }
-
-            SwingKatana();
-            nextSwingTime = Time.time + swingCooldown;
         }
     }
 
-    private void OnKatanaRelease()
+    private void ReleaseKatana()
     {
         isUsingKatana = false;
-
+        hasGrappled = false;
         if (grappler.IsGrappling())
         {
             controller.ResetWeaponAfterGrapple();
@@ -111,128 +121,72 @@ public class Katana : MonoBehaviour
         }
     }
 
-    private bool reachedGrapplePose = false;
-
-    private void LateUpdate()
+    private void UpdateTransform()
     {
-        if (!grappler.enabled) return;
+        bool grappling = grappler.enabled && (grappler.IsGrappling() || grappler.isEnemyGrapple);
+        animator.enabled = !grappling;
 
-        if (grappler.IsGrappling())
+        Vector3 targetPos = grappling ? grapplePos : defaultPos;
+        Quaternion targetRot = grappling ? grappleRot : defaultRot;
+
+        transform.SetLocalPositionAndRotation(Vector3.Lerp(transform.localPosition, targetPos, Time.deltaTime * transitionSpeed), Quaternion.Lerp(transform.localRotation, targetRot, Time.deltaTime * transitionSpeed));
+
+        if (grappling)
         {
-            if (!animator.enabled) animator.enabled = false;
-
-            //phase 1: transition to fixed grapple pose
-            if (!reachedGrapplePose)
-            {
-                transform.SetLocalPositionAndRotation(
-                    Vector3.Lerp(transform.localPosition, grappleLocalPosition, Time.deltaTime * transitionSpeed),
-                    Quaternion.Lerp(transform.localRotation, grappleLocalRotation, Time.deltaTime * transitionSpeed)
-                );
-
-                if (Vector3.Distance(transform.localPosition, grappleLocalPosition) < 0.01f &&
-                    Quaternion.Angle(transform.localRotation, grappleLocalRotation) < 0.5f)
-                    reachedGrapplePose = true;
-            }
-            else
-            {
-                //phase 2: snap look direction toward target
-                Vector3 directionToTarget = transform.position - grappler.GetGrapplePoint();  //inverted direction for -Z axis
-                if (directionToTarget.sqrMagnitude > 0.001f)
-                {
-                    Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-                    float rotateSpeed = 360f; //degrees per second
-                    transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
-                }
-            }
-        }
-        else
-        {
-            if (!animator.enabled) animator.enabled = true;
-
-            //return to default pose
-            transform.SetLocalPositionAndRotation(
-                Vector3.Lerp(transform.localPosition, defaultLocalPosition, Time.deltaTime * transitionSpeed),
-                Quaternion.Lerp(transform.localRotation, defaultLocalRotation, Time.deltaTime * transitionSpeed)
-            );
-            reachedGrapplePose = false;
+            Vector3 dir = transform.position - grappler.GetGrapplePoint();
+            if (dir.sqrMagnitude > 0.001f)
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(dir), 360f * Time.deltaTime);
         }
     }
 
-    private void HandleTransform()
-    {
-        if (!grappler.enabled) return;
-
-        if (grappler.IsGrappling())
-        {
-            if (animator.enabled) animator.enabled = false;
-
-            //smoothly move to grapple position and rotation
-            transform.SetLocalPositionAndRotation(
-                Vector3.Lerp(transform.localPosition, grappleLocalPosition, Time.deltaTime * transitionSpeed), 
-                Quaternion.Lerp(transform.localRotation, grappleLocalRotation, Time.deltaTime * transitionSpeed));
-        }
-        else
-        {
-            if (!animator.enabled) animator.enabled = true;
-
-            //smoothly return to original position and rotation
-            transform.SetLocalPositionAndRotation(
-                Vector3.Lerp(transform.localPosition, defaultLocalPosition, Time.deltaTime * transitionSpeed), 
-                Quaternion.Lerp(transform.localRotation, defaultLocalRotation, Time.deltaTime * transitionSpeed));
-        }
-    }
-
-    private void SwingKatana()
+    private void PerformSwing()
     {
         swingToRight = !swingToRight;
         animator.SetBool("SwingToRight", swingToRight);
         animator.SetTrigger("Shing");
 
-        FindObjectOfType<PickUpController>().DockEquippedWeaponTemporary();
+        controller.DockEquippedWeaponTemporary();
 
-        if (slashClip)
-            SoundManager.instance.PlaySound(slashClip, transform.position, 1, Random.Range(.9f, 1.1f), 1, transform);
+        PlaySound(slashClip);
+
         if (slashEffect)
         {
-            slashEffect.transform.localRotation = Quaternion.Euler(0, 0, swingToRight ? 0f : 180f);
+            slashEffect.transform.localRotation = Quaternion.Euler(0, 0, swingToRight ? 0 : 180f);
             slashEffect.Play();
         }
     }
 
-    //called on animation clip
+    //called by animation event
     public void Shing()
     {
         col.enabled = true;
-        Vector3 boxHalfExtents = new(0.05f, hitRange * 0.5f,  0.05f);
-        Quaternion boxRotation = hitOrigin.rotation * Quaternion.Euler(90f, 0f, 0f);
 
         RaycastHit[] hits = Physics.BoxCastAll(
             hitOrigin.position + new Vector3(0, -.2f, 0),
-            boxHalfExtents,
+            new Vector3(0.05f, hitRange * 0.5f, 0.05f),
             hitOrigin.forward,
-            boxRotation,
+            hitOrigin.rotation * Quaternion.Euler(90f, 0, 0),
+            0f,
             hitMask
         );
 
-        if (hits.Length > 0)
-            SoundManager.instance.PlaySound(hitClip, transform.position, .7f, Random.Range(.9f, 1.1f), 1, transform);
-
+        if (hits.Length > 0) PlaySound(hitClip, volume: 0.7f);
 
         foreach (RaycastHit hit in hits)
         {
             if (hit.transform.CompareTag("Enemy"))
             {
-                SoundManager.instance.PlaySound(enemyHitClip, hit.transform.position);
+                PlaySound(enemyHitClip, hit.transform.position);
                 hit.transform.GetComponent<Enemy>().DoRagdoll(true);
             }
+
             if (hit.transform.CompareTag("Barrel"))
                 hit.transform.GetComponent<Barrel>().TakeDamage(25);
 
-            Rigidbody rb = hit.rigidbody;
-            if (rb != null && !hit.transform.CompareTag("Player"))
+            if (hit.rigidbody && !hit.transform.CompareTag("Player"))
             {
-                float upwardForce = 7f * rb.mass;
-                rb.AddForce(Vector3.up * upwardForce + GameObject.Find("Orientation").transform.forward * upwardForce / 2, ForceMode.Impulse);
+                float force = 7f * hit.rigidbody.mass;
+                hit.rigidbody.AddForce(Vector3.up * force + GameObject.Find("Orientation").transform.forward * force / 2, ForceMode.Impulse);
             }
         }
         col.enabled = false;
@@ -240,12 +194,24 @@ public class Katana : MonoBehaviour
 
     private bool IsCloseToEnemy() => Vector3.Distance(transform.position, grappler.GetGrapplePoint()) < hitRange;
 
+    private void PlaySound(AudioClip clip, Vector3? pos = null, float volume = 1f)
+    {
+        if (!clip) return;
+        SoundManager.instance.PlaySound(clip, pos ?? transform.position, volume, Random.Range(0.9f, 1.1f), 1, transform);
+    }
+
+    public void ForceSwingAfterEnemyGrapple()
+    {
+        controller.ResetWeaponAfterGrapple();
+        PerformSwing();
+        nextSwingTime = Time.time + swingCooldown;
+    }
+
     private void OnDrawGizmosSelected()
     {
         if (!hitOrigin) return;
         Gizmos.color = Color.red;
-        Vector3 boxHalfExtents = new(0.05f, hitRange * 0.5f,  0.05f);
         Gizmos.matrix = Matrix4x4.TRS(hitOrigin.position + new Vector3(0, -.2f, 0), hitOrigin.rotation * Quaternion.Euler(90f, 0f, 0f), Vector3.one);
-        Gizmos.DrawWireCube(Vector3.zero, boxHalfExtents * 2f);
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(0.1f, hitRange, 0.1f));
     }
 }

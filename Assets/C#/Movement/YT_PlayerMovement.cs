@@ -74,6 +74,12 @@ public class YT_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.isGameOver)
+        {
+            rb.velocity = Vector3.zero;
+            return;
+        }
+
         if (!MovementTemporarilyDisabled)
         {
             HandleInput();
@@ -321,79 +327,3 @@ public class YT_PlayerMovement : MonoBehaviour
 
 public enum MoveState { Walking, Crouching, Sliding, Dashing, Wallrunning, Grappling, Air }
 public enum SpeedLerpType { Slide, Dash }
-
-
-//----------WORKS WELL WITH SLIDING------------------
-////check if desiredMoveSpeed has changed a lot
-//if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f && moveSpeed != 0)
-//{
-//    StopAllCoroutines();
-//    StartCoroutine(SmoothlyLerpMoveSpeed());
-//}
-//else
-//    moveSpeed = desiredMoveSpeed;
-
-//lastDesiredMoveSpeed = desiredMoveSpeed;
-
-//----------WORKS WELL WITH DASH------------------
-//bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
-//if(lastState == MoveState.Dashing) keepMomentum = true;
-//if(desiredMoveSpeedHasChanged)
-//{
-//    if(keepMomentum)
-//    {
-//        StopAllCoroutines();
-//        StartCoroutine(SmoothlyLerpMoveSpeed());
-//    }
-//    else
-//        moveSpeed = desiredMoveSpeed;
-//}
-//lastDesiredMoveSpeed = desiredMoveSpeed;
-//lastState = state;
-
-//----------COROUTINE THAT WORKS WELL WITH SLIDING------------------
-//private IEnumerator SmoothlyLerpMoveSpeed()
-//{
-//    float time = 0;
-//    float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
-//    float startValue = moveSpeed;
-
-//    while (time < difference)
-//    {
-//        moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
-
-//        if (OnSlope())
-//        {
-//            float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
-//            float slopeAngleIncrease = 1 + (slopeAngle / 90f);
-
-//            time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
-//        }
-//        else
-//            time += Time.deltaTime * speedIncreaseMultiplier;
-//        yield return null;
-//    }
-//    moveSpeed = desiredMoveSpeed;
-//}
-
-//----------COROUTINE THAT WORKS WELL WITH DASH------------------
-
-//private IEnumerator SmoothlyLerpMoveSpeed()
-//{
-//    float time = 0;
-//    float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
-//    float startValue = moveSpeed;
-
-//    float boostFactor = speedChangeFactor;
-
-//    while (time < difference)
-//    {
-//        moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
-//        time += Time.deltaTime * boostFactor;
-//        yield return null;
-//    }
-
-//    moveSpeed = desiredMoveSpeed;
-//    speedChangeFactor = 1f;
-//    keepMomentum = false;
-//}

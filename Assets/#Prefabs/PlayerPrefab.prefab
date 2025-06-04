@@ -57,9 +57,11 @@ MonoBehaviour:
   canvas: {fileID: 0}
   scaleSpeed: 20
   rotationSpeed: 180
-  cam: {fileID: 316863075910330446}
+  cam: {fileID: 6375101309857538533}
   player: {fileID: 4438573360269568040}
+  grappleClip: {fileID: 8300000, guid: 96b453aa942b5d4488adb77752ef342b, type: 3}
   lineOrigin: {fileID: 3939992002774834858}
+  isEnemyGrapple: 0
 --- !u!114 &4822890986810341798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1400,15 +1402,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5057c542a1a57b545b485ec6610184d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedTxt: {fileID: 0}
-  stateTxt: {fileID: 0}
   orientation: {fileID: 7801594129275894071}
   walkSpeed: 7
   slideSpeed: 30
   crouchSpeed: 3.5
   dashSpeed: 30
   wallrunSpeed: 8.5
-  grappleSpeed: 10
+  grappleSpeed: 20
   speedIncreaseMultiplier: 2.5
   slopeIncreaseMultiplier: 3.5
   groundDrag: 4
@@ -1457,7 +1457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 7801594129275894071}
   playerCam: {fileID: 6375101309857538533}
-  dashForce: 30
+  dashForce: 25
   dashUpForce: 4
   dashDuration: 0.25
 --- !u!114 &13295201189849277

@@ -89,6 +89,9 @@ public class Bullet : MonoBehaviour
                 if(col.CompareTag("Enemy"))
                     col.GetComponent<Enemy>().DoRagdoll(true);
 
+                if (col.CompareTag("Player"))
+                    Debug.Log("Fuck");
+
                 if (col.TryGetComponent<Rigidbody>(out var hitRb))
                     hitRb.AddExplosionForce(explosionForce * hitRb.mass, transform.position, explosionRadius);
             }

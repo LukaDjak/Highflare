@@ -28,7 +28,7 @@ public class GrapplerRope : MonoBehaviour
 
     void DrawRope()
     {
-        if (!gg.IsGrappling())
+        if (!gg.IsGrappling() && !gg.isEnemyGrapple)
         {
             currentGrapplePosition = gg.lineOrigin.position;
             spring.Reset();

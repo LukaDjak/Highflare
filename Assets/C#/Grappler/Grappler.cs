@@ -6,6 +6,7 @@ public class Grappler : MonoBehaviour
     [SerializeField] private LayerMask grappleLayer;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private float maxGrappleDistance = 30f;
+    [SerializeField] private float grapplePullSpeed = 20f;
 
     [Header("UI Indicator")]
     [SerializeField] private RectTransform uiGrappleIndicator;
@@ -14,21 +15,60 @@ public class Grappler : MonoBehaviour
     [SerializeField] private float rotationSpeed = 180f;
 
     [Header("References")]
-    [SerializeField] private Camera cam;
+    [SerializeField] private YT_PlayerCam cam;
     [SerializeField] private Transform player;
+    [SerializeField] private AudioClip grappleClip;
     public Transform lineOrigin;
 
     private SpringJoint springJoint;
     private Vector3 grapplePoint;
-    private bool shouldHideIndicator = false;
+    private YT_PlayerMovement playerMovement;
+    private bool shouldHideIndicator;
+    [HideInInspector] public bool isEnemyGrapple = false;
 
-    private void Update() => UpdateUIIndicator();
-
-    public void StartGrapple(Vector3 targetPoint, float spring = 4.5f, float damper = 7f, float massScale = 4.5f)
+    private void Start() => playerMovement = player.GetComponent<YT_PlayerMovement>();
+    private void Update()
     {
-        //player.GetComponent<PlayerMovement>().ms.isGrappling = true;
-        player.GetComponent<YT_PlayerMovement>().isGrappling = true;
+        if (isEnemyGrapple)
+        {
+            Vector3 direction = (grapplePoint - player.position).normalized;
+            float distance = Vector3.Distance(player.position, grapplePoint);
+
+            // 👇 Snap player toward enemy
+            player.GetComponent<Rigidbody>().velocity = direction * grapplePullSpeed;
+
+            // 👇 Optional smoothing
+            // player.position = Vector3.MoveTowards(player.position, grapplePoint, grapplePullSpeed * Time.deltaTime);
+
+            // Stop when close enough
+            if (distance < 2f)
+            {
+                StopGrapple();
+                FindObjectOfType<Katana>().ForceSwingAfterEnemyGrapple(); // 👈 call Katana attack
+            }
+            return;
+        }
+
+        UpdateUIIndicator();
+    }
+
+    public void StartGrapple(Vector3 targetPoint, bool enemy, float spring = 4.5f, float damper = 7f, float massScale = 4.5f)
+    {
+        playerMovement.isGrappling = true;
         grapplePoint = targetPoint;
+        cam.DoFov(90f);
+
+        if (grappleClip)
+            SoundManager.instance.PlaySound(grappleClip, player.position, 1f, Random.Range(0.9f, 1.1f));
+
+        if (enemy)
+        {
+            isEnemyGrapple = true;
+            player.GetComponent<Rigidbody>().velocity = Vector3.zero; // reset movement
+            return;
+        }
+
+        // default SpringJoint grapple
         springJoint = player.gameObject.AddComponent<SpringJoint>();
         springJoint.autoConfigureConnectedAnchor = false;
         springJoint.connectedAnchor = grapplePoint;
@@ -43,30 +83,30 @@ public class Grappler : MonoBehaviour
 
     public void StopGrapple()
     {
+        cam.DoFov(85f);
         if (springJoint)
             Destroy(springJoint);
-        player.GetComponent<YT_PlayerMovement>().isGrappling = false;
+
+        playerMovement.isGrappling = false;
+        isEnemyGrapple = false;
     }
 
-        //player.GetComponent<PlayerMovement>().ms.isGrappling = false;
+
     public bool IsGrappling() => springJoint != null;
     public Vector3 GetGrapplePoint() => grapplePoint;
 
     public bool TryGetGrappleTarget(out Vector3 targetPoint, out bool isEnemy)
     {
-        if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out RaycastHit hit, maxGrappleDistance, enemyLayer))
+        if (SphereCast(enemyLayer, out targetPoint))
         {
-            Enemy enemy = hit.transform.GetComponent<Enemy>();
-            if (enemy != null && !enemy.isDead)
+            if (targetPoint != Vector3.zero)
             {
-                targetPoint = hit.point;
                 isEnemy = true;
                 return true;
             }
         }
-        else if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out hit, maxGrappleDistance, grappleLayer))
+        else if (SphereCast(grappleLayer, out targetPoint))
         {
-            targetPoint = hit.point;
             isEnemy = false;
             return true;
         }
@@ -76,49 +116,60 @@ public class Grappler : MonoBehaviour
         return false;
     }
 
-
-    void UpdateUIIndicator()
+    private bool SphereCast(LayerMask layer, out Vector3 point)
     {
-        if (shouldHideIndicator)
+        if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out RaycastHit hit, maxGrappleDistance, layer))
         {
-            uiGrappleIndicator.localScale = Vector3.Lerp(uiGrappleIndicator.localScale, Vector3.zero, Time.deltaTime * scaleSpeed);
-            if (uiGrappleIndicator.localScale.magnitude < 0.01f)
+            if (layer == enemyLayer)
             {
-                uiGrappleIndicator.localScale = Vector3.zero;
-                uiGrappleIndicator.gameObject.SetActive(false);
-                shouldHideIndicator = false;
+                Enemy enemy = hit.transform.GetComponent<Enemy>();
+                if (enemy == null || enemy.isDead) { point = Vector3.zero; return false; }
             }
-            return;
+
+            point = hit.point;
+            return true;
         }
 
-        if (/*player.GetComponent<PlayerMovement>().ms.isGrappling*/ player.GetComponent<YT_PlayerMovement>().isGrappling)
+        point = Vector3.zero;
+        return false;
+    }
+
+    private void UpdateUIIndicator()
+    {
+        if (shouldHideIndicator || playerMovement.isGrappling)
         {
-            uiGrappleIndicator.gameObject.SetActive(false);
+            HideIndicator();
             return;
         }
 
         if (Physics.SphereCast(cam.transform.position, 4f, cam.transform.forward, out RaycastHit hit, maxGrappleDistance, grappleLayer))
-        {
-            Vector3 screenPos = cam.WorldToScreenPoint(hit.transform.position);
-            uiGrappleIndicator.gameObject.SetActive(true);
-            uiGrappleIndicator.position = screenPos;
-
-            // 🌟 Rotation
-            uiGrappleIndicator.localEulerAngles += new Vector3(0f, 0f, rotationSpeed * Time.deltaTime);
-
-            // 🌟 Distance-based scaling
-            float distance = Vector3.Distance(cam.transform.position, hit.point);
-            float t = 1f - Mathf.Clamp01(distance / maxGrappleDistance); // closer = 1, farther = 0
-            float scale = Mathf.Lerp(0.5f, 2.7f, t); // scale range
-
-            Vector3 targetScale = Vector3.one * scale;
-            uiGrappleIndicator.localScale = Vector3.Lerp(uiGrappleIndicator.localScale, targetScale, Time.deltaTime * scaleSpeed);
-        }
+            ShowIndicator(hit);
         else
+            HideIndicator();
+    }
+
+    private void ShowIndicator(RaycastHit hit)
+    {
+        uiGrappleIndicator.gameObject.SetActive(true);
+        uiGrappleIndicator.position = Camera.main.WorldToScreenPoint(hit.transform.position);
+        uiGrappleIndicator.localEulerAngles += new Vector3(0f, 0f, rotationSpeed * Time.deltaTime);
+
+        float t = 1f - Mathf.Clamp01(Vector3.Distance(cam.transform.position, hit.point) / maxGrappleDistance);
+        float scale = Mathf.Lerp(0.5f, 2.7f, t);
+        Vector3 targetScale = Vector3.one * scale;
+
+        uiGrappleIndicator.localScale = Vector3.Lerp(uiGrappleIndicator.localScale, targetScale, Time.deltaTime * scaleSpeed);
+    }
+
+    private void HideIndicator()
+    {
+        uiGrappleIndicator.localScale = Vector3.Lerp(uiGrappleIndicator.localScale, Vector3.zero, Time.deltaTime * scaleSpeed);
+
+        if (uiGrappleIndicator.localScale.magnitude < 0.01f)
         {
-            uiGrappleIndicator.localScale = Vector3.Lerp(uiGrappleIndicator.localScale, Vector3.zero, Time.deltaTime * scaleSpeed);
-            if (uiGrappleIndicator.localScale.magnitude < 0.01f)
-                uiGrappleIndicator.gameObject.SetActive(false);
+            uiGrappleIndicator.localScale = Vector3.zero;
+            uiGrappleIndicator.gameObject.SetActive(false);
+            shouldHideIndicator = false;
         }
     }
 }

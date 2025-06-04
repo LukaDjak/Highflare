@@ -51,19 +51,11 @@ public class YT_Sliding : MonoBehaviour
             SlidingMovement();
     }
 
-    private void OnMovePerformed(UnityEngine.InputSystem.InputAction.CallbackContext ctx)
-    {
-        moveInput = ctx.ReadValue<Vector2>();
-    }
-
-    private void OnMoveCanceled(UnityEngine.InputSystem.InputAction.CallbackContext _)
-    {
-        moveInput = Vector2.zero;
-    }
-
+    private void OnMovePerformed(UnityEngine.InputSystem.InputAction.CallbackContext ctx) => moveInput = ctx.ReadValue<Vector2>();
+    private void OnMoveCanceled(UnityEngine.InputSystem.InputAction.CallbackContext _) => moveInput = Vector2.zero;
     private void OnSlidePerformed(UnityEngine.InputSystem.InputAction.CallbackContext _)
     {
-        if (moveInput.magnitude > 0.1f && !pm.isGrappling)
+        if (moveInput.magnitude > 0.1f && !pm.isGrappling && !GameManager.isGameOver)
             StartSlide();
     }
 

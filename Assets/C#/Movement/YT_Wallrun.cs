@@ -64,6 +64,8 @@ public class YT_Wallrun : MonoBehaviour
 
     private void Update()
     {
+        if(GameManager.isGameOver) return;
+
         Vector2 move = input.Player.Move.ReadValue<Vector2>();
         horizontalInput = move.x;
         verticalInput = move.y;

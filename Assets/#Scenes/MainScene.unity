@@ -3220,23 +3220,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 702364759860426878, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
-      propertyPath: grappleSpeed
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 702364759860426878, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: maxSlopeAngle
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 702364759860426878, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
       propertyPath: enemyPullSpeed
       value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2366307152461392893, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3782507142442422670, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
@@ -3619,7 +3604,7 @@ PrefabInstance:
     - target: {fileID: 5992446052911000143, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: openPositionOffset.x
-      value: -6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5992446052911000143, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
@@ -3629,7 +3614,7 @@ PrefabInstance:
     - target: {fileID: 5992446052911000143, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: openPositionOffset.z
-      value: 0.25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6089877039731764040, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}

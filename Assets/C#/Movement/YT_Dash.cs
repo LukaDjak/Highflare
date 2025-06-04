@@ -38,7 +38,7 @@ public class YT_Dash : MonoBehaviour
 
     private void Update()
     {
-        if ((pm.IsGrounded() && !pm.isSliding) || pm.isWallrunning)
+        if (((pm.IsGrounded() && !pm.isSliding) || pm.isWallrunning) && !GameManager.isGameOver)
             canDash = true;
     }
 

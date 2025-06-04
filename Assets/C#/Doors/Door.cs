@@ -20,6 +20,9 @@ public class Door : MonoBehaviour
 
     public void ToggleDoor()
     {
+        if (!isOpen)
+            closedPosition = transform.position; // <-- update closed position when closing
+
         isOpen = !isOpen;
         Vector3 targetPosition = isOpen ? closedPosition + openPositionOffset : closedPosition;
 
