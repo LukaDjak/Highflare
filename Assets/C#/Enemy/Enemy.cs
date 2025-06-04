@@ -194,6 +194,8 @@ public class Enemy : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if(!shouldMove) return;
+
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, patrolRange);        
         Gizmos.color = Color.yellow;

@@ -86,25 +86,24 @@ public class Katana : MonoBehaviour
 
             if (!hasGrappled)
             {
-                if (grappler.TryGetGrappleTarget(out Vector3 point, out bool isEnemy))
+                if (grappler.TryGetGrappleTarget(out Vector3 point, out bool isEnemy, out Transform enemyTransform))
                 {
                     controller.DockWeaponForGrapple();
 
                     if (isEnemy)
                     {
-                        // Pull instantly toward enemy, no physics
                         Rigidbody rb = pm.GetComponent<Rigidbody>();
                         rb.velocity = Vector3.zero;
 
                         if (pm.IsGrounded())
                             rb.AddForce(Vector3.up * 12f, ForceMode.Impulse);
 
-                        grappler.StartGrapple(point, isEnemy);
+                        grappler.StartGrapple(point, isEnemy, enemyTransform);
                     }
                     else
                         grappler.StartGrapple(point, isEnemy);
 
-                    hasGrappled = true; // ✅ prevent re-triggering
+                    hasGrappled = true;
                     return;
                 }
 

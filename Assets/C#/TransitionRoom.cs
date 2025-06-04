@@ -82,8 +82,16 @@ public class TransitionRoom : MonoBehaviour
         yield return new WaitForSeconds(1f);
         endDoor.ToggleDoor(); // Close end door
 
-        GameManager.instance.currentLevel++;
-        Debug.Log($"Loading Level {GameManager.instance.currentLevel}");
+        if (GameManager.instance.currentLevel == 3)
+        {
+            FindObjectOfType<PauseMenu>().GoToMainMenu();
+            yield break;
+        }
+        else
+        {
+            GameManager.instance.currentLevel++;
+            Debug.Log($"Loading Level {GameManager.instance.currentLevel}");
+        }
 
         yield return new WaitForSeconds(2f);
 

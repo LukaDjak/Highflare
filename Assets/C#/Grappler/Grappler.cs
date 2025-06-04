@@ -73,7 +73,7 @@ public class Grappler : MonoBehaviour
         }
     }
 
-    public void StartGrapple(Vector3 targetPoint, bool enemy, float spring = 4.5f, float damper = 7f, float massScale = 4.5f)
+    public void StartGrapple(Vector3 targetPoint, bool enemy, Transform enemyTransform = null, float spring = 4.5f, float damper = 7f, float massScale = 4.5f)
     {
         playerMovement.isGrappling = true;
         cam.DoFov(90f);
@@ -84,28 +84,32 @@ public class Grappler : MonoBehaviour
         if (enemy)
         {
             isEnemyGrapple = true;
-            grappledEnemy = GetEnemyAtPoint(targetPoint);
+            grappledEnemy = enemyTransform;
+
             player.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
             if (grappledEnemy != null)
-                grapplePoint = grappledEnemy.position + Vector3.up * 1.0f; // center on enemy body
+                grapplePoint = grappledEnemy.position + Vector3.up * 1.0f;
             else
                 grapplePoint = targetPoint;
 
             return;
         }
+        else
+        {
+            // default SpringJoint grapple
+            grapplePoint = targetPoint;
+            springJoint = player.gameObject.AddComponent<SpringJoint>();
+            springJoint.autoConfigureConnectedAnchor = false;
+            springJoint.connectedAnchor = grapplePoint;
 
-        // default SpringJoint grapple
-        springJoint = player.gameObject.AddComponent<SpringJoint>();
-        springJoint.autoConfigureConnectedAnchor = false;
-        springJoint.connectedAnchor = grapplePoint;
-
-        float distance = Vector3.Distance(player.position, grapplePoint);
-        springJoint.maxDistance = distance * 0.8f;
-        springJoint.minDistance = 0f;
-        springJoint.spring = spring;
-        springJoint.damper = damper;
-        springJoint.massScale = massScale;
+            float distance = Vector3.Distance(player.position, grapplePoint);
+            springJoint.maxDistance = distance * 0.8f;
+            springJoint.minDistance = 0f;
+            springJoint.spring = spring;
+            springJoint.damper = damper;
+            springJoint.massScale = massScale;
+        }
     }
 
     public void StopGrapple()
@@ -117,64 +121,35 @@ public class Grappler : MonoBehaviour
         playerMovement.isGrappling = false;
         isEnemyGrapple = false;
         grappledEnemy = null;
-
-        // Stop player movement when grapple ends to prevent sliding
-        Rigidbody rb = player.GetComponent<Rigidbody>();
-        if (rb != null)
-            rb.velocity = Vector3.zero;
-    }
-
-    private Transform GetEnemyAtPoint(Vector3 point)
-    {
-        Collider[] hits = Physics.OverlapSphere(point, 1f, enemyLayer);
-        foreach (var hit in hits)
-        {
-            Enemy enemy = hit.GetComponent<Enemy>();
-            if (enemy != null && !enemy.isDead)
-                return enemy.transform;
-        }
-        return null;
     }
 
     public bool IsGrappling() => springJoint != null;
     public Vector3 GetGrapplePoint() => grapplePoint;
 
-    public bool TryGetGrappleTarget(out Vector3 targetPoint, out bool isEnemy)
+    public bool TryGetGrappleTarget(out Vector3 targetPoint, out bool isEnemy, out Transform targetTransform)
     {
-        if (SphereCast(enemyLayer, out targetPoint))
+        if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out RaycastHit hit, maxGrappleDistance, enemyLayer))
         {
-            if (targetPoint != Vector3.zero)
+            Enemy enemy = hit.transform.GetComponent<Enemy>();
+            if (enemy != null && !enemy.isDead)
             {
+                targetPoint = hit.point;
                 isEnemy = true;
+                targetTransform = enemy.transform;
                 return true;
             }
         }
-        else if (SphereCast(grappleLayer, out targetPoint))
+        else if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out RaycastHit hitGrapple, maxGrappleDistance, grappleLayer))
         {
+            targetPoint = hitGrapple.point;
             isEnemy = false;
+            targetTransform = null;
             return true;
         }
 
         targetPoint = Vector3.zero;
         isEnemy = false;
-        return false;
-    }
-
-    private bool SphereCast(LayerMask layer, out Vector3 point)
-    {
-        if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out RaycastHit hit, maxGrappleDistance, layer))
-        {
-            if (layer == enemyLayer)
-            {
-                Enemy enemy = hit.transform.GetComponent<Enemy>();
-                if (enemy == null || enemy.isDead) { point = Vector3.zero; return false; }
-            }
-
-            point = hit.point;
-            return true;
-        }
-
-        point = Vector3.zero;
+        targetTransform = null;
         return false;
     }
 
