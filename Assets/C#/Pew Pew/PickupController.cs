@@ -37,7 +37,7 @@ public class PickUpController : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.isGameOver && equippedWeapon != null)
+        if (GameManager.isGameOver && equippedWeapon != null && equippedWeapon.GetComponent<Gun>().isEquipped)
             Drop();
     }
 
@@ -80,7 +80,10 @@ public class PickUpController : MonoBehaviour
         outline = weapon.GetComponent<QuickOutline>();
 
         if (weapon.TryGetComponent<Gun>(out var gun))
+        {
             gun.enabled = true;
+            gun.isEquipped = true;
+        }
 
         gunRb.useGravity = false;
         gunCol.enabled = false;
@@ -121,7 +124,10 @@ public class PickUpController : MonoBehaviour
         gunRb.AddForce(Camera.main.transform.forward * dropForwardForce + Vector3.up * dropUpwardForce, ForceMode.Impulse);
 
         if (equippedWeapon.TryGetComponent<Gun>(out var gun))
+        {
             gun.enabled = false;
+            gun.isEquipped = false;
+        }
 
         equippedWeapon = null;
         gunRb = null;

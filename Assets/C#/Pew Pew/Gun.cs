@@ -1,22 +1,22 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
     [Header("General Settings")]
-    public bool allowButtonHold = true;
+    [SerializeField] private bool allowButtonHold = true;
     public KeyCode reloadKey = KeyCode.R;
 
     [Header("Shooting Settings")]
-    public GameObject bulletPrefab;
-    public Transform firePoint;
-    public float shootForce = 20f;
-    public float spread = 0.1f;
-    public float timeBetweenShots = 0.1f;
-    public int bulletsPerTap = 1;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private float shootForce = 20f;
+    [SerializeField] private float spread = 0.1f;
+    [SerializeField] private float timeBetweenShots = 0.1f;
+    [SerializeField] private int bulletsPerTap = 1;
 
     [Header("Magazine Settings")]
     public int magazineSize = 12;
-    public float reloadTime = 1.5f;
+    [SerializeField] private float reloadTime = 1.5f;
 
     [Header("Recoil Settings")]
     public float recoilForce = 5f;
@@ -27,6 +27,7 @@ public class Gun : MonoBehaviour
     [SerializeField] private AudioClip reloadSound;
 
     [HideInInspector] public int bulletsLeft;
+    [HideInInspector] public bool isEquipped;
 
     private bool shooting;
     private bool readyToShoot;
@@ -35,7 +36,6 @@ public class Gun : MonoBehaviour
     private Rigidbody playerRb;
     private Camera cam;
     private Animator anim;
-
 
     void Start()
     {
@@ -50,7 +50,7 @@ public class Gun : MonoBehaviour
 
     void HandleInput()
     {
-        if (transform.parent == null || GameManager.isGameOver || Time.timeScale == 0) return;
+        if (GameManager.isGameOver || Time.timeScale == 0 || !isEquipped) return;
 
         if (allowButtonHold)
             shooting = Input.GetMouseButton(0);
@@ -64,7 +64,7 @@ public class Gun : MonoBehaviour
             Shoot();
     }
 
-    void Shoot()
+    public void Shoot()
     {
         readyToShoot = false;
 
@@ -81,6 +81,31 @@ public class Gun : MonoBehaviour
         muzzleFlash.Play();
 
         SoundManager.instance.PlaySound(shootSound, firePoint.position, .7f, Random.Range(.9f, 1.1f), 0);
+
+        bulletsLeft--;
+        Invoke(nameof(ResetShot), timeBetweenShots);
+    }
+
+    //called from enemy script
+    public void EnemyShoot(Transform target)
+    {
+        if (!readyToShoot || reloading || bulletsLeft <= 0) return;
+
+        readyToShoot = false;
+
+        for (int i = 0; i < bulletsPerTap; i++)
+        {
+            Vector3 direction = GetEnemyDirectionWithSpread(target);
+            Debug.DrawRay(firePoint.position, direction * 5f, Color.red, 1f);
+            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, transform.rotation, GameObject.Find("Level").transform);
+            Rigidbody rb = bullet.GetComponent<Rigidbody>();
+            rb.AddForce(direction.normalized * shootForce, ForceMode.Impulse);
+        }
+
+        if (anim != null) anim.SetTrigger("Shoot");
+        if (muzzleFlash != null) muzzleFlash.Play();
+
+        SoundManager.instance.PlaySound(shootSound, firePoint.position, 0.7f, Random.Range(0.9f, 1.1f), 0);
 
         bulletsLeft--;
         Invoke(nameof(ResetShot), timeBetweenShots);
@@ -109,13 +134,25 @@ public class Gun : MonoBehaviour
         return spreadDirection.normalized;
     }
 
+    private Vector3 GetEnemyDirectionWithSpread(Transform target)
+    {
+        Vector3 directionWithoutSpread = target.position - firePoint.position;
+
+        float xSpread = Random.Range(-spread, spread);
+        float ySpread = Random.Range(-spread, spread);
+
+        Vector3 spreadDirection = Quaternion.Euler(ySpread, xSpread, 0) * directionWithoutSpread;
+
+        return spreadDirection.normalized;
+    }
+
     void ApplyRecoil()
     {
         if (playerRb != null)
         {
             Vector3 recoilDir = -cam.transform.forward * recoilForce;
 
-            if(recoilForce >= 10) playerRb.velocity = Vector3.zero;
+            if (recoilForce >= 10) playerRb.velocity = Vector3.zero;
             playerRb.AddForce(recoilDir, ForceMode.Impulse);
         }
     }

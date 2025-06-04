@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8123055167578459281}
   - component: {fileID: 6123443989770057154}
   - component: {fileID: 2575769943810778943}
+  - component: {fileID: 8018572237687444446}
   m_Layer: 0
   m_Name: ButtonHolder
   m_TagString: Untagged
@@ -106,6 +107,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.49995, y: 0.4999501, z: 1.0750002}
   m_Center: {x: 0, y: 0, z: 0.53796893}
+--- !u!208 &8018572237687444446
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4643091656108145582}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.25, y: 0.25, z: 0.53800005}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0.53800005}
+  m_TimeToStationary: 0.5
 --- !u!1 &7583570986996300258
 GameObject:
   m_ObjectHideFlags: 0
