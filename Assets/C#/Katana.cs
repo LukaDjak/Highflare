@@ -34,8 +34,14 @@ public class Katana : MonoBehaviour
     private void Awake()
     {
         input = new PlayerControls();
-        input.Player.KatanaGrapple.started += _ => isUsingKatana = true;
-        input.Player.KatanaGrapple.canceled += _ => ReleaseKatana();
+        input.Player.KatanaGrapple.started += _ => {
+            isUsingKatana = true;
+            grappler.SetGrappleInput(true);
+        };
+        input.Player.KatanaGrapple.canceled += _ => {
+            ReleaseKatana();
+            grappler.SetGrappleInput(false);
+        };
     }
 
     private void OnEnable() => input.Enable();

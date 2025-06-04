@@ -24,6 +24,8 @@ public class Grappler : MonoBehaviour
     private Vector3 grapplePoint;
     private YT_PlayerMovement playerMovement;
     private bool shouldHideIndicator;
+    private bool isGrappleInputHeld = false;
+    private Transform grappledEnemy = null;
     [HideInInspector] public bool isEnemyGrapple = false;
 
     private void Start() => playerMovement = player.GetComponent<YT_PlayerMovement>();
@@ -31,20 +33,29 @@ public class Grappler : MonoBehaviour
     {
         if (isEnemyGrapple)
         {
+            if (!isGrappleInputHeld)
+            {
+                StopGrapple();
+                return;
+            }
+
+            if (grappledEnemy == null)
+            {
+                StopGrapple();
+                return;
+            }
+
+            grapplePoint = grappledEnemy.position + Vector3.up * 1.0f; // add Y offset (adjust 1.0f as needed)
+
             Vector3 direction = (grapplePoint - player.position).normalized;
             float distance = Vector3.Distance(player.position, grapplePoint);
 
-            // 👇 Snap player toward enemy
             player.GetComponent<Rigidbody>().velocity = direction * grapplePullSpeed;
 
-            // 👇 Optional smoothing
-            // player.position = Vector3.MoveTowards(player.position, grapplePoint, grapplePullSpeed * Time.deltaTime);
-
-            // Stop when close enough
             if (distance < 2f)
             {
                 StopGrapple();
-                FindObjectOfType<Katana>().ForceSwingAfterEnemyGrapple(); // 👈 call Katana attack
+                FindObjectOfType<Katana>().ForceSwingAfterEnemyGrapple();
             }
             return;
         }
@@ -52,10 +63,19 @@ public class Grappler : MonoBehaviour
         UpdateUIIndicator();
     }
 
+    public void SetGrappleInput(bool held)
+    {
+        isGrappleInputHeld = held;
+
+        if (!held && IsGrappling())
+        {
+            StopGrapple();
+        }
+    }
+
     public void StartGrapple(Vector3 targetPoint, bool enemy, float spring = 4.5f, float damper = 7f, float massScale = 4.5f)
     {
         playerMovement.isGrappling = true;
-        grapplePoint = targetPoint;
         cam.DoFov(90f);
 
         if (grappleClip)
@@ -64,7 +84,14 @@ public class Grappler : MonoBehaviour
         if (enemy)
         {
             isEnemyGrapple = true;
-            player.GetComponent<Rigidbody>().velocity = Vector3.zero; // reset movement
+            grappledEnemy = GetEnemyAtPoint(targetPoint);
+            player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+            if (grappledEnemy != null)
+                grapplePoint = grappledEnemy.position + Vector3.up * 1.0f; // center on enemy body
+            else
+                grapplePoint = targetPoint;
+
             return;
         }
 
@@ -89,8 +116,25 @@ public class Grappler : MonoBehaviour
 
         playerMovement.isGrappling = false;
         isEnemyGrapple = false;
+        grappledEnemy = null;
+
+        // Stop player movement when grapple ends to prevent sliding
+        Rigidbody rb = player.GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.velocity = Vector3.zero;
     }
 
+    private Transform GetEnemyAtPoint(Vector3 point)
+    {
+        Collider[] hits = Physics.OverlapSphere(point, 1f, enemyLayer);
+        foreach (var hit in hits)
+        {
+            Enemy enemy = hit.GetComponent<Enemy>();
+            if (enemy != null && !enemy.isDead)
+                return enemy.transform;
+        }
+        return null;
+    }
 
     public bool IsGrappling() => springJoint != null;
     public Vector3 GetGrapplePoint() => grapplePoint;

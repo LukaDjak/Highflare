@@ -28,6 +28,9 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent agent;
     private Vector3 startPosition;
 
+    private float firstShotDelay = 0f;
+    private float shootStateEnterTime = 0f;
+
     private enum State { Idle, Patrol, Chase, Shoot }
     private State currentState;
 
@@ -93,6 +96,12 @@ public class Enemy : MonoBehaviour
             case State.Shoot:
                 animator.SetInteger("State", 2); //shoot idle anim
                 agent.isStopped = true;
+
+                //initialize delay timer on entering shooting state
+                firstShotDelay = Random.Range(0.5f, 1f);
+                shootStateEnterTime = Time.time;
+
+                lastShotTime = 0f; //reset last shot so cooldown triggers after delay
                 break;
         }
     }
@@ -126,10 +135,14 @@ public class Enemy : MonoBehaviour
                 FaceTarget(player.position);
                 animator.SetInteger("State", 2); // shoot
 
-                if (Time.time - lastShotTime >= shootCooldown)
+                //wait for first shot delay
+                if (Time.time - shootStateEnterTime >= firstShotDelay)
                 {
-                    ShootAtPlayer();
-                    lastShotTime = Time.time;
+                    if (Time.time - lastShotTime >= shootCooldown)
+                    {
+                        ShootAtPlayer();
+                        lastShotTime = Time.time;
+                    }
                 }
                 break;
         }
