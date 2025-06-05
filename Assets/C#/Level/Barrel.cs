@@ -42,7 +42,6 @@ public class Barrel : MonoBehaviour
                 SoundManager.instance.PlaySound(explosionClip, transform.position, .7f, Random.Range(0.9f, 1.1f));
             }
         }
-
         Destroy(gameObject);
     }
 

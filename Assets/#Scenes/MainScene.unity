@@ -2370,6 +2370,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7fcefb3d2c6f7245a76e0a26ab65989, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathClip: {fileID: 8300000, guid: 0a3e233308e895348ab396bebff4d16e, type: 3}
   background: {fileID: 608820972}
   pauseMenu: {fileID: 1855749308}
   gameOverMenu: {fileID: 820553139}
@@ -3223,6 +3224,11 @@ PrefabInstance:
       propertyPath: enemyPullSpeed
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 3245341710480467933, guid: 0e050f120ff8dd34784a33d1c338eded,
+        type: 3}
+      propertyPath: slideClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 929dcd6b606331f45b90e8a8e6b1da1b, type: 3}
     - target: {fileID: 3782507142442422670, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
       propertyPath: m_LocalPosition.x

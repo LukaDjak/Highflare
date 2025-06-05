@@ -13,10 +13,7 @@ public class Door : MonoBehaviour
     private Vector3 closedPosition;
     private Coroutine moveCoroutine;
 
-    private void Start()
-    {
-        closedPosition = transform.position;
-    }
+    private void Start() => closedPosition = transform.position;
 
     public void ToggleDoor()
     {
@@ -48,13 +45,12 @@ public class Door : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null;
         }
-
         transform.position = target;
     }
 
     private IEnumerator AutoCloseAfterDelay()
     {
         yield return new WaitForSeconds(autoCloseDelay);
-        ToggleDoor(); // close
+        ToggleDoor(); //close
     }
 }

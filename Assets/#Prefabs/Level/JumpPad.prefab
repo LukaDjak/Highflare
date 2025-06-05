@@ -99,7 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bouncerStrength: 3
   useVelocity: 1
-  bouncerClip: {fileID: 0}
+  bouncerClip: {fileID: 8300000, guid: 3a0c1f9aad6011146ab89d2fdf599da7, type: 3}
 --- !u!65 &7634981360527762915
 BoxCollider:
   m_ObjectHideFlags: 0

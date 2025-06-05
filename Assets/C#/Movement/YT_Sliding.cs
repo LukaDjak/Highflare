@@ -3,7 +3,9 @@ using UnityEngine;
 public class YT_Sliding : MonoBehaviour
 {
     [Header("References")]
-    public Transform orientation, playerObj;
+    public Transform orientation;
+    public Transform playerObj;
+    public AudioClip slideClip;
     public float maxSlideTime = 1.5f, slideForce = 400f, slideYScale = 0.5f;
 
     private float startYScale, slideTimer;
@@ -69,6 +71,7 @@ public class YT_Sliding : MonoBehaviour
     private void StartSlide()
     {
         pm.isSliding = true;
+        SoundManager.instance.PlaySound(slideClip, transform.position, 1, 1, 1, transform);
         playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale, playerObj.localScale.z);
         rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
         slideTimer = maxSlideTime;

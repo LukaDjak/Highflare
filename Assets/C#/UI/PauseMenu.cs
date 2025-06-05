@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+    [SerializeField] private AudioClip deathClip;
+
     [Header("UI Panels")]
     [SerializeField] private GameObject background;
     [SerializeField] private GameObject pauseMenu;
@@ -61,6 +63,7 @@ public class PauseMenu : MonoBehaviour
     public void ShowGameOver()
     {
         GameManager.isGameOver = true;
+        SoundManager.instance.PlaySound(deathClip, Vector3.zero, 1, 1, 0);
         Time.timeScale = 0.5f; //slow down time
         background.SetActive(true);
         gameOverMenu.SetActive(true);
