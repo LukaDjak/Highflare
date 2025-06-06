@@ -26,6 +26,8 @@ public class PickUpController : MonoBehaviour
     private PlayerControls input;
     private Scene gunOriginalScene;
 
+    public static bool IsPickingUpWeapon { get; private set; }
+
     void Awake()
     {
         input = new PlayerControls();
@@ -48,7 +50,7 @@ public class PickUpController : MonoBehaviour
             if (equippedWeapon != null)
                 Drop();
 
-            CrosshairManager.instance.ResetCrosshair();
+            CrosshairManager.Instance.ResetCrosshair();
             PickUp(weapon);
         }
         else
@@ -72,7 +74,7 @@ public class PickUpController : MonoBehaviour
 
     void PickUp(GameObject weapon)
     {
-        CrosshairManager.instance.ResetCrosshair();
+        CrosshairManager.Instance.ResetCrosshair();
         equippedWeapon = weapon;
         gunRb = weapon.GetComponent<Rigidbody>();
         gunCol = weapon.GetComponent<Collider>();
@@ -90,12 +92,14 @@ public class PickUpController : MonoBehaviour
         outline.enabled = false;
         gunAnim.enabled = true;
 
+        IsPickingUpWeapon = true;
         gunOriginalScene = weapon.scene;
         weapon.transform.DOMove(itemSocket.position, 0.2f).SetEase(Ease.OutQuad);
         weapon.transform.DORotateQuaternion(itemSocket.rotation, 0.2f).SetEase(Ease.OutQuad).OnComplete(() =>
         {
             weapon.transform.SetParent(itemSocket);
             weapon.transform.SetLocalPositionAndRotation(Vector3.zero, itemSocket.rotation);
+            IsPickingUpWeapon = false;
         });
 
         weapon.layer = LayerMask.NameToLayer("Clipping");

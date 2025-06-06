@@ -162,8 +162,8 @@ public class Gun : MonoBehaviour
     void StartReload()
     {
         reloading = true;
-        CrosshairManager.instance.SetCrosshair(null);
-        CrosshairManager.instance.StartTimedFill(reloadTime / 2f);
+        CrosshairManager.Instance.SetCrosshair(null);
+        CrosshairManager.Instance.StartTimedFill(reloadTime / 2f);
         anim.SetFloat("Duration", 2f / reloadTime);
         anim.SetTrigger("Reload");
         SoundManager.instance.PlaySound(reloadSound, transform.position, .7f, 1.2f, 0);
@@ -172,7 +172,7 @@ public class Gun : MonoBehaviour
     //called on animation clip
     public void FinishReload()
     {
-        CrosshairManager.instance.ResetCrosshair();
+        CrosshairManager.Instance.ResetCrosshair();
         bulletsLeft = magazineSize;
         reloading = false;
     }

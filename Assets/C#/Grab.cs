@@ -10,6 +10,8 @@ public class Grab : MonoBehaviour
     LineRenderer lr;
     SpringJoint joint;
 
+    [SerializeField] private Transform itemSocket;
+
     [Header("Crosshair UI")]
     [SerializeField] private Sprite grabIcon;
 
@@ -31,17 +33,17 @@ public class Grab : MonoBehaviour
 
     void CheckForGrabbable()
     {
-        if (grabbedObj != null || GameObject.Find("ItemSocket").transform.childCount != 0)
+        if (grabbedObj != null || itemSocket.childCount != 0 || PickUpController.IsPickingUpWeapon)
             return;
-        if (Physics.Raycast(cam.position, cam.forward, out hit, 10f, whatIsGrabbable))
-            CrosshairManager.instance.SetCrosshair(grabIcon);
+        if (Physics.Raycast(cam.position, cam.forward, out hit, 10f, whatIsGrabbable) && itemSocket.childCount == 0)
+            CrosshairManager.Instance.SetCrosshair(grabIcon);
         else
-            CrosshairManager.instance.ResetCrosshair();
+            CrosshairManager.Instance.ResetCrosshair();
     }
 
     void GrabObject()
     {
-        if (GameObject.Find("ItemSocket").transform.childCount != 0 || GameManager.isGameOver) return;
+        if (itemSocket.childCount != 0 || GameManager.isGameOver) return;
         if (Physics.Raycast(cam.position, cam.forward, out hit, 10f, whatIsGrabbable))
         {
             if (hit.transform.GetComponent<Rigidbody>() != null)

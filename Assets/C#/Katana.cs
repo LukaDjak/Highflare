@@ -102,15 +102,13 @@ public class Katana : MonoBehaviour
                     }
                     else
                         grappler.StartGrapple(point, isEnemy);
-
                     hasGrappled = true;
-                    return;
                 }
-
-                //no valid target — just swing
-                PerformSwing();
-                nextSwingTime = Time.time + swingCooldown;
-                hasGrappled = true;
+                else
+                {
+                    PerformSwing();
+                    nextSwingTime = Time.time + swingCooldown;
+                }
             }
         }
     }

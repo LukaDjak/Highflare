@@ -56,13 +56,19 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        if (isDead || !shouldMove || !agent.enabled) return;
+        if (isDead || !shouldMove || !agent.enabled || player == null) return;
+
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (distanceToPlayer <= shootRange)
-            SetState(State.Shoot);
-        else if (distanceToPlayer <= chaseRange)
-            SetState(State.Chase);
+        if(!GameManager.isGameOver)
+        {
+            if (distanceToPlayer <= shootRange)
+                SetState(State.Shoot);
+            else if (distanceToPlayer <= chaseRange)
+                SetState(State.Chase);
+            else
+                SetState(State.Patrol);
+        }
         else
             SetState(State.Patrol);
 

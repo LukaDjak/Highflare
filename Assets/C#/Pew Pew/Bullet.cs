@@ -72,7 +72,8 @@ public class Bullet : MonoBehaviour
 
         if(collision.gameObject.CompareTag("Player"))
         {
-            FindObjectOfType<PauseMenu>().ShowGameOver();
+            if(!GameManager.isGameOver)
+                FindObjectOfType<PauseMenu>().GameOver();
             Explode();
         }
 

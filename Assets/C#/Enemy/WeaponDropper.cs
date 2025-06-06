@@ -39,7 +39,6 @@ public class WeaponDropper : MonoBehaviour
     {
         if (equippedWeapon == null) return;
 
-        Debug.Log(equippedWeapon);
         equippedWeapon.transform.SetParent(null);
 
         gunRb.useGravity = true;

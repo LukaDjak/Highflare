@@ -68,9 +68,7 @@ public class Grappler : MonoBehaviour
         isGrappleInputHeld = held;
 
         if (!held && IsGrappling())
-        {
             StopGrapple();
-        }
     }
 
     public void StartGrapple(Vector3 targetPoint, bool enemy, Transform enemyTransform = null, float spring = 4.5f, float damper = 7f, float massScale = 4.5f)
@@ -128,29 +126,40 @@ public class Grappler : MonoBehaviour
 
     public bool TryGetGrappleTarget(out Vector3 targetPoint, out bool isEnemy, out Transform targetTransform)
     {
-        if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out RaycastHit hit, maxGrappleDistance, enemyLayer))
-        {
-            Enemy enemy = hit.transform.GetComponent<Enemy>();
-            if (enemy != null && !enemy.isDead)
-            {
-                targetPoint = hit.point;
-                isEnemy = true;
-                targetTransform = enemy.transform;
-                return true;
-            }
-        }
-        else if (Physics.SphereCast(cam.transform.position, 2f, cam.transform.forward, out RaycastHit hitGrapple, maxGrappleDistance, grappleLayer))
-        {
-            targetPoint = hitGrapple.point;
-            isEnemy = false;
-            targetTransform = null;
-            return true;
-        }
+        Camera mainCam = cam.GetComponent<Camera>();
+        Vector2 screenCenter = new(Screen.width / 2f, Screen.height / 2f);
+        float maxScreenDistance = 100f;
+
+        Collider[] candidates = Physics.OverlapSphere(mainCam.transform.position, maxGrappleDistance, enemyLayer | grappleLayer);
+        float bestScore = float.MaxValue;
 
         targetPoint = Vector3.zero;
         isEnemy = false;
         targetTransform = null;
-        return false;
+
+        foreach (Collider col in candidates)
+        {
+            bool targetIsEnemy = ((1 << col.gameObject.layer) & enemyLayer) != 0;
+            if (targetIsEnemy && col.TryGetComponent(out Enemy enemy) && enemy.isDead)
+                continue;
+
+            Vector3 worldPos = col.transform.position + (targetIsEnemy ? Vector3.up : Vector3.zero); //offset for enemy head
+            Vector2 screenPos = mainCam.WorldToScreenPoint(worldPos);
+            float distToCenter = Vector2.Distance(screenPos, screenCenter);
+            if (distToCenter > maxScreenDistance) continue;
+
+            if (Physics.Linecast(mainCam.transform.position, worldPos, out RaycastHit hit) && hit.collider != col)
+                continue; //wall check
+
+            if (distToCenter < bestScore)
+            {
+                bestScore = distToCenter;
+                targetPoint = worldPos;
+                isEnemy = targetIsEnemy;
+                targetTransform = targetIsEnemy ? col.transform : null;
+            }
+        }
+        return targetPoint != Vector3.zero;
     }
 
     private void UpdateUIIndicator()

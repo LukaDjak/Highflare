@@ -792,7 +792,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 3829611487319364148, guid: f8fcb70f842546a4ba2e7b43e3c21f54,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 9621fa086560b114ab6300203dd7d00f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 8934fac0096494e4ea33fbf6e6fcf837, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0
   m_Pitch: 1
@@ -893,8 +893,8 @@ MonoBehaviour:
   playerRb: {fileID: 83448343026657218}
   minSpeed: 15
   maxSpeed: 40
-  maxVolume: 0.5
-  volumeSmoothSpeed: 1
+  maxVolume: 1
+  volumeSmoothSpeed: 1.2
 --- !u!1 &3645582728341590019
 GameObject:
   m_ObjectHideFlags: 0
@@ -1538,6 +1538,7 @@ MonoBehaviour:
   whatIsGrabbable:
     serializedVersion: 2
     m_Bits: 1280
+  itemSocket: {fileID: 1739913154150790189}
   grabIcon: {fileID: 21300000, guid: 6726ed210f223bc4c913aaa8d2167de8, type: 3}
 --- !u!114 &702364759860426878
 MonoBehaviour:

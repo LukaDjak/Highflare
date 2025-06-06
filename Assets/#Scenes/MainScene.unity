@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000006, guid: ddf9fbf8a18e33d408cbad87bfa92322,
+  m_LightingDataAsset: {fileID: 112000000, guid: 68f61ff6c84403540918cb979ec51bb7,
     type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: ba3047eb4bf1764428532e85895d12db,
     type: 2}
@@ -123,7 +123,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 30c037ba6e5423247a144869bd22b9ad, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: deb95351f9d2f224588bd016a9abc72e, type: 2}
 --- !u!43 &52578627
 Mesh:
   m_ObjectHideFlags: 0
@@ -3332,6 +3332,21 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 4212
       objectReference: {fileID: 0}
+    - target: {fileID: 212395928136243251, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: m_SelectedEdges.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 212395928136243251, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: m_SelectedFaces.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212395928136243251, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: m_SelectedVertices.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 353962521612535360, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3575,7 +3590,22 @@ PrefabInstance:
     - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_Range
-      value: 15.375984
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.68235296
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.68235296
+      objectReference: {fileID: 0}
+    - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.68235296
       objectReference: {fileID: 0}
     - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
@@ -3590,7 +3620,7 @@ PrefabInstance:
     - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 179
+      value: 131.94167
       objectReference: {fileID: 0}
     - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
@@ -3600,7 +3630,7 @@ PrefabInstance:
     - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 87.60405
+      value: 71.24795
       objectReference: {fileID: 0}
     - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}

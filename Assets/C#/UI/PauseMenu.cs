@@ -60,7 +60,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public void ShowGameOver()
+    public void GameOver()
     {
         GameManager.isGameOver = true;
         SoundManager.instance.PlaySound(deathClip, Vector3.zero, 1, 1, 0);

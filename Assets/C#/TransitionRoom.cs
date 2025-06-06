@@ -82,7 +82,7 @@ public class TransitionRoom : MonoBehaviour
         yield return new WaitForSeconds(1f);
         endDoor.ToggleDoor(); // Close end door
 
-        if (GameManager.instance.currentLevel == 3)
+        if (GameManager.instance.currentLevel == 4)
         {
             FindObjectOfType<PauseMenu>().GoToMainMenu();
             yield break;
