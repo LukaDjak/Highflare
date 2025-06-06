@@ -36,10 +36,11 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector] public bool isDead = false;
 
-    private void Awake() => player = GameObject.FindGameObjectWithTag("Player").transform;
+    //private void Awake() => player = GameObject.FindGameObjectWithTag("Player").transform;
 
     private void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         animator = GetComponent<Animator>();
         mainCol = GetComponent<Collider>();
         allColliders = GetComponentsInChildren<Collider>(true);
@@ -55,7 +56,7 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        if (isDead || !shouldMove) return;
+        if (isDead || !shouldMove || !agent.enabled) return;
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
         if (distanceToPlayer <= shootRange)
@@ -178,7 +179,7 @@ public class Enemy : MonoBehaviour
     public void DoRagdoll(bool isRagdoll)
     {
         //drop a gun if dead
-        if (dropper.equippedWeapon != null)
+        if (isRagdoll && dropper.equippedWeapon != null)
             dropper.DropWeapon();
 
         foreach (var col in allColliders)
@@ -186,7 +187,6 @@ public class Enemy : MonoBehaviour
         foreach (var rb in allRigidBodies)
             rb.isKinematic = !isRagdoll;
 
-        dropper.enabled = !isRagdoll;
         animator.enabled = !isRagdoll;
         mainCol.enabled = !isRagdoll;
         agent.enabled = !isRagdoll;
