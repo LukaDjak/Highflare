@@ -52,11 +52,4 @@ public class SettingsMenu : MonoBehaviour
         GameManager.settings.sensY = value;
         PlayerPrefs.SetFloat("SensY", value);
     }
-
-    public void ApplyAudioSettings()
-    {
-        // Set AudioMixer volumes based on current GameManager settings
-        audioMixer.SetFloat("GameSound", Mathf.Log10(Mathf.Clamp(GameManager.settings.audioVolume, 0.001f, 1f)) * 20f);
-        audioMixer.SetFloat("Music", Mathf.Log10(Mathf.Clamp(GameManager.settings.musicVolume, 0.001f, 1f)) * 20f);
-    }
 }

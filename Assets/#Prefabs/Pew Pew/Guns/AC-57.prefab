@@ -192,7 +192,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8388609542270426600}
-  m_Mesh: {fileID: -1464698385377129957, guid: 3f0dec66535fc0f439f96a903c84909b, type: 3}
+  m_Mesh: {fileID: -6490856304894640176, guid: dd19e6dc5afda5e44abef952d8c38fd3, type: 3}
 --- !u!23 &5665750051363406050
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -285,7 +285,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -1464698385377129957, guid: 3f0dec66535fc0f439f96a903c84909b, type: 3}
+  m_Mesh: {fileID: -6490856304894640176, guid: dd19e6dc5afda5e44abef952d8c38fd3, type: 3}
 --- !u!95 &1028323163975506159
 Animator:
   serializedVersion: 5
@@ -335,6 +335,7 @@ MonoBehaviour:
   shootSound: {fileID: 8300000, guid: 9a0220441fd1ce241bde1a58e9ebeeff, type: 3}
   reloadSound: {fileID: 8300000, guid: 6a1619fa029316e4badb35655a030d45, type: 3}
   bulletsLeft: 0
+  isEquipped: 0
 --- !u!114 &6582112426985922628
 MonoBehaviour:
   m_ObjectHideFlags: 0

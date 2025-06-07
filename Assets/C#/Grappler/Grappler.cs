@@ -140,16 +140,21 @@ public class Grappler : MonoBehaviour
         foreach (Collider col in candidates)
         {
             bool targetIsEnemy = ((1 << col.gameObject.layer) & enemyLayer) != 0;
-            if (targetIsEnemy && col.TryGetComponent(out Enemy enemy) && enemy.isDead)
-                continue;
 
-            Vector3 worldPos = col.transform.position + (targetIsEnemy ? Vector3.up : Vector3.zero); //offset for enemy head
+            if (targetIsEnemy)
+            {
+                Enemy enemy = col.GetComponent<Enemy>();
+                if (enemy == null || enemy.isDead)
+                    continue;
+            }
+
+            Vector3 worldPos = col.transform.position + (targetIsEnemy ? Vector3.up : Vector3.zero); // offset for enemy head
             Vector2 screenPos = mainCam.WorldToScreenPoint(worldPos);
             float distToCenter = Vector2.Distance(screenPos, screenCenter);
             if (distToCenter > maxScreenDistance) continue;
 
             if (Physics.Linecast(mainCam.transform.position, worldPos, out RaycastHit hit) && hit.collider != col)
-                continue; //wall check
+                continue; // wall check
 
             if (distToCenter < bestScore)
             {
@@ -159,8 +164,10 @@ public class Grappler : MonoBehaviour
                 targetTransform = targetIsEnemy ? col.transform : null;
             }
         }
+
         return targetPoint != Vector3.zero;
     }
+
 
     private void UpdateUIIndicator()
     {

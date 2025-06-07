@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
@@ -11,7 +12,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject gameOverMenu;
     [SerializeField] private GameObject winMenu;
-    private AudioListener audioListener;
+    [SerializeField] private AudioMixer audioMixer;
 
     private bool isPaused = false;
     private void Start()
@@ -20,7 +21,6 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         GameManager.isGameOver = false;
-        audioListener = Camera.main.GetComponent<AudioListener>();
     }
 
     void Update()
@@ -37,7 +37,7 @@ public class PauseMenu : MonoBehaviour
     public void PauseGame()
     {
         Time.timeScale = 0f;
-        AudioListener.pause = true;
+        audioMixer.SetFloat("GameSound", -80f);
         isPaused = true;
         background.SetActive(true);
         pauseMenu.SetActive(true);
@@ -51,7 +51,7 @@ public class PauseMenu : MonoBehaviour
         if (GameManager.isGameOver) return;
 
         Time.timeScale = 1f;
-        AudioListener.pause = false;
+        audioMixer.SetFloat("GameSound", Mathf.Log10(Mathf.Clamp(GameManager.settings.audioVolume, 0.001f, 1f)) * 20f);
         isPaused = false;
         background.SetActive(false);
         pauseMenu.SetActive(false);
@@ -75,14 +75,14 @@ public class PauseMenu : MonoBehaviour
     public void RestartLevel()
     {
         Time.timeScale = 1f;
-        AudioListener.pause = false;
+        audioMixer.SetFloat("GameSound", Mathf.Log10(Mathf.Clamp(GameManager.settings.audioVolume, 0.001f, 1f)) * 20f);
         isPaused = false;
         StartCoroutine(RestartLevelRoutine());
     }
     public void GoToMainMenu()
     {
         Time.timeScale = 1f;
-        AudioListener.pause = false;
+        audioMixer.SetFloat("GameSound", Mathf.Log10(Mathf.Clamp(GameManager.settings.audioVolume, 0.001f, 1f)) * 20f);
         isPaused = false;
         StartCoroutine(GoToMainMenuRoutine());
     }

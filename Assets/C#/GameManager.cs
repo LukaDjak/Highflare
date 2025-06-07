@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -6,6 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [SerializeField] private Camera loaderCamera;
+    [SerializeField] private AudioMixer audioMixer;
 
     [HideInInspector] public int currentLevel = 1;
     public static bool isGameOver = false;
@@ -21,10 +24,13 @@ public class GameManager : MonoBehaviour
         }
 
         LoadSettings();
-        ApplySettings();
+        audioMixer.SetFloat("GameSound", Mathf.Log10(Mathf.Clamp(settings.audioVolume, 0.001f, 1f)) * 20f);
+        audioMixer.SetFloat("Music", Mathf.Log10(Mathf.Clamp(settings.musicVolume, 0.001f, 1f)) * 20f);
 
         // LoadScene("MainMenu");
     }
+
+    void Start() => ApplyAudioSettings();
 
     public void LoadScene(string loadSceneName, string unloadSceneName = null)
     {
@@ -52,13 +58,16 @@ public class GameManager : MonoBehaviour
         settings.sensY = PlayerPrefs.GetFloat("SensY", 1f);
         settings.audioVolume = PlayerPrefs.GetFloat("Audio", 1f);
         settings.musicVolume = PlayerPrefs.GetFloat("Music", 1f);
+
+        audioMixer.SetFloat("GameSound", Mathf.Log10(Mathf.Clamp(settings.audioVolume, 0.001f, 1f)) * 20f);
+        audioMixer.SetFloat("Music", Mathf.Log10(Mathf.Clamp(settings.musicVolume, 0.001f, 1f)) * 20f);
         // currentLevel = PlayerPrefs.GetInt("Level", 1);
     }
 
-    private void ApplySettings()
+    private void ApplyAudioSettings()
     {
-        if (TryGetComponent<SettingsMenu>(out var settingsMenu))
-            settingsMenu.ApplyAudioSettings();
+        audioMixer.SetFloat("GameSound", Mathf.Log10(Mathf.Clamp(settings.audioVolume, 0.001f, 1f)) * 20f);
+        audioMixer.SetFloat("Music", Mathf.Log10(Mathf.Clamp(settings.musicVolume, 0.001f, 1f)) * 20f);
     }
 
     private void OnApplicationQuit()

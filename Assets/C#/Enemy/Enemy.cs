@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if(!GameManager.isGameOver)
+        if (!GameManager.isGameOver)
         {
             if (distanceToPlayer <= shootRange)
                 SetState(State.Shoot);
@@ -166,6 +166,8 @@ public class Enemy : MonoBehaviour
 
     void ShootAtPlayer()
     {
+        if (!HasLineOfSightToPlayer()) return;
+
         Gun g = GetComponentInChildren<Gun>();
         if (g != null)
             g.EnemyShoot(player);
@@ -180,6 +182,17 @@ public class Enemy : MonoBehaviour
             Quaternion rot = Quaternion.LookRotation(lookDir);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 5f);
         }
+    }
+
+    private bool HasLineOfSightToPlayer() //this fixes ability to shoot the player through wall
+    {
+        Vector3 enemyEyes = transform.position;
+        Vector3 playerCenter = player.position;
+
+        if (Physics.Linecast(enemyEyes, playerCenter, out RaycastHit hit))
+            return hit.transform == player;
+
+        return false;
     }
 
     public void DoRagdoll(bool isRagdoll)

@@ -113,10 +113,7 @@ public class Bullet : MonoBehaviour
     void HandleEnemyHit(GameObject enemy)
     {
         if (enemy.TryGetComponent<Enemy>(out var hitEnemy))
-        {
             hitEnemy.DoRagdoll(true);
-            Debug.Log("Enemy hit: " + enemy.name);
-        }
     }
 
     private void OnDrawGizmosSelected()

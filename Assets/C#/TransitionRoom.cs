@@ -26,7 +26,10 @@ public class TransitionRoom : MonoBehaviour
     private void Start()
     {
         if(!startDoor.isOpen)
+        {
             startDoor.ToggleDoor(); // Open start door at beginning
+            StartCoroutine(ShowObjective());
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -34,7 +37,16 @@ public class TransitionRoom : MonoBehaviour
         timer = FindObjectOfType<Timer>();
         isTransitioning = true;
         if (!startDoor.isOpen)
+        {
             startDoor.ToggleDoor(); // Open door again for new level
+            StartCoroutine(ShowObjective());
+        }
+    }
+
+    private IEnumerator ShowObjective()
+    {
+        yield return new WaitForSeconds(1f);
+        FindObjectOfType<LevelObjective>().ShowObjective();
     }
 
     private void OnTriggerEnter(Collider other)
