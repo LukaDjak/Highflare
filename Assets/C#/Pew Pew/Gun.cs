@@ -73,7 +73,13 @@ public class Gun : MonoBehaviour
             Vector3 direction = GetDirectionWithSpread();
             GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity, GameObject.Find("Level").transform);
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
+
+            // Assign shooter
+            Bullet bulletScript = bullet.GetComponent<Bullet>();
+            bulletScript.shooter = GameObject.FindWithTag("Player");
+
             rb.AddForce(direction * shootForce, ForceMode.Impulse);
+
         }
 
         ApplyRecoil();
@@ -99,6 +105,11 @@ public class Gun : MonoBehaviour
             Debug.DrawRay(firePoint.position, direction * 5f, Color.red, 1f);
             GameObject bullet = Instantiate(bulletPrefab, firePoint.position, transform.rotation, GameObject.Find("Level").transform);
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
+
+            // Assign shooter
+            Bullet bulletScript = bullet.GetComponent<Bullet>();
+            bulletScript.shooter = gameObject;
+
             rb.AddForce(direction.normalized * shootForce, ForceMode.Impulse);
         }
 

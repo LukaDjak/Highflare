@@ -29,6 +29,8 @@ public class Bullet : MonoBehaviour
 
     private bool hasExploded = false;
 
+    [HideInInspector] public GameObject shooter;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -63,16 +65,19 @@ public class Bullet : MonoBehaviour
     {
         currentCollisions++;
 
-        //example: interact with enemy
+        // Don't collide with the shooter
+        if (collision.gameObject == shooter)
+            return;
+
         if (((1 << collision.gameObject.layer) & enemyLayer) != 0)
         {
             if (explodeOnImpact) Explode();
             else HandleEnemyHit(collision.gameObject);
         }
 
-        if(collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            if(!GameManager.isGameOver)
+            if (!GameManager.isGameOver)
                 FindObjectOfType<PauseMenu>().GameOver();
             Explode();
         }
@@ -83,6 +88,7 @@ public class Bullet : MonoBehaviour
             return;
         }
     }
+
 
     void Explode()
     {
