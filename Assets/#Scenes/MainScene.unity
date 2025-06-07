@@ -2415,7 +2415,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1416716651
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3467,6 +3467,11 @@ PrefabInstance:
       propertyPath: stateTxt
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 702364759860426878, guid: 0e050f120ff8dd34784a33d1c338eded,
+        type: 3}
+      propertyPath: footsteps
+      value: 
+      objectReference: {fileID: 8300000, guid: eaebf11a9db0630478622c4790dfa641, type: 3}
     - target: {fileID: 702364759860426878, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
       propertyPath: enemyPullSpeed

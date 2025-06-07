@@ -4,6 +4,7 @@ using UnityEngine;
 public class YT_PlayerMovement : MonoBehaviour
 { 
     [SerializeField] private Transform orientation;
+    [SerializeField] private AudioClip footsteps;
 
     [Header("Movement Speed")]
     [SerializeField] private float walkSpeed;
@@ -51,7 +52,7 @@ public class YT_PlayerMovement : MonoBehaviour
 
     private PlayerControls inputActions;
     private Vector2 moveInput;
-
+    private float footstepTimer = 0f;
     private float movementDisabledTimer = 0f;
     public bool MovementTemporarilyDisabled => movementDisabledTimer > 0f;
     public float GetMoveSpeed() => moveSpeed;
@@ -128,6 +129,18 @@ public class YT_PlayerMovement : MonoBehaviour
             isCrouching = false;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
+
+        if (IsGrounded() && (xInput != 0 || zInput != 0) && !isSliding)
+        {
+            footstepTimer -= Time.deltaTime;
+            if (footstepTimer <= 0f && footsteps != null)
+            {
+                SoundManager.instance.PlaySound(footsteps, transform.position, .75f, Random.Range(0.9f, 1.1f), 0);
+                footstepTimer = footsteps.length * (12f / moveSpeed);
+            }
+        }
+        else
+            footstepTimer = 0f;
     }
 
     private void StateHandler()

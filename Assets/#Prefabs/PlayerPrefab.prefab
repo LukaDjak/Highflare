@@ -496,7 +496,7 @@ Transform:
   m_GameObject: {fileID: 1246116169450742521}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.321}
+  m_LocalPosition: {x: 0.0108, y: 0, z: -0.321}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1251,6 +1251,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3782507142442422670}
+  - component: {fileID: 8261727829593202581}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -1276,6 +1277,34 @@ Transform:
   - {fileID: 936945961491899467}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8261727829593202581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4560015066151135294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fddf7b693f6612488b985339aeaca97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allManagedScripts:
+  - {fileID: 7013558985047240795}
+  - {fileID: 7570802752857221191}
+  - {fileID: 2366307152461392893}
+  - {fileID: 13295201189849277}
+  sceneScriptSets:
+  - sceneName: Level2
+    scriptsToEnable:
+    - {fileID: 7013558985047240795}
+    - {fileID: 7570802752857221191}
+  - sceneName: Level3
+    scriptsToEnable:
+    - {fileID: 2366307152461392893}
+    - {fileID: 13295201189849277}
+    - {fileID: 7013558985047240795}
+    - {fileID: 7570802752857221191}
 --- !u!1 &6241302092211270786
 GameObject:
   m_ObjectHideFlags: 0
@@ -1553,6 +1582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orientation: {fileID: 7801594129275894071}
+  footsteps: {fileID: 8300000, guid: 56b518689da790b46994dd64d5727fa5, type: 3}
   walkSpeed: 7
   slideSpeed: 30
   crouchSpeed: 3.5
