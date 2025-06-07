@@ -30,14 +30,25 @@ public class MovementToggler : MonoBehaviour
 
     private void ToggleScriptsForScene(string sceneName)
     {
-        // Disable all scripts
+        // If level is 3 or higher, enable everything and skip scene-specific logic
+        if (sceneName != "Level1" && sceneName != "Level2")
+        {
+            foreach (var script in allManagedScripts)
+            {
+                if (script != null)
+                    script.enabled = true;
+            }
+            return;
+        }
+
+        // Disable all scripts first
         foreach (var script in allManagedScripts)
         {
             if (script != null)
                 script.enabled = false;
         }
 
-        // Find matching scene config and enable the listed scripts
+        // Enable only the scripts defined for this scene
         foreach (var set in sceneScriptSets)
         {
             if (set.sceneName == sceneName)

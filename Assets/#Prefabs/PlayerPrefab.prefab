@@ -1206,11 +1206,13 @@ MonoBehaviour:
   hitClip: {fileID: 8300000, guid: 815e4c02cffbb7f4ab9ff265f66c6581, type: 3}
   enemyHitClip: {fileID: 8300000, guid: 4eba31e7c24ba074f87e6f0ef32cc473, type: 3}
   grappler: {fileID: 7013558985047240795}
+  sliceParticles: {fileID: 402696140653575441, guid: 4637566d3e59c184b9694c22daf09094,
+    type: 3}
   swingCooldown: 0.6
   hitRange: 1.28
   hitMask:
     serializedVersion: 2
-    m_Bits: 1345
+    m_Bits: 8389953
 --- !u!1 &4108700246401334069
 GameObject:
   m_ObjectHideFlags: 0
@@ -1297,12 +1299,6 @@ MonoBehaviour:
   sceneScriptSets:
   - sceneName: Level2
     scriptsToEnable:
-    - {fileID: 7013558985047240795}
-    - {fileID: 7570802752857221191}
-  - sceneName: Level3
-    scriptsToEnable:
-    - {fileID: 2366307152461392893}
-    - {fileID: 13295201189849277}
     - {fileID: 7013558985047240795}
     - {fileID: 7570802752857221191}
 --- !u!1 &6241302092211270786

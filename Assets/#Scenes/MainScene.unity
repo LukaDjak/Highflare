@@ -3559,8 +3559,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7570802752857221191, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
-      propertyPath: hitMask.m_Bits
-      value: 8389953
+      propertyPath: hitRange
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8261727829593202581, guid: 0e050f120ff8dd34784a33d1c338eded,
+        type: 3}
+      propertyPath: sceneScriptSets.Array.data[1].scriptsToEnable.Array.size
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

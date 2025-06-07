@@ -7,6 +7,7 @@ public class Katana : MonoBehaviour
     [SerializeField] private ParticleSystem slashEffect;
     [SerializeField] private AudioClip slashClip, grappleClip, hitClip, enemyHitClip;
     [SerializeField] private Grappler grappler;
+    [SerializeField] private GameObject sliceParticles;
 
     [Header("Properties")]
     [SerializeField] private float swingCooldown = 0.6f;
@@ -166,7 +167,7 @@ public class Katana : MonoBehaviour
 
         RaycastHit[] hits = Physics.BoxCastAll(
             hitOrigin.position + new Vector3(0, -.2f, 0),
-            new Vector3(0.05f, hitRange * 0.5f, 0.05f),
+            new Vector3(hitRange * .2f, hitRange * 0.5f, hitRange * .2f),
             hitOrigin.forward,
             hitOrigin.rotation * Quaternion.Euler(90f, 0, 0),
             0f,
@@ -179,8 +180,13 @@ public class Katana : MonoBehaviour
         {
             if (hit.transform.CompareTag("Enemy"))
             {
-                PlaySound(enemyHitClip, hit.transform.position);
-                hit.transform.GetComponent<Enemy>().DoRagdoll(true);
+                Enemy e = hit.transform.GetComponent<Enemy>();
+                if(!e.isDead)
+                {
+                    PlaySound(enemyHitClip, hit.transform.position);
+                    Instantiate(sliceParticles, hit.transform.position, Quaternion.identity);
+                    e.DoRagdoll(true);
+                }
             }
 
             if (hit.transform.CompareTag("Barrel"))
@@ -215,6 +221,6 @@ public class Katana : MonoBehaviour
         if (!hitOrigin) return;
         Gizmos.color = Color.red;
         Gizmos.matrix = Matrix4x4.TRS(hitOrigin.position + new Vector3(0, -.2f, 0), hitOrigin.rotation * Quaternion.Euler(90f, 0f, 0f), Vector3.one);
-        Gizmos.DrawWireCube(Vector3.zero, new Vector3(0.1f, hitRange, 0.1f));
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(hitRange * .2f, hitRange, hitRange * .2f));
     }
 }
