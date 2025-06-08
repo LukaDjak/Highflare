@@ -1,3 +1,4 @@
+using System.Net;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -26,8 +27,8 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
+        LoadScene("MainMenu");
         LoadSettings();
-        ApplyAudioSettings();
     }
 
     private void Start() => ApplyAudioSettings();
