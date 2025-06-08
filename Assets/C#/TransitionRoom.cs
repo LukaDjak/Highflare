@@ -5,8 +5,9 @@ using UnityEngine.SceneManagement;
 public class TransitionRoom : MonoBehaviour
 {
     [Header("References")]
-    public Door startDoor;
-    public Door endDoor;
+    [SerializeField] private Door startDoor;
+    [SerializeField] private Door endDoor;
+    [SerializeField] private GameObject timeline;
 
     private Timer timer;
     private Coroutine transitionCoroutine;
@@ -25,10 +26,15 @@ public class TransitionRoom : MonoBehaviour
 
     private void Start()
     {
-        if(!startDoor.isOpen)
+        if (GameManager.justEnteredGame)
         {
-            startDoor.ToggleDoor(); // Open start door at beginning
-            StartCoroutine(ShowObjective());
+            timeline.SetActive(true);
+            GameManager.justEnteredGame = false;
+        }
+        else
+        {
+            timeline.SetActive(false);
+            OpenStartDoorIfClosed();
         }
     }
 
@@ -36,17 +42,29 @@ public class TransitionRoom : MonoBehaviour
     {
         timer = FindObjectOfType<Timer>();
         isTransitioning = true;
+
+        if (!timeline.activeInHierarchy)
+            OpenStartDoorIfClosed();
+    }
+
+    private void OpenStartDoorIfClosed()
+    {
         if (!startDoor.isOpen)
         {
-            startDoor.ToggleDoor(); // Open door again for new level
+            startDoor.ToggleDoor();
             StartCoroutine(ShowObjective());
         }
     }
 
+    public void ObjectiveSignal() => StartCoroutine(ShowObjective());
+
     private IEnumerator ShowObjective()
     {
         yield return new WaitForSeconds(1f);
-        FindObjectOfType<LevelObjective>().ShowObjective();
+
+        LevelObjective objective = FindObjectOfType<LevelObjective>();
+        if (objective != null)
+            objective.ShowObjective();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -54,9 +72,13 @@ public class TransitionRoom : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         if (shouldTransition && !startingGame && transitionCoroutine == null)
+        {
             transitionCoroutine = StartCoroutine(HandleLevelTransition());
+        }
         else if (startingGame)
+        {
             startingGame = false;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -84,7 +106,7 @@ public class TransitionRoom : MonoBehaviour
             timer.enabled = false;
 
         shouldTransition = true;
-        endDoor.ToggleDoor(); // Open end door (eventually replaced with a cutscene)
+        endDoor.ToggleDoor(); // Open end door
     }
 
     private IEnumerator HandleLevelTransition()
@@ -94,26 +116,25 @@ public class TransitionRoom : MonoBehaviour
         yield return new WaitForSeconds(1f);
         endDoor.ToggleDoor(); // Close end door
 
-        if (GameManager.instance.currentLevel == 4)
+        if (GameManager.instance.currentLevel == 5)
         {
             FindObjectOfType<PauseMenu>().GoToMainMenu();
             yield break;
         }
-        else
-        {
-            GameManager.instance.currentLevel++;
-            Debug.Log($"Loading Level {GameManager.instance.currentLevel}");
-        }
+
+        GameManager.instance.currentLevel++;
+        Debug.Log($"Loading Level {GameManager.instance.currentLevel}");
 
         yield return new WaitForSeconds(2f);
 
         FindObjectOfType<PickUpController>().DropAndDestroyWeapon();
+
         GameManager.instance.LoadScene(
             $"Level{GameManager.instance.currentLevel}",
             $"Level{GameManager.instance.currentLevel - 1}"
         );
 
-        yield return new WaitForSeconds(1f); // Let things settle
+        yield return new WaitForSeconds(1f);
 
         isTransitioning = false;
         shouldTransition = false;

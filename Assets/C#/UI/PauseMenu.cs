@@ -84,6 +84,8 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         audioMixer.SetFloat("GameSound", Mathf.Log10(Mathf.Clamp(GameManager.settings.audioVolume, 0.001f, 1f)) * 20f);
         isPaused = false;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         StartCoroutine(GoToMainMenuRoutine());
     }
     private IEnumerator RestartLevelRoutine()

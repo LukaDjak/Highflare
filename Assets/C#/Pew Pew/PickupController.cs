@@ -27,6 +27,8 @@ public class PickUpController : MonoBehaviour
     private Scene gunOriginalScene;
 
     public static bool IsPickingUpWeapon { get; private set; }
+    private float interactionCooldown = 0.25f;
+    private float lastInteractionTime = -1f;
 
     void Awake()
     {
@@ -45,6 +47,9 @@ public class PickUpController : MonoBehaviour
 
     void Interact()
     {
+        if (Time.time - lastInteractionTime < interactionCooldown || IsPickingUpWeapon) return;
+        lastInteractionTime = Time.time;
+
         if (TryGetNearbyWeapon(out GameObject weapon))
         {
             if (equippedWeapon != null)
@@ -54,7 +59,7 @@ public class PickUpController : MonoBehaviour
             PickUp(weapon);
         }
         else
-            Drop(); // no weapon nearby — drop current
+            Drop(); //no weapon nearby — drop current
     }
 
     bool TryGetNearbyWeapon(out GameObject weapon)
@@ -97,6 +102,7 @@ public class PickUpController : MonoBehaviour
         weapon.transform.DOMove(itemSocket.position, 0.2f).SetEase(Ease.OutQuad);
         weapon.transform.DORotateQuaternion(itemSocket.rotation, 0.2f).SetEase(Ease.OutQuad).OnComplete(() =>
         {
+            if (equippedWeapon == null) return; //bug fixing - has dropped during pickup
             weapon.transform.SetParent(itemSocket);
             weapon.transform.SetLocalPositionAndRotation(Vector3.zero, itemSocket.rotation);
             IsPickingUpWeapon = false;
@@ -112,6 +118,7 @@ public class PickUpController : MonoBehaviour
     {
         if (equippedWeapon == null) return;
 
+        DOTween.Kill(equippedWeapon.transform);
         equippedWeapon.transform.SetParent(null);
 
         if (gunOriginalScene.IsValid())

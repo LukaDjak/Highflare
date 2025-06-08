@@ -84,7 +84,9 @@ public class Grappler : MonoBehaviour
             isEnemyGrapple = true;
             grappledEnemy = enemyTransform;
 
-            player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            Rigidbody rb = player.GetComponent<Rigidbody>();
+            rb.velocity = Vector3.zero;
+            rb.AddForce(Vector3.up * 10f, ForceMode.Impulse);
 
             if (grappledEnemy != null)
                 grapplePoint = grappledEnemy.position + Vector3.up * 1.0f;

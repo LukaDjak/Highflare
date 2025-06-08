@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -7,12 +6,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [Header("References")]
     [SerializeField] private Camera loaderCamera;
     [SerializeField] private AudioMixer audioMixer;
 
-    [HideInInspector] public int currentLevel = 1;
+    [Header("State")]
+    public int currentLevel = 1;
     public static bool isGameOver = false;
+    public static bool justEnteredGame = true;
     public static Settings settings;
+
     private string currentSceneName;
 
     private void Awake()
@@ -24,13 +27,10 @@ public class GameManager : MonoBehaviour
         }
 
         LoadSettings();
-        audioMixer.SetFloat("GameSound", Mathf.Log10(Mathf.Clamp(settings.audioVolume, 0.001f, 1f)) * 20f);
-        audioMixer.SetFloat("Music", Mathf.Log10(Mathf.Clamp(settings.musicVolume, 0.001f, 1f)) * 20f);
-
-        // LoadScene("MainMenu");
+        ApplyAudioSettings();
     }
 
-    void Start() => ApplyAudioSettings();
+    private void Start() => ApplyAudioSettings();
 
     public void LoadScene(string loadSceneName, string unloadSceneName = null)
     {
@@ -42,8 +42,8 @@ public class GameManager : MonoBehaviour
             SceneManager.UnloadSceneAsync(sceneToUnload);
         }
 
-        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(loadSceneName, LoadSceneMode.Additive);
-        loadOperation.completed += _ =>
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync(loadSceneName, LoadSceneMode.Additive);
+        loadOp.completed += _ =>
         {
             loaderCamera.gameObject.SetActive(false);
             currentSceneName = loadSceneName;
@@ -52,16 +52,14 @@ public class GameManager : MonoBehaviour
 
     private void LoadSettings()
     {
-        settings ??= new Settings();
-
-        settings.sensX = PlayerPrefs.GetFloat("SensX", 1f);
-        settings.sensY = PlayerPrefs.GetFloat("SensY", 1f);
-        settings.audioVolume = PlayerPrefs.GetFloat("Audio", 1f);
-        settings.musicVolume = PlayerPrefs.GetFloat("Music", 1f);
-
-        audioMixer.SetFloat("GameSound", Mathf.Log10(Mathf.Clamp(settings.audioVolume, 0.001f, 1f)) * 20f);
-        audioMixer.SetFloat("Music", Mathf.Log10(Mathf.Clamp(settings.musicVolume, 0.001f, 1f)) * 20f);
-        // currentLevel = PlayerPrefs.GetInt("Level", 1);
+        settings ??= new Settings
+        {
+            sensX = PlayerPrefs.GetFloat("SensX", 1f),
+            sensY = PlayerPrefs.GetFloat("SensY", 1f),
+            audioVolume = PlayerPrefs.GetFloat("Audio", 1f),
+            musicVolume = PlayerPrefs.GetFloat("Music", 1f)
+        };
+        currentLevel = PlayerPrefs.GetInt("Level", 1);
     }
 
     private void ApplyAudioSettings()
@@ -70,9 +68,11 @@ public class GameManager : MonoBehaviour
         audioMixer.SetFloat("Music", Mathf.Log10(Mathf.Clamp(settings.musicVolume, 0.001f, 1f)) * 20f);
     }
 
-    private void OnApplicationQuit()
+    private void OnApplicationQuit() => SaveSettings();
+
+    private void SaveSettings()
     {
-        // PlayerPrefs.SetInt("Level", currentLevel);
+        PlayerPrefs.SetInt("Level", currentLevel);
         PlayerPrefs.SetFloat("SensX", settings.sensX);
         PlayerPrefs.SetFloat("SensY", settings.sensY);
         PlayerPrefs.SetFloat("Audio", settings.audioVolume);

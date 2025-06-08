@@ -23,7 +23,6 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(LoadWithTransition("MainScene", "Level1"));
     }
     public void LoadEndless() => StartCoroutine(LoadWithTransition("MainScene", "Endless"));
-    public void LoadTesting() => StartCoroutine(LoadWithTransition("MainScene", "Movement"));
     public void QuitGame() => Application.Quit();
 
     public void TogglePanel(int index)
@@ -34,8 +33,11 @@ public class MainMenu : MonoBehaviour
 
     private IEnumerator LoadWithTransition(string baseScene, string levelScene)
     {
-        TransitionManager.instance.DoTransition();
-        yield return new WaitForSeconds(.45f);
+        if (GameManager.justEnteredGame)
+            TransitionManager.instance.DoTransition("Fade"); //fade transition for cutscene, other code handled in TransitionRoom
+        else
+            TransitionManager.instance.DoTransition();
+            yield return new WaitForSeconds(.45f);
 
         GameManager.instance.LoadScene(baseScene);
 

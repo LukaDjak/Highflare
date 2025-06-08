@@ -32,7 +32,6 @@ public class TransitionManager : MonoBehaviour
                 triggerToUse = transitionTriggers[Random.Range(0, transitionTriggers.Count)];
             } while (triggerToUse == lastTrigger && transitionTriggers.Count > 1);
         }
-
         transitionAnimator.SetTrigger(triggerToUse);
         lastTrigger = triggerToUse;
     }
