@@ -1085,7 +1085,7 @@ Transform:
   m_GameObject: {fileID: 3946426395778912652}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.75, y: -0.15, z: 0.01}
+  m_LocalPosition: {x: -0.75, y: -0.15, z: -0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1296,9 +1296,29 @@ MonoBehaviour:
   - {fileID: 7570802752857221191}
   - {fileID: 2366307152461392893}
   - {fileID: 13295201189849277}
+  - {fileID: 3245341710480467933}
+  - {fileID: 702364759860426878}
+  - {fileID: 7510727995054848729}
+  - {fileID: 4186873617573359401}
+  - {fileID: 8629770252016901068}
+  - {fileID: 6375101309857538533}
   sceneScriptSets:
+  - sceneName: Level1
+    scriptsToEnable:
+    - {fileID: 702364759860426878}
+    - {fileID: 7510727995054848729}
+    - {fileID: 4186873617573359401}
+    - {fileID: 3245341710480467933}
+    - {fileID: 8629770252016901068}
+    - {fileID: 6375101309857538533}
   - sceneName: Level2
     scriptsToEnable:
+    - {fileID: 702364759860426878}
+    - {fileID: 7510727995054848729}
+    - {fileID: 4186873617573359401}
+    - {fileID: 3245341710480467933}
+    - {fileID: 8629770252016901068}
+    - {fileID: 6375101309857538533}
     - {fileID: 7013558985047240795}
     - {fileID: 7570802752857221191}
 --- !u!1 &6241302092211270786
