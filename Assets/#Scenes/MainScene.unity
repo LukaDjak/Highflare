@@ -1199,6 +1199,8 @@ PlayableDirector:
     value: {fileID: 5063127242663288569}
   - key: {fileID: -7968409937273886771, guid: af39f14cdc234864686e822be51ec2cd, type: 2}
     value: {fileID: 1801779417}
+  - key: {fileID: -1519872010749522268, guid: af39f14cdc234864686e822be51ec2cd, type: 2}
+    value: {fileID: 663679463}
   m_ExposedReferences:
     m_References: []
 --- !u!4 &403822586
@@ -2214,6 +2216,7 @@ MonoBehaviour:
     m_Signals:
     - {fileID: 11400000, guid: 99fde799a2490704980b637359a3d556, type: 2}
     - {fileID: 11400000, guid: 546b7fc1acbcdce4eb2871ac9786f105, type: 2}
+    - {fileID: 11400000, guid: 4f36f4f96629b6649ab91e8c85d76af9, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -2238,6 +2241,20 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: 
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 663679462}
+          m_TargetAssemblyTypeName: TransitionRoom, Assembly-CSharp
+          m_MethodName: DisableTimeline
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -6946,6 +6963,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 152634360}
+    - target: {fileID: 1190872202260993792, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 123
+      objectReference: {fileID: 0}
     - target: {fileID: 1229049184051400670, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_StaticEditorFlags

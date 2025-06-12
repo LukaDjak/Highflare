@@ -7,7 +7,7 @@ public class TransitionRoom : MonoBehaviour
     [Header("References")]
     [SerializeField] private Door startDoor;
     [SerializeField] private Door endDoor;
-    [SerializeField] private GameObject timeline;
+    public GameObject timeline;
 
     private Timer timer;
     private Coroutine transitionCoroutine;
@@ -57,6 +57,7 @@ public class TransitionRoom : MonoBehaviour
     }
 
     public void ObjectiveSignal() => StartCoroutine(ShowObjective());
+    public void DisableTimeline() => timeline.SetActive(false);
 
     private IEnumerator ShowObjective()
     {

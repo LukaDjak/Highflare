@@ -36,6 +36,8 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
+        if(FindObjectOfType<TransitionRoom>().timeline.activeInHierarchy) return; //do not allow to pause the game during the cutscene :)
+
         Time.timeScale = 0f;
         audioMixer.SetFloat("GameSound", -80f);
         isPaused = true;

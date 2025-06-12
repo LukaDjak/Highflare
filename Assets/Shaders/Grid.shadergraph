@@ -110,6 +110,9 @@
         },
         {
             "m_Id": "d3ee3b3da9764409ba6c93d7586ddde8"
+        },
+        {
+            "m_Id": "74d55f21f1ac47478498e1f85f7cf02a"
         }
     ],
     "m_GroupDatas": [
@@ -432,6 +435,9 @@
             },
             {
                 "m_Id": "aaea4a5124dd4773b4a37705bfe1dd09"
+            },
+            {
+                "m_Id": "74d55f21f1ac47478498e1f85f7cf02a"
             }
         ]
     },
@@ -457,6 +463,30 @@
             "m_Id": "e74f6be0ae7147c8800a9696d8e570b8"
         }
     ]
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.NormalMaterialSlot",
+    "m_ObjectId": "0a04f36808d543b8a4803dd9d8dad286",
+    "m_Id": 0,
+    "m_DisplayName": "Normal (Object Space)",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "NormalOS",
+    "m_StageCapability": 2,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_Labels": [],
+    "m_Space": 0
 }
 
 {
@@ -656,8 +686,8 @@
     "m_ObjectId": "234f2509df7a4a5987a502557d5a6256",
     "m_Title": "Grid Cells",
     "m_Position": {
-        "x": 10.0,
-        "y": 10.0
+        "x": -402.9999694824219,
+        "y": -47.0
     }
 }
 
@@ -828,8 +858,8 @@
     "m_ObjectId": "4956719e734649da9d4ccf9710d0e39b",
     "m_Title": "Normal Map",
     "m_Position": {
-        "x": 880.7999267578125,
-        "y": 932.7998046875
+        "x": 880.9998168945313,
+        "y": 934.0000610351563
     }
 }
 
@@ -962,7 +992,7 @@
     "m_Type": "UnityEditor.Rendering.BuiltIn.ShaderGraph.BuiltInLitSubTarget",
     "m_ObjectId": "4f77498b8d5c40caa36887a2159b0196",
     "m_WorkflowMode": 1,
-    "m_NormalDropOffSpace": 0
+    "m_NormalDropOffSpace": 1
 }
 
 {
@@ -1531,6 +1561,40 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
+    "m_ObjectId": "74d55f21f1ac47478498e1f85f7cf02a",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "SurfaceDescription.NormalOS",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "0a04f36808d543b8a4803dd9d8dad286"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_SerializedDescriptor": "SurfaceDescription.NormalOS"
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "77edd003b0054c8e9a55644045e5c3fc",
     "m_Id": 2,
@@ -1869,8 +1933,8 @@
     "m_ObjectId": "a8c0d3b91da6439092284f2a27382e11",
     "m_Title": "Grid Lines",
     "m_Position": {
-        "x": 719.199951171875,
-        "y": 517.599853515625
+        "x": 720.0001831054688,
+        "y": 519.0
     }
 }
 
