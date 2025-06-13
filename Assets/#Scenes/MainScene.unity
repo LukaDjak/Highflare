@@ -1174,7 +1174,7 @@ PlayableDirector:
   - key: {fileID: -5267600274536474186, guid: a5f2ddb476923774b91a0a6ccd63dc2d, type: 2}
     value: {fileID: 1228925530}
   - key: {fileID: -3308902216027130125, guid: a5f2ddb476923774b91a0a6ccd63dc2d, type: 2}
-    value: {fileID: 5063127242663288565}
+    value: {fileID: 0}
   - key: {fileID: -5927515331217066673, guid: a5f2ddb476923774b91a0a6ccd63dc2d, type: 2}
     value: {fileID: 1801779417}
   - key: {fileID: -697171989332521888, guid: a5f2ddb476923774b91a0a6ccd63dc2d, type: 2}
@@ -6533,56 +6533,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2983903428938088018, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2983903428938088018, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2983903428938088018, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2983903428938088018, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2983903428938088018, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2983903428938088018, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2983903428938088018, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2983903428938088018, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2983903428938088018, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2983903428938088018, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3245341710480467933, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
       propertyPath: m_Enabled
@@ -6776,42 +6726,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5063127242663288569}
-    - targetCorrespondingSourceObject: {fileID: 2599921869435737314, guid: 0e050f120ff8dd34784a33d1c338eded,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5063127242663288565}
     - targetCorrespondingSourceObject: {fileID: 3645582728341590019, guid: 0e050f120ff8dd34784a33d1c338eded,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 479335806}
   m_SourcePrefab: {fileID: 100100000, guid: 0e050f120ff8dd34784a33d1c338eded, type: 3}
---- !u!1 &5063127242663288564 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2599921869435737314, guid: 0e050f120ff8dd34784a33d1c338eded,
-    type: 3}
-  m_PrefabInstance: {fileID: 5063127242663288563}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &5063127242663288565
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5063127242663288564}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &5063127242663288567 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8261727829593202581, guid: 0e050f120ff8dd34784a33d1c338eded,
