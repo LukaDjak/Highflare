@@ -22,7 +22,7 @@ public class MainMenu : MonoBehaviour
         GameManager.instance.currentLevel = 1;
         StartCoroutine(LoadWithTransition("MainScene", "Level1"));
     }
-    public void LoadEndless() => StartCoroutine(LoadWithTransition("MainScene", "Endless"));
+    public void LoadLevel(int index) => StartCoroutine(LoadWithTransition("MainScene", $"Level{index}"));
     public void QuitGame() => Application.Quit();
 
     public void TogglePanel(int index)
