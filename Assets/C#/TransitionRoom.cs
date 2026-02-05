@@ -7,6 +7,7 @@ public class TransitionRoom : MonoBehaviour
     [Header("References")]
     [SerializeField] private Door startDoor;
     [SerializeField] private Door endDoor;
+    [SerializeField] private bool showCutScene = true;
     public GameObject timeline;
 
     private Timer timer;
@@ -26,7 +27,7 @@ public class TransitionRoom : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.justEnteredGame)
+        if (GameManager.justEnteredGame && showCutScene)
         {
             timeline.SetActive(true);
             GameManager.justEnteredGame = false;

@@ -7072,6 +7072,11 @@ PrefabInstance:
       propertyPath: timeline
       value: 
       objectReference: {fileID: 403822584}
+    - target: {fileID: 5753972786322882662, guid: e0a88919b0d4f9443aec711f806ea39a,
+        type: 3}
+      propertyPath: showCutScene
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5937882884099581597, guid: e0a88919b0d4f9443aec711f806ea39a,
         type: 3}
       propertyPath: m_Type
