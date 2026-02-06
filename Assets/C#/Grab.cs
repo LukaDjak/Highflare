@@ -15,6 +15,14 @@ public class Grab : MonoBehaviour
     [Header("Crosshair UI")]
     [SerializeField] private Sprite grabIcon;
 
+    [Header("Throw Settings")]
+    [SerializeField] private float throwForce = 18f;
+    [SerializeField] private float throwUpwardForce = 1.5f;
+
+    public static bool IsHoldingObject { get; private set; }
+    private static int _consumeAltFireFrame = -1;
+    public static bool ConsumeAltFireThisFrame => _consumeAltFireFrame == Time.frameCount;
+
     private void Start() => cam = Camera.main.transform;
 
     private void Update()
@@ -23,6 +31,12 @@ public class Grab : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
             GrabObject();
+
+        if (grabbedObj && Input.GetMouseButtonDown(1))
+        {
+            _consumeAltFireFrame = Time.frameCount;
+            TryThrow();
+        }
 
         if (Input.GetMouseButtonUp(0))
             StopGrab();
@@ -49,6 +63,8 @@ public class Grab : MonoBehaviour
             if (hit.transform.GetComponent<Rigidbody>() != null)
             {
                 grabbedObj = hit.transform.gameObject;
+
+                IsHoldingObject = true;
 
                 joint = grabbedObj.AddComponent<SpringJoint>();
                 joint.autoConfigureConnectedAnchor = false;
@@ -80,6 +96,27 @@ public class Grab : MonoBehaviour
         lr.SetPosition(1, grabbedObj.transform.position);
     }
 
+    private void TryThrow()
+    {
+        if (!grabbedObj) return;
+
+        Rigidbody rb = grabbedObj.GetComponent<Rigidbody>();
+        StopGrab();
+
+        rb.drag = 0f;
+        rb.angularDrag = 0.05f;
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        Vector3 dir = cam.forward;
+        Vector3 force = (dir * throwForce + Vector3.up * throwUpwardForce) * rb.mass;
+        rb.AddForce(force, ForceMode.Impulse);
+
+        //spin for da feeeeeel
+        rb.AddTorque(Random.insideUnitSphere * 0.75f, ForceMode.Impulse);
+    }
+
     void StopGrab()
     {
         if (grabbedObj != null)
@@ -89,6 +126,8 @@ public class Grab : MonoBehaviour
             grabbedObj.GetComponent<Rigidbody>().angularDrag = .05f;
             grabbedObj.GetComponent<Rigidbody>().drag = .0f;
             grabbedObj = null;
+
+            IsHoldingObject = false;
         }
     }
 }

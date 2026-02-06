@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Bullet : MonoBehaviour
 {
     [Header("References")]
@@ -104,6 +105,9 @@ public class Bullet : MonoBehaviour
 
                 if (col.TryGetComponent<Rigidbody>(out var hitRb))
                     hitRb.AddExplosionForce(explosionForce * hitRb.mass, transform.position, explosionRadius);
+
+                if (col.TryGetComponent(out Destructible d))
+                    d.Explode();
             }
             GameObject explosionParticle = Instantiate(explosion, transform.position, Quaternion.identity);
             Destroy(explosionParticle, 5f);

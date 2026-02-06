@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class Gun : MonoBehaviour
 {
     [Header("General Settings")]

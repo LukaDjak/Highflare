@@ -39,7 +39,9 @@ public class MovementManager : MonoBehaviour
 
         string sceneName = scene.name;
 
-        if (sceneName != "Level1" && sceneName != "Level2")
+        //all scenes needed in this if are in sceneScriptSets value,
+        //just need a way to write it correctly here
+        if (sceneName != "Level1" && sceneName != "Level2" && sceneName != "Prototype") 
         {
             EnableAllManagedScripts();
             return;

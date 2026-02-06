@@ -35,7 +35,12 @@ public class Katana : MonoBehaviour
     private void Awake()
     {
         input = new PlayerControls();
-        input.Player.KatanaGrapple.started += _ => {
+        input.Player.KatanaGrapple.started += _ =>
+        {
+            //if RMB is being used for throwing, don't start katana/grapple
+            if (Grab.IsHoldingObject || Grab.ConsumeAltFireThisFrame)
+                return;
+
             isUsingKatana = true;
             grappler.SetGrappleInput(true);
         };
@@ -71,7 +76,7 @@ public class Katana : MonoBehaviour
         UpdateTransform();
 
         //only proceed if the grapple button is being held
-        if (isUsingKatana && Time.time >= nextSwingTime)
+        if (isUsingKatana && Time.time >= nextSwingTime && !Grab.IsHoldingObject && !Grab.ConsumeAltFireThisFrame)
         {
             if (grappler.IsGrappling())
             {

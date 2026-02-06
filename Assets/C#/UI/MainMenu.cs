@@ -23,6 +23,7 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(LoadWithTransition("MainScene", "Level1"));
     }
     public void LoadLevel(int index) => StartCoroutine(LoadWithTransition("MainScene", $"Level{index}"));
+    public void LoadPrototype() => StartCoroutine(LoadWithTransition("MainScene", "Prototype"));
     public void QuitGame() => Application.Quit();
 
     public void TogglePanel(int index)

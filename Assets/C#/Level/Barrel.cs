@@ -38,6 +38,9 @@ public class Barrel : MonoBehaviour
                 if (col.TryGetComponent<Rigidbody>(out var hitRb))
                     hitRb.AddExplosionForce(explosionForce * hitRb.mass, transform.position, explosionRadius);
 
+                if (col.TryGetComponent(out Destructible d))
+                    d.Explode();
+
                 Instantiate(explosionParticles, transform.position, Quaternion.identity);
                 SoundManager.instance.PlaySound(explosionClip, transform.position, .7f, Random.Range(0.9f, 1.1f));
             }
