@@ -95,7 +95,7 @@ public class TransitionRoom : MonoBehaviour
 
     private void OnRoomExit()
     {
-        startDoor.ToggleDoor(); // Close start door
+        startDoor.ToggleDoor(); //close start door
         isTransitioning = false;
 
         if (timer != null)
@@ -118,7 +118,7 @@ public class TransitionRoom : MonoBehaviour
         yield return new WaitForSeconds(1f);
         endDoor.ToggleDoor(); // Close end door
 
-        if (GameManager.instance.currentLevel == 5)
+        if (GameManager.instance.currentLevel == 5 || SceneManager.GetSceneAt(2).name == "Prototype")
         {
             FindObjectOfType<PauseMenu>().GoToMainMenu();
             yield break;

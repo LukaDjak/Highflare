@@ -8,6 +8,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float patrolRadius = 10f;
     [SerializeField] private float idleWaitTime = 2f;
 
+    [Header("Momentum Elims")]
+    [SerializeField] private float momentumKillThreshold = 12f;
+
     [Header("Range")]
     [SerializeField] private float patrolRange = 15f;
     [SerializeField] private float chaseRange = 10f;
@@ -193,6 +196,17 @@ public class Enemy : MonoBehaviour
             return hit.transform == player;
 
         return false;
+    }
+
+    //momentum kills
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(isDead) return;
+
+        float impactSpeed = collision.relativeVelocity.magnitude;
+        if (impactSpeed < momentumKillThreshold) return;
+
+        DoRagdoll(true);
     }
 
     public void DoRagdoll(bool isRagdoll)

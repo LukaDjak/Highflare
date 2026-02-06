@@ -2040,6 +2040,7 @@ MonoBehaviour:
   shootCooldown: 2
   patrolRadius: 10
   idleWaitTime: 2
+  momentumKillThreshold: 15
   patrolRange: 25
   chaseRange: 15
   shootRange: 5
